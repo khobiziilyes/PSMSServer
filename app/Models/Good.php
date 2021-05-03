@@ -11,30 +11,22 @@ class Good extends baseModel {
     protected $table = 'goods';
     protected $appends = ['isPhone'];
 
-    public function __construct(array $attributes = []) {
-        parent::__construct($attributes);
-        $this->hidden[] = 'type_id';
-    }
-
     public static function boot() {
         parent::boot();
 
-        if (isset(static::$isPhone)) {
-            static::addGlobalScope('type_id', function (Builder $builder) {
-                $builder->where('type_id', (static::$isPhone ? '' : '!' ) . '=', 0);
-            });
-        }
+        static::addGlobalScope('type_id', function (Builder $builder) {
+            $builder->where('type_id', (static::$isPhone ? '' : '!' ) . '=', 0);
+        });
     }
 
     public function getIsPhoneAttribute() {
-        return (intval($this->type_id) === 0);
+        return static::$isPhone;
     }
 
     public function Items() {
-        return $this->hasMany(Item::class, 'good_id');
+        return $this->morphMany(Item::class, 'itemable');
     }
 }
 
 class Phone extends Good { static $isPhone = true; }
-
 class Accessory extends Good { static $isPhone = false; }

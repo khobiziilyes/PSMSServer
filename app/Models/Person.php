@@ -17,13 +17,11 @@ class Person extends baseModel {
     public static function boot() {
         parent::boot();
 
-        if (isset(static::$isVendor)) {
-            static::addGlobalScope('isVendor', function (Builder $builder) {
-                $builder->where('isVendor', static::$isVendor);
-            });
-        }
+        static::addGlobalScope('isVendor', function (Builder $builder) {
+            $builder->where('isVendor', static::$isVendor);
+        });
 
-        static::creating(function($model){
+        static::creating(function($model) {
             $model->isVendor = static::$isVendor;
         });
     }

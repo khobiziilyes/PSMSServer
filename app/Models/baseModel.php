@@ -19,7 +19,7 @@ class baseModel extends Model {
             $builder->where('store_id', auth()->user()->Store->id);
         });
 
-        static::creating(function($model){
+        static::creating(function($model) {
             $user = Auth::user();
 
             $model->created_by = $user->id;
@@ -28,7 +28,7 @@ class baseModel extends Model {
             $model->store_id = $user->store_id;
         });
         
-        static::updating(function($model){
+        static::updating(function($model) {
             $user = Auth::user();
             $model->updated_by = $user->id;
         });     

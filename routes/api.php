@@ -1,15 +1,12 @@
 <?php
 
     /*
-        - person_type - good_id .... Cannot be edited.
-        - Decrease/Increase currentQuantity.
-        - Re-write tests.
-        - Check quantity before sell.
         - Multi transactions in one.
-        - Cannot double sell same IMEI.
-        - Fix Delta & its validation.
-        - use morph.
         - Transactions "destroy" && Deal with IMEI specially ...
+    
+        - Create common validation rules like: quantity - price ...
+        - person_type - good_id .... Cannot be edited.
+        - Fix type_id & its validation.
         - https://laravel.com/docs/8.x/authorization
         - Flexy.
         - Enable onlyJsonMiddleware in "Kernel.php".
@@ -17,9 +14,10 @@
 
     use Illuminate\Support\Facades\Route;
     use App\Models\Buy;
+    use App\Models\Phone;
 
     Illuminate\Support\Facades\Auth::loginUsingId(1);
-
+    
     Route::prefix('auth')->group(function () {
         Route::post('login', 'AuthController@login');
         //Route::post('register', 'AuthController@register');
@@ -31,28 +29,28 @@
     });
 
     //Route::middleware('auth:api')->group(function() {
-        Route::prefix('people')->group(function () {
-            Route::apiResources([
-                'vendors' => VendorsController::class,
-                'customers' => CustomersController::class
-            ]);
-        });
+        Route::apiResources([
+            'vendors' => VendorsController::class,
+            'customers' => CustomersController::class,
+            'imei' => imeiController::class
+        ]);
 
-        Route::prefix('goods')->group(function () {
-            Route::apiResources([
-                'phones' => PhonesController::class,
-                'accessories' => AccessoriesController::class
-            ]);
-        });
 
-        Route::apiResource('items', ItemsController::class);
-        
-        Route::prefix('transactions')->group(function() {
-            Route::apiResources([
-                'buy' => BuyController::class,
-                'sell' => SellController::class
-            ], ['except' => 'update']);
-        });
+        Route::apiResources([
+            'phones' => PhonesController::class,
+            'accessories' => AccessoriesController::class,
+        ], ['except' => 'store']);
 
-        Route::apiResource('imei', imeiController::class);
+        Route::apiResource('items', ItemsController::class)->except(['store']);
+
+        Route::apiResources([
+            'buy' => BuyController::class,
+            'sell' => SellController::class
+        ], ['except' => ['store', 'update', 'destroy']]);
+
+        Route::post('items/phone/{Itemable}', [App\Http\Controllers\ItemsController::class, 'storePhoneItem']);
+        Route::post('items/accessory/{Itemable}', [App\Http\Controllers\ItemsController::class, 'storeAccessoryItem']);
+
+        Route::get('buyx/{Item}/{Vendor}', [App\Http\Controllers\BuyController::class, 'storeBuy']);
+        Route::get('sellx/{Item}/{Customer}', [App\Http\Controllers\SellController::class, 'storeSell']);
     //});

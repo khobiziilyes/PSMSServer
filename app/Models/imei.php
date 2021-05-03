@@ -6,7 +6,7 @@ class imei extends baseModel {
     protected $table = 'imei';
     protected $appends = ['isSold'];
     protected $fillable = ['item_id', 'imei', 'buy_payment_id'];
-    protected $with = ['item:id,good_id,delta', 'item.good:id,name,brand'];
+    protected $with = ['item:id,itemable_id,delta', 'item.itemable:id,name,brand'];
     
     public function __construct(array $attributes = []) {
         parent::__construct($attributes);

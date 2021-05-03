@@ -14,12 +14,12 @@ class CreateItemsTable extends Migration {
         Schema::create('items', function (Blueprint $table) {
             $table->id();
             
-            $table->foreignId('good_id');
+            $table->morphs('itemable');
             $table->integer('delta');
             $table->integer('currentQuantity')->default(0);
             $table->integer('defaultPrice');
-            
-            $table->unique(['good_id', 'delta']);            
+                        
+            $table->unique(['itemable_id', 'delta']);            
             /*
             $table->integer('totalBuyCost')->default(0);
             $table->integer('totalSellCost')->default(0);

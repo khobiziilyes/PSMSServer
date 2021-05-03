@@ -25,21 +25,17 @@ class baseController extends Controller {
     public function createOrUpdate($theDatas, $id = null, $save = true) {
         $normalText = config('app.normalText');
         $valArr = $this->getValidationRules($normalText);
-        
-        $theClass = $this->theClass;
 
-        $theDatas['id'] = $id;
-        $valArr['id'] = 'nullable|exists:' . (new $theClass)->getTable();
-
-        Validator::make($theDatas, $valArr)->stopOnFirstFailure()->validate();
+        $validatedData = Validator::make($theDatas, $valArr)->validate();
         
         $theInstance = null;
+        $theClass = $this->theClass;
         
         if (is_null($id)) {
-            $theInstance = new $theClass($theDatas);
+            $theInstance = new $theClass($validatedData);
         } else {
             $theInstance = $theClass::findOrFail($id); // What if it's a trick id?
-            $theInstance->fill($theDatas);
+            $theInstance->fill($validatedData);
         }
         
         if ($save) $theInstance->save();

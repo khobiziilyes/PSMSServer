@@ -19,10 +19,5 @@ class GoodsController extends baseController {
     }
 }
 
-class PhonesController extends GoodsController {
-    protected $theClass = Phone::class;
-}
-
-class AccessoriesController extends GoodsController {
-    protected $theClass = Accessory::class;
-}
+class PhonesController extends GoodsController { protected $theClass = Phone::class; }
+class AccessoriesController extends GoodsController { protected $theClass = Accessory::class; }

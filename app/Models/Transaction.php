@@ -11,7 +11,7 @@ class Transaction extends baseModel {
     protected $fillable = ['costPerItem', 'Quantity', 'person_id', 'item_id', 'notes'];
     protected $table = 'transactions';
     protected $casts = ['isBuy' => 'boolean', 'priceChanged' => 'boolean'];
-    protected $with = ['Item:id,good_id,delta', 'Person:id,name'];
+    protected $with = ['Item:id,itemable_id,delta', 'Person:id,name'];
 
     public function __construct(array $attributes = []) {
         parent::__construct($attributes);

@@ -8,31 +8,37 @@ use Illuminate\Validation\Rule;
 
 use App\Http\Controllers\baseController;
 
-use App\Models\Transaction;
+use App\Models\Customer;
+use App\Models\Vendor;
+
 use App\Models\Buy;
 use App\Models\Sell;
+
+use App\Models\Transaction;
+use App\Models\Item;
 use App\Models\imei;
 
 class TransactionsController extends baseController {
     public $theClass = Transaction::class;
 
-    function getValidationRules($normalText) {
+    function getValidationRules($normalText, $maxQuantity) {
         return [
             'costPerItem' => 'required|integer',
-            'Quantity' => 'required|integer' . ($this->theClass::$isBuy ? '' : '|between:1,'),
-            'person_id' => ['required', 
-                Rule::exists('people', 'id')->where(function ($query) {
-                    return $query->where('isVendor', $this->theClass::$isBuy);
-                })    
-            ],
-            'item_id' => 'required|exists:items,id',
+            'Quantity' => 'required|integer|min:1' . (is_null($maxQuantity) ? '' : ('|max:' . $maxQuantity)),
             'notes' => $normalText
         ];
     }
 
-    public function store(Request $request) {
-        $theInstance = $this->createOrUpdate($request->input(), null, false);
+    public function storeTransaction(Item $Item, $Person) {
+        $normalText = config('app.normalText');
+
+        $valArr = $this->getValidationRules($normalText, $Item->currentQuantity);
+        $validatedData = Validator::make(request()->input(), $valArr)->validate();
+        
+        $theInstance = $Item->Transactions()->create($validatedData);
         $theInstance->priceChanged = $this->theClass::$isBuy ? null : ($theInstance->costPerItem !== $theInstance->Item->defaultPrice);
+        
+        $theInstance->save();
 
         if ($theInstance->Item->isPhone) {
             $theDatas = ['imei' => $request->input('imei', [])];
@@ -46,45 +52,51 @@ class TransactionsController extends baseController {
                 'imei.*' => [
                     'imei',
                     'distinct:strict',
-                    $this->imeiExtraValidation
+                    $theInstance->isBuy ? 'unique:imei,imei' : 'exists:imei,imei,sell_payment_id,NULL'
                 ]
             ];
 
-            Validator::make($theDatas, $IMEIRules)->validate();
-            $theInstance->save();
+            $theDatas = Validator::make($theDatas, $IMEIRules)->after(function($validator) {
+                if ($this->somethingElseIsInvalid()) $theInstance->delete();
+            })->validate();
+            
+            dd($theDatas);
 
-            foreach ($request->input('imei') as $imei) $this->saveIMEI($imei, $theInstance);
-        } else {
-            $theInstance->save();
+            foreach ($theDatas as $imei) $this->saveIMEI($imei, $theInstance);
         }
 
-          
+        $Item->changeQuantityBy($theInstance->Quantity * ($theInstance->isBuy ? 1 : -1));
+
         return $theInstance;
     }
 }
 
 class BuyController extends TransactionsController {
     public $theClass = Buy::class;
-    protected $imeiExtraValidation = 'unique:imei,imei';
- 
+    
+    function storeBuy(Item $Item, Vendor $Vendor) {
+        return $this->storeTransaction($Item, $Vendor);
+    }
+
     function saveIMEI($imei, $theInstance) {
-        $theDatas = [
+        $imeiInstance = imei::create([
             'item_id' => $theInstance->item_id,
             'imei' => $imei,
             'buy_payment_id' => $theInstance->id,
-            'sell_payment_id' => null,
-            'notes' => null
-        ];
+            'sell_payment_id' => null
+        ]);
 
-        $imeiInstance = new imei($theDatas);
         $imeiInstance->save();
     }
 }
 
 class SellController extends TransactionsController {
     public $theClass = Sell::class;
-    protected $imeiExtraValidation = 'exists:imei,imei';
- 
+    
+    function storeSell(Item $Item, Customer $Customer) {
+        return $this->storeTransaction($Item, $Customer);
+    }
+    
     function saveIMEI($imei, $theInstance) {
         $imeiInstance = imei::where('imei', $imei)->firstOrFail();
         $imeiInstance->sell_payment_id = $theInstance->id;
