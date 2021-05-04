@@ -7,11 +7,7 @@ use Illuminate\Support\Facades\Validator;
 
 class baseController extends Controller {
     public function index() {
-        return $this->theClass::filter()->paginateAuto();
-    }
-    
-    public function store(Request $request) {
-        return $this->createOrUpdate($request->input());
+        return $this->theClass::with(['created_by:id,name', 'updated_by:id,name'])->filter()->paginateAuto();
     }
 
     public function show($id) {
@@ -21,8 +17,12 @@ class baseController extends Controller {
     public function update(Request $request, $id) {
         return $this->createOrUpdate($request->input(), $id);
     }
+    
+    public function store(Request $request) {
+        return $this->createOrUpdate($request->input());
+    }
 
-    public function createOrUpdate($theDatas, $id = null, $save = true) {
+    public function createOrUpdate($theDatas, $id = null) {
         $normalText = config('app.normalText');
         $valArr = $this->getValidationRules($normalText);
 
@@ -34,11 +34,11 @@ class baseController extends Controller {
         if (is_null($id)) {
             $theInstance = new $theClass($validatedData);
         } else {
-            $theInstance = $theClass::findOrFail($id); // What if it's a trick id?
+            $theInstance = $theClass::findOrFail($id);
             $theInstance->fill($validatedData);
         }
         
-        if ($save) $theInstance->save();
+        $theInstance->save();
         return $theInstance;
     }
 

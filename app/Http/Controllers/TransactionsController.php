@@ -16,56 +16,56 @@ use App\Models\Sell;
 
 use App\Models\Transaction;
 use App\Models\Item;
-use App\Models\imei;
 
 class TransactionsController extends baseController {
     public $theClass = Transaction::class;
 
-    function getValidationRules($normalText, $maxQuantity) {
-        return [
-            'costPerItem' => 'required|integer',
-            'Quantity' => 'required|integer|min:1' . (is_null($maxQuantity) ? '' : ('|max:' . $maxQuantity)),
+    function getValidationRules($normalText, $isBuy) {
+        $validationRules = [
+            'person_id' => 'required|exists:people,id,isVendor,' . ($isBuy ? '1' : '0'),
+            'cart' => 'required|array|min:1',
+            'cart.*.costPerItem' => 'required|integer',
+            'cart.*.item_id' => 'required|exists:items,id|distinct:strict',
+            'cart.*.Quantity' => 'required|integer|min:1',
             'notes' => $normalText
         ];
+
+        if (!$isBuy) $validationRules['cart.*'] = function($attribute, $value, $fail) {  
+            $item_id = $value['item_id'] ?? null;
+            $Quantity = $value['Quantity'] ?? null;
+                
+            if (is_null($item_id) || is_null($Quantity)) return $fail('Cart is invalid.');
+            if (Item::findOrFail($item_id)->currentQuantity < $Quantity) return $fail("$Quantity item aren't available.");
+        };
+
+        return $validationRules;
     }
 
-    public function storeTransaction(Item $Item, $Person) {
+    public function store(Request $request) {
         $normalText = config('app.normalText');
+        $isBuy = $this->theClass::$isBuy;
 
-        $valArr = $this->getValidationRules($normalText, $Item->currentQuantity);
+        $valArr = $this->getValidationRules($normalText, $isBuy);
+
         $validatedData = Validator::make(request()->input(), $valArr)->validate();
-        
-        $theInstance = $Item->Transactions()->create($validatedData);
-        $theInstance->priceChanged = $this->theClass::$isBuy ? null : ($theInstance->costPerItem !== $theInstance->Item->defaultPrice);
-        
-        $theInstance->save();
 
-        if ($theInstance->Item->isPhone) {
-            $theDatas = ['imei' => $request->input('imei', [])];
-
-            $IMEIRules = [
-                'imei' => [
-                    'required',
-                    'array',
-                    'size:' . $theInstance->Quantity
-                ],
-                'imei.*' => [
-                    'imei',
-                    'distinct:strict',
-                    $theInstance->isBuy ? 'unique:imei,imei' : 'exists:imei,imei,sell_payment_id,NULL'
-                ]
-            ];
-
-            $theDatas = Validator::make($theDatas, $IMEIRules)->after(function($validator) {
-                if ($this->somethingElseIsInvalid()) $theInstance->delete();
-            })->validate();
+        $newCart = [];
+        foreach ($validatedData['cart'] as $cart_item) {
+            $Item = Item::findOrFail($cart_item['item_id']);
             
-            dd($theDatas);
+            $cart_item['priceChanged'] = $isBuy ? null : ($cart_item['costPerItem'] !== $Item->defaultPrice);            
+            $Item->transactionPerformed($cart_item['Quantity'], $cart_item['costPerItem'], $isBuy);
 
-            foreach ($theDatas as $imei) $this->saveIMEI($imei, $theInstance);
+            $newCart[] = $cart_item;
         }
 
-        $Item->changeQuantityBy($theInstance->Quantity * ($theInstance->isBuy ? 1 : -1));
+        $theInstance = ($isBuy ? Buy::class : Sell::class)::create([
+            'person_id' => $validatedData['person_id'],
+            'notes' => $validatedData['notes'] ?? null,
+            'cart' => $newCart
+        ]);
+
+        $theInstance->save();
 
         return $theInstance;
     }
@@ -73,34 +73,15 @@ class TransactionsController extends baseController {
 
 class BuyController extends TransactionsController {
     public $theClass = Buy::class;
-    
-    function storeBuy(Item $Item, Vendor $Vendor) {
-        return $this->storeTransaction($Item, $Vendor);
-    }
 
-    function saveIMEI($imei, $theInstance) {
-        $imeiInstance = imei::create([
-            'item_id' => $theInstance->item_id,
-            'imei' => $imei,
-            'buy_payment_id' => $theInstance->id,
-            'sell_payment_id' => null
-        ]);
-
-        $imeiInstance->save();
+    public function destroyBuy(Buy $Transaction) {
+        ret
     }
 }
-
 class SellController extends TransactionsController {
     public $theClass = Sell::class;
-    
-    function storeSell(Item $Item, Customer $Customer) {
-        return $this->storeTransaction($Item, $Customer);
-    }
-    
-    function saveIMEI($imei, $theInstance) {
-        $imeiInstance = imei::where('imei', $imei)->firstOrFail();
-        $imeiInstance->sell_payment_id = $theInstance->id;
 
-        $imeiInstance->save();
+    public function destroySell(Sell $Transaction) {
+        
     }
 }

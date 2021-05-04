@@ -2,25 +2,22 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Builder;
 use App\Models\baseModel;
 use App\Models\Item;
-use App\Models\Person;
+
+use App\Models\Vendor;
+use App\Models\Customer;
 
 class Transaction extends baseModel {
-    protected $fillable = ['costPerItem', 'Quantity', 'person_id', 'item_id', 'notes'];
+    use SoftDeletes;
+    
+    protected $fillable = ['cart', 'person_id', 'notes'];
     protected $table = 'transactions';
-    protected $casts = ['isBuy' => 'boolean', 'priceChanged' => 'boolean'];
-    protected $with = ['Item:id,itemable_id,delta', 'Person:id,name'];
-
-    public function __construct(array $attributes = []) {
-        parent::__construct($attributes);
-        $this->hidden[] = 'updated_at';
-        $this->hidden[] = 'updated_by';
-        $this->hidden[] = 'item_id';
-        $this->hidden[] = 'person_id';
-        $this->hidden[] = 'isBuy';
-    }
+    protected $casts = ['isBuy' => 'boolean', 'priceChanged' => 'boolean', 'cart' => 'array'];
+    protected $appendWith = ['Person:id,name'];
+    protected $appendHidden = ['updated_at', 'updated_by', 'person_id', 'isBuy'];
 
     public static function boot() {
         parent::boot();
@@ -36,12 +33,33 @@ class Transaction extends baseModel {
         });
     }
     
-    public function Person() {
-        return $this->belongsTo(Person::class);
+    public function getCartAttribute($value) {
+        $Obj = json_decode($value);
+
+        $ids = array_map(function($Cart_Item) {
+            return $Cart_Item->item_id;
+        }, $Obj);
+
+        $Items = Item::select('id', 'delta', 'itemable_id', 'itemable_type')->find($ids)->makeHidden([
+            'mediumSellPrice',
+            'mediumBuyPrice',
+            'totalProfitPrice',
+            'mediumProfitPrice',
+            'expectedTotalProfitPrice'
+        ])->keyBy('id');
+        
+        return array_map(function($Cart_Item) use ($Items) {
+            return [
+                'Item' => $Items[$Cart_Item->item_id],
+                'Quantity' => $Cart_Item->Quantity,
+                'costPerItem' => $Cart_Item->costPerItem,
+                'priceChanged' => $Cart_Item->priceChanged,
+            ];
+        }, $Obj);
     }
 
-    public function Item() {
-        return $this->belongsTo(Item::class);
+    public function Person() {
+        return $this->belongsTo(static::$isBuy ? Vendor::class : Customer::class);
     }
 }
 

@@ -8,19 +8,16 @@ use \App\Models\baseModel;
 class Person extends baseModel {
     protected $fillable = ['name', 'address', 'phone1', 'phone2', 'fax', 'notes'];
     protected $table = 'people';
-
-    public function __construct(array $attributes = []) {
-        parent::__construct($attributes);
-        $this->hidden[] = 'isVendor';
-    }
-
+    protected $appendHidden = ['isVendor'];
+    
     public static function boot() {
         parent::boot();
 
-        static::addGlobalScope('isVendor', function (Builder $builder) {
-            $builder->where('isVendor', static::$isVendor);
-        });
-
+        if (isset(static::$isVendor)) {
+            static::addGlobalScope('isVendor', function (Builder $builder) {
+                $builder->where('isVendor', static::$isVendor);
+            });
+        }
         static::creating(function($model) {
             $model->isVendor = static::$isVendor;
         });

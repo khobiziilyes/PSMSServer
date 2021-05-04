@@ -10,7 +10,16 @@ class baseModel extends Model {
     use FilterQueryString;
     
     protected $filters = ['like'];
-    protected $hidden = ['store_id'];
+    protected $hidden = ['store_id', 'created_by_id', 'updated_by_id'];
+    
+    public function __construct(array $attributes = []) {
+        parent::__construct($attributes);
+        
+        $this->filters = array_merge($this->filters, $this->appendFilters ?? []);
+        $this->with = array_merge($this->with ?? [], $this->appendWith ?? []);
+        $this->appends = array_merge($this->appends ?? [], $this->appendAppends ?? []);
+        $this->hidden = array_merge($this->hidden ?? [], $this->appendHidden ?? []);
+    }
 
     public static function boot() {
         parent::boot();
@@ -22,30 +31,23 @@ class baseModel extends Model {
         static::creating(function($model) {
             $user = Auth::user();
 
-            $model->created_by = $user->id;
-            $model->updated_by = $user->id;
+            $model->created_by_id = $user->id;
+            $model->updated_by_id = $user->id;
 
             $model->store_id = $user->store_id;
         });
         
         static::updating(function($model) {
             $user = Auth::user();
-            $model->updated_by = $user->id;
+            $model->updated_by_id = $user->id;
         });     
     }
 
-    public function getCreatedByAttribute($value){
-        return $this->theAttributes($value);
+    public function created_by() {
+        return $this->hasOne(\App\Models\User::class, 'id', 'created_by_id');
     }
 
-    public function getUpdatedByAttribute($value){
-        return $this->theAttributes($value);
-    }
-
-    public function theAttributes($value){
-        $theUser = User::find($value);
-        if ($theUser) return $theUser->name;
-        
-        return '';
+    public function updated_by() {
+        return $this->hasOne(\App\Models\User::class, 'id', 'updated_by_id');   
     }
 }

@@ -12,10 +12,7 @@ class DatabaseSeeder extends Seeder {
      *
      * @return void
      */
-    public function run() {
-        DB::table('stores')->truncate();
-        DB::table('users')->truncate();
-        
+    public function run() {        
         $theStoreId = DB::table('stores')->insertGetId([
             'name' => 'Walido Store',
             'location' => 'SEG, Bouira',

@@ -36,13 +36,12 @@ trait Traits {
         return $response['id'];
     }
 
-    public function createTransaction($endPoint, $person_id, $item_id, $imei = []) {
+    public function createTransaction($endPoint, $person_id, $item_id) {
         $response = $this->postJson($endPoint, [
             'costPerItem' => 34000,
             'Quantity' => 1,
             'person_id' => $person_id,
-            'item_id' => $item_id,
-            'imei' => $imei
+            'item_id' => $item_id
         ]);
         
         $this->Log('idk', $response->original);

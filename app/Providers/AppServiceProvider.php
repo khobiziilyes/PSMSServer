@@ -2,6 +2,9 @@
 
 namespace App\Providers;
 
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
+
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Database\Schema\Blueprint;
@@ -26,19 +29,23 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot() {
         Schema::defaultStringLength(191);
-
-        Blueprint::macro('users', function(){
-            $this->foreignId('created_by');
-            $this->foreignId('updated_by');
+        
+        Blueprint::macro('users', function() {
+            $this->foreignId('created_by_id');
+            $this->foreignId('updated_by_id');
         });
 
-        Blueprint::macro('usersAndStamps', function(){
+        Blueprint::macro('usersAndStamps', function() {
             $this->timestamps();
             $this->users();
         });
 
         Validator::extendImplicit('emptyOrValid', function ($attribute, $value, $parameters, $validator) {
             return ($value === '' || $value === null || preg_match($parameters[0], $value));
+        });
+
+        Validator::extend('notes', function ($attribute, $value, $parameters, $validator) {
+            return ($value === '' || $value === null || preg_match('/HERE THE NOTES PATTERN/', $value));
         });
 
         Builder::macro('paginateAuto', function ($perPage = null, ...$args) {
@@ -68,17 +75,12 @@ class AppServiceProvider extends ServiceProvider
             if(strlen($value) != 15 || !ctype_digit($value)) return false;
             
             $digits = str_split($value);
-            // Remove last digit, and store it
             $imei_last = array_pop($digits);
-            // Create log
             $log = array();
             
             foreach($digits as $key => $n) {
-                // If key is odd, then count is even
-                if($key & 1){
-                    // Get double digits
+                if ($key & 1){
                     $double = str_split($n * 2);
-                    // Sum double digits
                     $n = array_sum($double);
                 }
                 
