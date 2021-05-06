@@ -51,6 +51,7 @@
         });
 
         Route::apiResource('items', ItemsController::class)->except(['store']);
-        Route::post('items/phone/{Itemable}', [App\Http\Controllers\ItemsController::class, 'storePhoneItem']);
-        Route::post('items/accessory/{Itemable}', [App\Http\Controllers\ItemsController::class, 'storeAccessoryItem']);
+        Route::post('items/{type}/{Itemable}',
+            [App\Http\Controllers\ItemsController::class, 'storeItemable'])
+        ->where(['type' => '(?:phone|accessory)', 'Itemable' => '[0-9]+']);
     //});

@@ -27,10 +27,8 @@ class ItemsController extends baseController {
         return $validationRules;
     }
 
-    public function storePhoneItem(Phone $Itemable) { return $this->storeItemable($Itemable); }
-    public function storeAccessoryItem(Accessory $Itemable) { return $this->storeItemable($Itemable); }
-
-    public function storeItemable($Itemable) {
+    public function storeItemable($type, $Itemable) {
+        $Itemable = ($type === 'phone' ? Phone::class : Accessory::class)::findOrFail($Itemable);
         $normalText = config('app.normalText');
 
         $valArr = $this->getValidationRules($normalText, false, $Itemable->id);

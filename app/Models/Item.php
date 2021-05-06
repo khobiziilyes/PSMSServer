@@ -91,7 +91,7 @@ class Item extends baseModel {
     }
 
     public function transactionPerformed($Quantity, $costPerItem, $isBuy, $destroyed = false) {
-        if ($isBuy === $destroyed) && ($this->currentQuantity < $Quantity)) return false;
+        if (($isBuy === $destroyed) && ($this->currentQuantity < $Quantity)) return false;
         $coefficient = $destroyed ? -1 : 1;
 
         if ($isBuy) return $this->buyPerformed($Quantity, $costPerItem, $coefficient);
