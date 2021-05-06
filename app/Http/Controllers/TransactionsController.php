@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\ValidationException;
+use Illuminate\Support\Facades\DB;
 
 use App\Http\Controllers\baseController;
 
@@ -18,9 +21,16 @@ use App\Models\Transaction;
 use App\Models\Item;
 
 class TransactionsController extends baseController {
-    public $theClass = Transaction::class;
+    protected $theClass = Transaction::class;
+    
+    public function indexQuery() {
+        $query = $this->theClass::query();
+        if (request()->query->has('withTrashed')) $query = $query->withTrashed();
 
-    function getValidationRules($normalText, $isBuy) {
+        return $query;
+    }
+    
+    function getValidationRules($normalText, $isUpdate, $isBuy) {
         $validationRules = [
             'person_id' => 'required|exists:people,id,isVendor,' . ($isBuy ? '1' : '0'),
             'cart' => 'required|array|min:1',
@@ -30,14 +40,6 @@ class TransactionsController extends baseController {
             'notes' => $normalText
         ];
 
-        if (!$isBuy) $validationRules['cart.*'] = function($attribute, $value, $fail) {  
-            $item_id = $value['item_id'] ?? null;
-            $Quantity = $value['Quantity'] ?? null;
-                
-            if (is_null($item_id) || is_null($Quantity)) return $fail('Cart is invalid.');
-            if (Item::findOrFail($item_id)->currentQuantity < $Quantity) return $fail("$Quantity item aren't available.");
-        };
-
         return $validationRules;
     }
 
@@ -45,29 +47,55 @@ class TransactionsController extends baseController {
         $normalText = config('app.normalText');
         $isBuy = $this->theClass::$isBuy;
 
-        $valArr = $this->getValidationRules($normalText, $isBuy);
+        $valArr = $this->getValidationRules($normalText, false, $isBuy);
 
         $validatedData = Validator::make(request()->input(), $valArr)->validate();
 
-        $newCart = [];
-        foreach ($validatedData['cart'] as $cart_item) {
-            $Item = Item::findOrFail($cart_item['item_id']);
-            
-            $cart_item['priceChanged'] = $isBuy ? null : ($cart_item['costPerItem'] !== $Item->defaultPrice);            
-            $Item->transactionPerformed($cart_item['Quantity'], $cart_item['costPerItem'], $isBuy);
-
-            $newCart[] = $cart_item;
-        }
-
-        $theInstance = ($isBuy ? Buy::class : Sell::class)::create([
+        $theInstance = new $this->theClass([
             'person_id' => $validatedData['person_id'],
-            'notes' => $validatedData['notes'] ?? null,
-            'cart' => $newCart
+            'notes' => $validatedData['notes'] ?? null
         ]);
+        
+        DB::transaction(function () use($theInstance, $validatedData, $isBuy) {
+            $theInstance->save();
 
-        $theInstance->save();
+            foreach ($validatedData['cart'] as $i => $cart_item) {
+                $Item = Item::findOrFail($cart_item['item_id']);
+                
+                if (!$isBuy && ($Item->currentQuantity < $cart_item['Quantity'])) 
+                    throw ValidationException::withMessages(["cart.$i.Quantity" => 'This quantity is not available.']);
+
+                $priceChanged = $isBuy ? null : ($cart_item['costPerItem'] !== $Item->defaultPrice);
+                $Item->transactionPerformed($cart_item['Quantity'], $cart_item['costPerItem'], $isBuy);
+
+                $theInstance->Carts()->create([
+                    'item_id' => $cart_item['item_id'],
+                    'Quantity' => $cart_item['Quantity'],
+                    'costPerItem' => $cart_item['costPerItem'],
+                    'priceChanged' => $priceChanged
+                ]);
+            }
+        });
 
         return $theInstance;
+    }
+
+    public function destroyTransaction($Transaction) {
+        DB::transaction(function () use($Transaction) {
+            $isBuy = $Transaction->isBuy;
+
+            $Transaction->Carts->each(function($Cart) use ($isBuy) {
+                $Item = $Cart->Item;
+                $itemCalcsDestroyed = $Item->transactionDestroyed($Cart->Quantity, $Cart->costPerItem, $isBuy);
+
+                if (!$itemCalcsDestroyed)
+                    throw ValidationException::withMessages(["Quantity" => 'This quantity is not available.']);
+            });
+
+            $Transaction->delete();
+        });
+
+        return ['deleted' => true];
     }
 }
 
@@ -75,13 +103,14 @@ class BuyController extends TransactionsController {
     public $theClass = Buy::class;
 
     public function destroyBuy(Buy $Transaction) {
-        ret
+        return $this->destroyTransaction($Transaction);
     }
 }
+
 class SellController extends TransactionsController {
     public $theClass = Sell::class;
 
     public function destroySell(Sell $Transaction) {
-        
+        return $this->destroyTransaction($Transaction);
     }
 }

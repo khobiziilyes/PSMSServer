@@ -4,21 +4,18 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
+
 use Mehradsadeghi\FilterQueryString\FilterQueryString;
 
 class baseModel extends Model {
     use FilterQueryString;
     
     protected $filters = ['like'];
-    protected $hidden = ['store_id', 'created_by_id', 'updated_by_id'];
+    protected $hidden = ['store_id', 'created_by_id', 'updated_by_id', 'created_by_obj', 'updated_by_obj'];
     
     public function __construct(array $attributes = []) {
         parent::__construct($attributes);
-        
-        $this->filters = array_merge($this->filters, $this->appendFilters ?? []);
-        $this->with = array_merge($this->with ?? [], $this->appendWith ?? []);
-        $this->appends = array_merge($this->appends ?? [], $this->appendAppends ?? []);
-        $this->hidden = array_merge($this->hidden ?? [], $this->appendHidden ?? []);
+        $this->hidden = array_merge($this->hidden ?? [], $this->_hidden ?? []);
     }
 
     public static function boot() {
@@ -34,20 +31,37 @@ class baseModel extends Model {
             $model->created_by_id = $user->id;
             $model->updated_by_id = $user->id;
 
-            $model->store_id = $user->store_id;
+            $model->store_id = $user->Store->id;
         });
         
-        static::updating(function($model) {
-            $user = Auth::user();
-            $model->updated_by_id = $user->id;
-        });     
+        static::updating(function ($model) { 
+            $user_id = Auth::user()->id;
+            $model->updated_by_id = $user_id;
+        });
+
+        static::deleting(function($model) {
+            if (!$model->isForceDeleting()) {
+                $user_id = Auth::user()->id;
+                $model->updated_by_id = $user_id;
+
+                $model->save();
+            }
+        });
     }
 
-    public function created_by() {
+    public function created_by_obj() {
         return $this->hasOne(\App\Models\User::class, 'id', 'created_by_id');
     }
 
-    public function updated_by() {
+    public function updated_by_obj() {
         return $this->hasOne(\App\Models\User::class, 'id', 'updated_by_id');   
+    }
+
+    public function getCreatedByAttribute () {
+        return $this->created_by_obj->name;
+    }
+
+    public function getUpdatedByAttribute () {
+        return $this->updated_by_obj->name;
     }
 }

@@ -19,7 +19,7 @@ class CreatePeopleTable extends Migration
             $table->boolean('isVendor');
             $table->string('name');
             $table->string('address')->nullable();
-            $table->string('phone1');
+            $table->string('phone1')->unique();
             $table->string('phone2')->nullable();
             $table->string('fax')->nullable();
             $table->string('notes')->nullable();

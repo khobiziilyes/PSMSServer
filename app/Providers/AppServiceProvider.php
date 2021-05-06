@@ -2,31 +2,17 @@
 
 namespace App\Providers;
 
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Storage;
-
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\ServiceProvider;
 
-class AppServiceProvider extends ServiceProvider
-{
-    /**
-     * Register any application services.
-     *
-     * @return void
-     */
+class AppServiceProvider extends ServiceProvider {
     public function register() {
-        //
+    
     }
 
-    /**
-     * Bootstrap any application services.
-     *
-     * @return void
-     */
     public function boot() {
         Schema::defaultStringLength(191);
         
@@ -50,7 +36,7 @@ class AppServiceProvider extends ServiceProvider
 
         Builder::macro('paginateAuto', function ($perPage = null, ...$args) {
             if ($perPage === null) {
-                $perPage = request()->query('perPage');
+                $perPage = request()->query('per_page');
                 $defaultPerPage = 10;
                 $maxPerPage = 100;
 
@@ -59,18 +45,9 @@ class AppServiceProvider extends ServiceProvider
                 : min((int) $perPage, $maxPerPage);
             }
             
-            $paginator = $this->paginate($perPage, ...$args);
-
-            return [
-                'currentPage' => $paginator->currentPage(),
-                'from' => $paginator->firstItem(),
-                'to' => $paginator->lastItem(),
-                'perPage' => $paginator->count(),
-                'total' => $paginator->total(),
-                'data' => $paginator->items()
-            ];
+            return $this->paginate($perPage, ...$args);
         });
-
+        
         Validator::extendImplicit('imei', function ($attribute, $value, $parameters, $validator) {
             if(strlen($value) != 15 || !ctype_digit($value)) return false;
             

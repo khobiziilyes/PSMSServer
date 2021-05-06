@@ -4,54 +4,94 @@ namespace App\Models;
 
 class Item extends baseModel {
     protected $fillable = ['delta', 'currentQuantity', 'defaultPrice', 'notes'];
-    protected $appendWith = ['itemable:id,name,brand'];
-    
-    protected $appendAppends = [
-        'isPhone',
-        'mediumSellPrice',
-        'mediumBuyPrice',
+    protected $with = ['itemable:id,name,brand'];
+    protected $_hidden = ['itemable_id', 'itemable_type'];
+    static $indexAppends = [
         'totalProfitPrice',
-        'mediumProfitPrice',
-        'expectedTotalProfitPrice'
+
+        'averageBuyPricePerItem',
+        'averageSellPricePerItem',
+        'averageProfitPricePerItem',
+
+        'averageTotalProfitPrice',
+        'currentQuantityBuyWorth',
+        'currentQuantitySellWorth',
+        'ExpectedCurrentQuantityProfitPrice',
+        'expectedTotalProfitPrice',
+        'requiredMinimumPrice',
+
+        'isPhone'
     ];
 
-    protected $appendHidden = ['itemable_id', 'itemable_type'];
-
-    public function Itemable() {
+    public function itemable() {
         return $this->morphTo();
     }
     
     public function getIsPhoneAttribute() {
-        return $this->Itemable->isPhone;
-    }
-
-    public function getMediumSellPriceAttribute() {
-        return $this->generalStatistic('totalSellCost', 'totalSells');
-    }
-
-    public function getMediumBuyPriceAttribute() {
-        return $this->generalStatistic('totalBuyCost', 'totalBuys');
+        return $this->itemable->isPhone;
     }
 
     public function getTotalProfitPriceAttribute() {
         return $this->totalSellCost - $this->totalBuyCost;
     }
 
-    public function getMediumProfitPriceAttribute() {
-        return $this->generalStatistic('totalProfitPrice', 'totalSells');
+    public function getAverageBuyPricePerItemAttribute() {
+        return $this->generalStatistic('totalBuyCost', 'totalBuys');
+    }
+
+    public function getAverageSellPricePerItemAttribute() {
+        return $this->generalStatistic('totalSellCost', 'totalSells');
+    }
+
+    public function getAverageProfitPricePerItemAttribute() {
+        return $this->averageSellPricePerItem - $this->averageBuyPricePerItem;
+    }
+
+    public function getAverageTotalProfitPriceAttribute() {
+        return $this->averageProfitPricePerItem * $this->totalSells;
+    }
+
+    public function getCurrentQuantityBuyWorthAttribute() {
+        return $this->averageBuyPricePerItem * $this->currentQuantity;
+    }
+
+    public function getCurrentQuantitySellWorthAttribute() {
+        return $this->averageSellPricePerItem * $this->currentQuantity;
+    }
+
+    public function getExpectedCurrentQuantityProfitPriceAttribute() {
+        return $this->averageProfitPricePerItem * $this->currentQuantity;
     }
 
     public function getExpectedTotalProfitPriceAttribute() {
-        return ($this->mediumProfitPrice * $this->currentQuantity) + $this->totalProfitPrice;
+        return $this->averageProfitPrice + $this->ExpectedCurrentQuantityProfitPrice;
+    }
+
+    public function getRequiredMinimumPriceAttribute() {
+        return $this->generalStatistic('totalProfitPrice', 'currentQuantity') * -1;
     }
 
     public function generalStatistic($First, $Second) {
         if (is_null($this->$First) || is_null($this->$Second)) return 0;
         if ($this->$Second === 0) return 0;
-        return floor($this->$First / $this->$Second);
+
+        $val = $this->$First / $this->$Second;
+        $val = floor($val);
+        $val /= 10;
+        $val = floor($val);
+        $val *= 10;
+
+        return $val;
     }
     
+    // Those are transactions statistics functions
+
+    public function transactionDestroyed($Quantity, $costPerItem, $isBuy) {
+        return $this->transactionPerformed($Quantity, $costPerItem, $isBuy, true);
+    }
+
     public function transactionPerformed($Quantity, $costPerItem, $isBuy, $destroyed = false) {
+        if ($isBuy === $destroyed) && ($this->currentQuantity < $Quantity)) return false;
         $coefficient = $destroyed ? -1 : 1;
 
         if ($isBuy) return $this->buyPerformed($Quantity, $costPerItem, $coefficient);
@@ -67,8 +107,6 @@ class Item extends baseModel {
     }
 
     public function sellPerformed($Quantity, $costPerItem, $coefficient) {
-        if (($Quantity < 1) || ($this->currentQuantity < $Quantity)) return false;
-
         $this->currentQuantity -= $Quantity * $coefficient;
         $this->totalSells += $Quantity * $coefficient;
         $this->totalSellCost += $Quantity * $costPerItem * $coefficient;

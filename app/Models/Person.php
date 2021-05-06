@@ -8,7 +8,7 @@ use \App\Models\baseModel;
 class Person extends baseModel {
     protected $fillable = ['name', 'address', 'phone1', 'phone2', 'fax', 'notes'];
     protected $table = 'people';
-    protected $appendHidden = ['isVendor'];
+    protected $_hidden = ['isVendor'];
     
     public static function boot() {
         parent::boot();
@@ -18,6 +18,7 @@ class Person extends baseModel {
                 $builder->where('isVendor', static::$isVendor);
             });
         }
+        
         static::creating(function($model) {
             $model->isVendor = static::$isVendor;
         });

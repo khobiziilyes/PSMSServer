@@ -9,7 +9,6 @@ use App\Models\Item;
 class Good extends baseModel {
     protected $fillable = ['name', 'brand', 'notes', 'type_id'];
     protected $table = 'goods';
-    protected $appendAppends = ['isPhone'];
 
     public static function boot() {
         parent::boot();
@@ -28,5 +27,5 @@ class Good extends baseModel {
     }
 }
 
-class Phone extends Good { static $isPhone = true; protected $appendHidden = ['type_id']; }
+class Phone extends Good { static $isPhone = true; protected $_hidden = ['type_id']; }
 class Accessory extends Good { static $isPhone = false; }

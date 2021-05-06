@@ -15,9 +15,6 @@ class CreateTransactionsTable extends Migration
         Schema::create('transactions', function (Blueprint $table) {
             $table->id();
             $table->boolean('isBuy');
-
-            $table->json('cart');
-
             /*
                 $table->integer('costPerItem');
                 $table->integer('Quantity');

@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use App\Models\User;
 
 class Store extends Model {    
-    function Users(){
+    function Users() {
         return $this->hasMany(User::Class);
     }
 }

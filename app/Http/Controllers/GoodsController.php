@@ -9,12 +9,12 @@ use App\Models\Accessory;
 class GoodsController extends baseController {
     protected $beforeDestroy = 'items';
 
-    function getValidationRules($normalText) {
+    function getValidationRules($normalText, $isUpdate) {
         return [
             'name' => $normalText,
             'brand' => $normalText,
             'notes' => $normalText,
-            'type_id' => 'required|numeric|' . ($this->theClass::$isPhone ? '' : 'not_') . 'in:0' // real Validation.
+            'type_id' => 'required|numeric|' . ($this->theClass::$isPhone ? '' : 'not_') . 'in:0'
         ];
     }
 }

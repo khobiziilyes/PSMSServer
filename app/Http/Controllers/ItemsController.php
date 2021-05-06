@@ -13,13 +13,13 @@ class ItemsController extends baseController {
     protected $theClass = Item::class;
     protected $beforeDestroy = 'Transactions';
 
-    function getValidationRules($normalText, $itemable_id = null) {
+    function getValidationRules($normalText, $isUpdate, $itemable_id = null) {
         $validationRules = [
             'defaultPrice' => 'required|integer',
             'notes' => $normalText
         ];
         
-        if (!is_null($itemable_id)) {
+        if (!$isUpdate) {
             $validationRules['delta'] = 'required|integer|between:-3,3|unique:items,delta,NULL,id,itemable_id,' . $itemable_id;
             $validationRules['currentQuantity'] = 'required|integer';
         }
@@ -33,7 +33,7 @@ class ItemsController extends baseController {
     public function storeItemable($Itemable) {
         $normalText = config('app.normalText');
 
-        $valArr = $this->getValidationRules($normalText, $Itemable->id);
+        $valArr = $this->getValidationRules($normalText, false, $Itemable->id);
         $validatedData = Validator::make(request()->input(), $valArr)->validate();
         
         $theInstance = $Itemable->Items()->create($validatedData);

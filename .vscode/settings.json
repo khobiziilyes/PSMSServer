@@ -1,0 +1,23 @@
+{
+    "files.exclude": {
+        "**/.git": true,
+        "**/.svn": true,
+        "**/.hg": true,
+        "**/CVS": true,
+        "**/.DS_Store": true,
+        "vendor": true,
+        "app/Exceptions": true,
+        "app/Console": true,
+        "package-lock.json": true,
+        "bootstrap": true,
+        "storage": true,
+        "resources/css": true,
+        "resources/js": true,
+        "**/resources": true,
+        "**/public": true
+    },
+    "explorerExclude.backup": null,
+    "files.watcherExclude": {
+        "vendor": true
+    }
+}
