@@ -11,7 +11,7 @@ use App\Models\Accessory;
 
 class ItemsController extends baseController {
     protected $theClass = Item::class;
-    protected $beforeDestroy = 'Transactions';
+    protected $beforeDestroy = 'Carts';
 
     function getValidationRules($normalText, $isUpdate, $itemable_id = null) {
         $validationRules = [

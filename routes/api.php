@@ -1,7 +1,6 @@
 <?php
     /*
-        - Updated getValidationRule in baseController to include isUpdate Argument.
-        - Check destroy() property, if useful.
+        - Cart model should use baseModel.
         - Update/Insert validation fields are not the same ... First one aren't required !
 
         - Create common validation rules like: quantity - price ...
@@ -44,7 +43,7 @@
                 'buy' => BuyController::class,
                 'sell' => SellController::class
             ], ['except' => ['update', 'destroy']]);
-
+            
             Route::delete('buy/{Transaction}', [App\Http\Controllers\BuyController::class, 'destroyBuy']);
             Route::delete('sell/{Transaction}', [App\Http\Controllers\SellController::class, 'destroySell']);
             Route::get('/', [App\Http\Controllers\TransactionsController::class, 'index']);

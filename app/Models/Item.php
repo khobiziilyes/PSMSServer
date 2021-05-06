@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Models\Cart;
+
 class Item extends baseModel {
     protected $fillable = ['delta', 'currentQuantity', 'defaultPrice', 'notes'];
     protected $with = ['itemable:id,name,brand'];
@@ -27,6 +29,10 @@ class Item extends baseModel {
         return $this->morphTo();
     }
     
+    public function Carts() {
+        return $this->hasMany(Cart::class);
+    }
+
     public function getIsPhoneAttribute() {
         return $this->itemable->isPhone;
     }

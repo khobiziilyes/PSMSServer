@@ -3,7 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Builder;
-use \App\Models\baseModel;
+use App\Models\baseModel;
 
 class Person extends baseModel {
     protected $fillable = ['name', 'address', 'phone1', 'phone2', 'fax', 'notes'];
