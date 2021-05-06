@@ -36,16 +36,14 @@
         Route::apiResources([
             'phones' => PhonesController::class,
             'accessories' => AccessoriesController::class,
-        ], ['except' => 'store']);
+        ]);
 
         Route::prefix('transactions')->group(function() {
             Route::apiResources([
                 'buy' => BuyController::class,
                 'sell' => SellController::class
-            ], ['except' => ['update', 'destroy']]);
-            
-            Route::delete('buy/{Transaction}', [App\Http\Controllers\BuyController::class, 'destroyBuy']);
-            Route::delete('sell/{Transaction}', [App\Http\Controllers\SellController::class, 'destroySell']);
+            ], ['except' => ['update']]);
+
             Route::get('/', [App\Http\Controllers\TransactionsController::class, 'index']);
         });
 

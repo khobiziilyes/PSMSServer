@@ -57,7 +57,7 @@ class baseController extends Controller {
         return $theInstance;
     }
 
-    function destroy($id) {
+    public function destroy($id) {
         if (property_exists($this, 'beforeDestroy')) {
             $theInstance = $this->theClass::findOrFail($id);
             $beforeDestroy = $this->beforeDestroy;

@@ -80,7 +80,9 @@ class TransactionsController extends baseController {
         return $theInstance;
     }
 
-    public function destroyTransaction($Transaction) {
+    public function destroy($id) {
+        $Transaction = $this->theClass::findOrFail($id);
+
         DB::transaction(function () use($Transaction) {
             $isBuy = $Transaction->isBuy;
 
@@ -99,18 +101,5 @@ class TransactionsController extends baseController {
     }
 }
 
-class BuyController extends TransactionsController {
-    public $theClass = Buy::class;
-
-    public function destroyBuy(Buy $Transaction) {
-        return $this->destroyTransaction($Transaction);
-    }
-}
-
-class SellController extends TransactionsController {
-    public $theClass = Sell::class;
-
-    public function destroySell(Sell $Transaction) {
-        return $this->destroyTransaction($Transaction);
-    }
-}
+class BuyController extends TransactionsController { public $theClass = Buy::class; }
+class SellController extends TransactionsController { public $theClass = Sell::class; }

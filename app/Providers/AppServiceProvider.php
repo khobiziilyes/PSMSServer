@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Database\Schema\Blueprint;
@@ -45,6 +46,14 @@ class AppServiceProvider extends ServiceProvider {
                 : min((int) $perPage, $maxPerPage);
             }
             
+            $currentPage = request()->query('page', null);
+            if (filter_var($currentPage, FILTER_VALIDATE_INT) === false || (int) $currentPage < 0) $currentPage = 1;
+            if ((int) $currentPage === 0) $currentPage = floor($this->count() / $perPage);
+
+            LengthAwarePaginator::currentPageResolver(function () use ($currentPage) {
+                return $currentPage;
+            });
+
             return $this->paginate($perPage, ...$args);
         });
         

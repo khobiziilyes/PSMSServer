@@ -7,9 +7,12 @@ class partTest extends featureBase {
     use Traits;
 
     public function testAnything() {
-        $delete = 6;
+        $delete = 1;
+        $type = 'buy';
 
-        $response = $delete ? $this->deleteJson('/api/transactions/sell/' . $delete) : $this->postJson('/api/transactions/sell', [
+        $endPoint = "/api/transactions/$type";
+
+        $response = $delete ? $this->deleteJson("$endPoint/$delete") : $this->postJson($endPoint, [
             'person_id' => 14,
             'cart' => [
                 [
