@@ -3,7 +3,6 @@
         - Cart model should use baseModel.
         - Update/Insert validation fields are not the same ... First one aren't required !
 
-        - Create common validation rules like: quantity - price ...
         - Fix type_id.
         - https://laravel.com/docs/8.x/authorization
         - Flexy.

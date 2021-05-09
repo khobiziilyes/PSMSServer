@@ -62,6 +62,6 @@ class FlattenedPaginatedResourceResponse extends PaginatedResourceResponse {
      */
     protected function paginationInformation($request) {
         $paginated = $this->resource->resource->toArray();
-        return Arr::only($paginated, ['current_page', 'from', 'to', 'per_page', 'total']);
+        return Arr::only($paginated, ['current_page', 'from', 'to', 'per_page', 'total', 'last_page']);
     }
 }
