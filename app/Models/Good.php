@@ -10,12 +10,24 @@ class Good extends baseModel {
     protected $fillable = ['name', 'brand', 'notes', 'type_id'];
     protected $table = 'goods';
 
+    public function __construct(array $attributes = []) {
+        parent::__construct($attributes);
+        
+        $this->makeHiddenIf(static::$isPhone, [
+            'created_by',
+            'created_at',
+            'updated_by',
+            'updated_at',
+            'notes'
+        ]);
+    }
+
     public static function boot() {
         parent::boot();
          
         static::addGlobalScope('type_id', function (Builder $builder) {
             $builder->where('type_id', (static::$isPhone ? '' : '!' ) . '=', 0);
-        });
+        });    
     }
 
     public function getIsPhoneAttribute() {
@@ -27,5 +39,5 @@ class Good extends baseModel {
     }
 }
 
-class Phone extends Good { static $isPhone = true; protected $_hidden = ['type_id']; }
+class Phone extends Good { static $isPhone = true; }
 class Accessory extends Good { static $isPhone = false; }

@@ -1,13 +1,12 @@
 <?php
     /*
-        - Separate phone model from Goods.
         - Fix type_id.
+        
         - https://laravel.com/docs/8.x/authorization
-        - Flexy.
         - Enable onlyJsonMiddleware.
         - Think about doing calculations on client side.
-        - Not able to sell under requriedMinimumPrice.
-        - not able to change sell price.
+        - sell under requriedMinimumPrice auth.
+        - change sell price auth.
         - https://github.com/leshawn-rice/grabaphone
     */
 
@@ -15,6 +14,13 @@
     
     Illuminate\Support\Facades\Auth::loginUsingId(1);
     
+    Route::prefix('devices')->group(function() {
+        Route::get('search/{term}', [App\Http\Controllers\PhonesScrapController::class, 'searchDevices']);
+        Route::get('specs/{endPoint}', [App\Http\Controllers\PhonesScrapController::class, 'getDeviceSpecs']);
+    });
+
+    Route::get('test', [App\Http\Controllers\PhonesScrapController::class, 'getDeviceSpecs']);
+
     Route::prefix('auth')->group(function () {
         Route::post('login', 'AuthController@login');
         //Route::post('register', 'AuthController@register');
@@ -31,10 +37,9 @@
             'customers' => CustomersController::class,
         ]);
 
-        Route::apiResources([
-            'phones' => PhonesController::class,
-            'accessories' => AccessoriesController::class,
-        ]);
+        Route::apiResource('accessories', PhonesController::class);
+        Route::apiResource('phones', PhonesController::class)->except(['store', 'update', 'destroy']);
+        Route::post('/phones', [App\Http\Controllers\PhonesController::class, 'search']);
 
         Route::prefix('transactions')->group(function() {
             Route::apiResources([
