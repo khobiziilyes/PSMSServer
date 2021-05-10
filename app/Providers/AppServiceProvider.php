@@ -17,6 +17,10 @@ class AppServiceProvider extends ServiceProvider {
     public function boot() {
         Schema::defaultStringLength(191);
         
+        Blueprint::macro('notes', function(){
+            $this->string('notes')->nullable()->default(null);
+        });
+
         Blueprint::macro('users', function() {
             $this->foreignId('created_by_id');
             $this->foreignId('updated_by_id');
@@ -27,13 +31,13 @@ class AppServiceProvider extends ServiceProvider {
             $this->users();
         });
 
-        Validator::extendImplicit('emptyOrValid', function ($attribute, $value, $parameters, $validator) {
-            return ($value === '' || $value === null || preg_match($parameters[0], $value));
-        });
-
+        Validator::extend('name', function ($attribute, $value, $parameters, $validator) {
+            return preg_match('/^[\w\d\- ]{1,30}$/', $value);
+        }, 'The field characters are invalid, Or too long.');
+        
         Validator::extend('notes', function ($attribute, $value, $parameters, $validator) {
-            return ($value === '' || $value === null || preg_match('/HERE THE NOTES PATTERN/', $value));
-        });
+            return ($value === null || preg_match('/^[\w\d\s,.\-\n]{1,250}$/', $value));
+        }, 'The field characters are invalid, Or too long.');
 
         Builder::macro('paginateAuto', function ($perPage = null, ...$args) {
             if ($perPage === null) {

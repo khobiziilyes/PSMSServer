@@ -23,31 +23,30 @@ use App\Models\Item;
 class TransactionsController extends baseController {
     protected $theClass = Transaction::class;
     
+    function getValidationRules($isUpdate, $isBuy) {
+        $validationRules = [
+            'person_id' => 'required|exists:people,id,isVendor,' . ($isBuy ? '1' : '0'),
+            'cart' => 'required|array|min:1',
+            'cart.*.costPerItem' => 'required|integer|min:0',
+            'cart.*.item_id' => 'required|exists:items,id|distinct:strict',
+            'cart.*.Quantity' => 'required|integer|min:1',
+            'notes' => 'notes'
+        ];
+
+        return $validationRules;
+    }
+
     public function indexQuery() {
         $query = $this->theClass::query();
         if (request()->query->has('withTrashed')) $query = $query->withTrashed();
 
         return $query;
     }
-    
-    function getValidationRules($normalText, $isUpdate, $isBuy) {
-        $validationRules = [
-            'person_id' => 'required|exists:people,id,isVendor,' . ($isBuy ? '1' : '0'),
-            'cart' => 'required|array|min:1',
-            'cart.*.costPerItem' => 'required|integer',
-            'cart.*.item_id' => 'required|exists:items,id|distinct:strict',
-            'cart.*.Quantity' => 'required|integer|min:1',
-            'notes' => $normalText
-        ];
-
-        return $validationRules;
-    }
 
     public function store(Request $request) {
-        $normalText = config('app.normalText');
         $isBuy = $this->theClass::$isBuy;
 
-        $valArr = $this->getValidationRules($normalText, false, $isBuy);
+        $valArr = $this->getValidationRules(false, $isBuy);
 
         $validatedData = Validator::make(request()->input(), $valArr)->validate();
 

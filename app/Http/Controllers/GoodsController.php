@@ -9,13 +9,18 @@ use App\Models\Accessory;
 class GoodsController extends baseController {
     protected $beforeDestroy = 'items';
 
-    function getValidationRules($normalText, $isUpdate) {
-        return [
-            'name' => $normalText,
-            'brand' => $normalText,
-            'notes' => $normalText,
-            'type_id' => 'required|numeric|' . ($this->theClass::$isPhone ? '' : 'not_') . 'in:0'
+    function getValidationRules($isUpdate) {
+    	$requiredName = ($isUpdate ? '' : 'required|') . 'name';
+
+        $baseRules = [
+            'name' => $requiredName,
+            'brand' => $requiredName,
+            'notes' => 'notes'
         ];
+
+        if (!$isUpdate) $baseRules['type_id'] = 'required|numeric|' . ($this->theClass::$isPhone ? '' : 'not_') . 'in:0';
+
+        return $baseRules;
     }
 }
 

@@ -1,14 +1,13 @@
 <?php
     /*
-        - Cart model should use baseModel.
-        - Update/Insert validation fields are not the same ... First one aren't required !
-
+        - Separate phone model from Goods.
         - Fix type_id.
         - https://laravel.com/docs/8.x/authorization
         - Flexy.
         - Enable onlyJsonMiddleware.
         - Think about doing calculations on client side.
         - Not able to sell under requriedMinimumPrice.
+        - not able to change sell price.
         - https://github.com/leshawn-rice/grabaphone
     */
 

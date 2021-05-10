@@ -13,25 +13,26 @@ class ItemsController extends baseController {
     protected $theClass = Item::class;
     protected $beforeDestroy = 'Carts';
 
-    function getValidationRules($normalText, $isUpdate, $itemable_id = null) {
-        $validationRules = [
-            'defaultPrice' => 'required|integer',
-            'notes' => $normalText
+    function getValidationRules($isUpdate, $itemable_id = null) {
+        $required = $isUpdate ? '' : 'required|';
+
+        $basicRules = [
+            'defaultPrice' => $required . 'integer|min:0',
+            'notes' => 'notes'
         ];
         
         if (!$isUpdate) {
-            $validationRules['delta'] = 'required|integer|between:-3,3|unique:items,delta,NULL,id,itemable_id,' . $itemable_id;
-            $validationRules['currentQuantity'] = 'required|integer';
+            $basicRules['delta'] = 'required|integer|between:-3,3|unique:items,delta,NULL,id,itemable_id,' . $itemable_id;
+            $basicRules['currentQuantity'] = 'required|integer|min:0';
         }
     
-        return $validationRules;
+        return $basicRules;
     }
 
     public function storeItemable($type, $Itemable) {
         $Itemable = ($type === 'phone' ? Phone::class : Accessory::class)::findOrFail($Itemable);
-        $normalText = config('app.normalText');
-
-        $valArr = $this->getValidationRules($normalText, false, $Itemable->id);
+        
+        $valArr = $this->getValidationRules(false, $Itemable->id);
         $validatedData = Validator::make(request()->input(), $valArr)->validate();
         
         $theInstance = $Itemable->Items()->create($validatedData);

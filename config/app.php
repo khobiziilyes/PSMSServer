@@ -1,6 +1,8 @@
 <?php
 
 return [
+    'nameField' => 'regex:/^[\w\d ]{1,30}$/',
+
     /*
     |--------------------------------------------------------------------------
     | Application Name
@@ -11,7 +13,7 @@ return [
     | any other location as required by the application or its packages.
     |
     */
-    'normalText' => 'regex:/^[ \d\pL\s\-]+$/u|max:255',
+
     'name' => env('APP_NAME', 'Laravel'),
 
     /*

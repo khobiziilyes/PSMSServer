@@ -38,9 +38,8 @@ class baseController extends Controller {
     }
 
     public function createOrUpdate($theDatas, $id = null) {
-        $normalText = config('app.normalText');
-        $valArr = $this->getValidationRules($normalText);
-
+        $valArr = $this->getValidationRules(!is_null($id));
+        
         $validatedData = Validator::make($theDatas, $valArr)->validate();
         
         $theInstance = null;

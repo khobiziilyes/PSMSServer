@@ -18,7 +18,7 @@ class CreateGoodsTable extends Migration
             
             $table->string('name');
             $table->string('brand');
-            $table->string('notes')->nullable();
+            $table->notes();
             $table->integer('type_id');
             
             $table->foreignId('store_id');

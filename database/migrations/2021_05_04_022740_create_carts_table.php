@@ -20,6 +20,9 @@ class CreateCartsTable extends Migration {
             $table->integer('Quantity');
             $table->integer('costPerItem');
             $table->boolean('priceChanged')->nullable();
+
+            $table->foreignId('store_id');
+            $table->usersAndStamps();
         });
     }
 

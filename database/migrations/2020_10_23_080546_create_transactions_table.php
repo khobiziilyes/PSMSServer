@@ -15,16 +15,9 @@ class CreateTransactionsTable extends Migration
         Schema::create('transactions', function (Blueprint $table) {
             $table->id();
             $table->boolean('isBuy');
-            /*
-                $table->integer('costPerItem');
-                $table->integer('Quantity');
-                $table->boolean('priceChanged')->nullable();
-                $table->foreignId('item_id');
-            */
-
             $table->foreignId('person_id');
 
-            $table->string('notes')->nullable();
+            $table->notes();
             
             $table->softDeletes();
             $table->foreignId('store_id');
