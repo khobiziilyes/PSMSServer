@@ -9,7 +9,7 @@ use App\Models\Item;
 class Cart extends baseModel {
     protected $fillable = ['Quantity', 'costPerItem', 'item_id', 'priceChanged'];
     protected $casts = ['priceChanged' => 'boolean'];
-    protected $_hidden = ['id', 'transaction_id', 'item_id'];
+    protected $_hidden = ['id', 'transaction_id', 'item_id', 'created_at', 'updated_at'];
     protected $with = ['item:id,delta,itemable_id,itemable_type'];
 
     public function Item() {
@@ -17,6 +17,6 @@ class Cart extends baseModel {
     }
 
     public function Transaction() {
-    	return $this->belongsTo(Transaction::class, 'id', 'transaction_id');
+    	return $this->belongsTo(Transaction::class, 'transaction_id', 'id');
     }
 }

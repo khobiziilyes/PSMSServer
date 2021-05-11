@@ -14,6 +14,7 @@ class Good extends baseModel {
         parent::__construct($attributes);
         
         $this->makeHiddenIf(static::$isPhone, [
+            'type_id',
             'created_by',
             'created_at',
             'updated_by',

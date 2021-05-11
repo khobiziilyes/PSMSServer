@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
@@ -20,18 +19,26 @@ use App\Models\Sell;
 
 use App\Models\Transaction;
 use App\Models\Item;
+use App\Models\Cart;
+
+use App\Models\Phone;
+use App\Models\Accessory;
 
 class TransactionsController extends baseController {
     protected $theClass = Transaction::class;
     protected $withTrashed = true;
-        
+    
+    public function indexQuery() {
+        return Transaction::with['Carts'];
+    }
+    
     function getValidationRules($isUpdate, $isBuy) {
         $validationRules = [
             'person_id' => 'required|exists:people,id,isVendor,' . ($isBuy ? '1' : '0'),
             'cart' => 'required|array|min:1',
-            'cart.*.costPerItem' => 'required|integer|min:0',
-            'cart.*.item_id' => 'required|exists:items,id|distinct:strict',
-            'cart.*.Quantity' => 'required|integer|min:1',
+            'cart.*.0' => 'required|exists:items,id|distinct:strict',
+            'cart.*.1.*.0' => 'required|integer|min:0',
+            'cart.*.1.*.1' => 'required|integer|min:1',
             'notes' => 'notes'
         ];
 
@@ -42,32 +49,36 @@ class TransactionsController extends baseController {
         $isBuy = $this->theClass::$isBuy;
 
         $valArr = $this->getValidationRules(false, $isBuy);
-
         $validatedData = Validator::make(request()->input(), $valArr)->validate();
 
-        $theInstance = new $this->theClass([
-            'person_id' => $validatedData['person_id'],
-            'notes' => $validatedData['notes'] ?? null
-        ]);
+        $theInstance = new $this->theClass(Arr::except($validatedData, ['cart']));
         
         DB::transaction(function () use($theInstance, $validatedData, $isBuy) {
             $theInstance->save();
 
-            foreach ($validatedData['cart'] as $i => $cart_item) {
-                $Item = Item::findOrFail($cart_item['item_id']);
+            foreach ($validatedData['cart'] as $cart_item_group) {
+                $Item = Item::findOrFail($cart_item_group[0]);
+                $carts_item = $cart_item_group[1];
                 
-                if (!$isBuy && ($Item->currentQuantity < $cart_item['Quantity'])) 
-                    throw ValidationException::withMessages(["cart.$i.Quantity" => 'This quantity is not available.']);
+                $totalQuantity = array_sum(array_map(function($Arr) {
+                    return $Arr[1];
+                }, $carts_item));
+                
+                if (!$isBuy && ($Item->currentQuantity < $totalQuantity)) 
+                    throw ValidationException::withMessages(["Quantity" => 'This quantity is not available.']);
 
-                $priceChanged = $isBuy ? null : ($cart_item['costPerItem'] !== $Item->defaultPrice);
-                $Item->transactionPerformed($cart_item['Quantity'], $cart_item['costPerItem'], $isBuy);
+                foreach ($carts_item as $cart_item) {
+                    $priceChanged = $isBuy ? null : ($cart_item[0] !== $Item->defaultPrice);
+                    
+                    $Item->transactionPerformed($cart_item[1], $cart_item[0], $isBuy);
 
-                $theInstance->Carts()->create([
-                    'item_id' => $cart_item['item_id'],
-                    'Quantity' => $cart_item['Quantity'],
-                    'costPerItem' => $cart_item['costPerItem'],
-                    'priceChanged' => $priceChanged
-                ]);
+                    $theInstance->Carts()->create([
+                        'item_id' => $Item->id,
+                        'Quantity' => $cart_item[1],
+                        'costPerItem' => $cart_item[0],
+                        'priceChanged' => $priceChanged
+                    ]);
+                }
             }
         });
 
@@ -92,6 +103,34 @@ class TransactionsController extends baseController {
         });
 
         return ['deleted' => true];
+    }
+
+    public function getItemsTransactions($items_ids) {
+        $transactions_ids = DB::table('carts')->whereIn('item_id', $items_ids)->pluck('transaction_id')->toArray();
+        $transactions_ids = array_unique($transactions_ids);
+        
+        $query = Transaction::where('id', $transactions_ids);
+        
+        return $this->paginateQuery($query);
+    }
+
+    public function getGoodTransactions($good) {
+        $items_ids = $good->Items->toArray();
+        $items_ids = Arr::pluck($items_ids, 'id');
+
+        return $this->getItemsTransactions($items_ids);
+    }
+
+    public function indexItem(Item $item) {
+        return $this->getItemsTransactions([$item->id]);
+    }
+
+    public function indexPhone(Phone $phone) {
+        return $this->getGoodTransactions($phone);
+    }
+
+    public function indexAccessory(Accessory $accessory) {
+        return $this->getGoodTransactions($accessory);
     }
 }
 

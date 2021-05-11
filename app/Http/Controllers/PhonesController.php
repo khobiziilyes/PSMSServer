@@ -22,8 +22,11 @@ class PhonesController extends PhonesScrapController {
             $devices = $this->searchDevices($query);
             if (count($devices) === 0) return [];
 
-            foreach ($devices as $device) 
-                new Phone(array_merge($device, ['type_id' => 0]));
+            foreach ($devices as $device) {
+                $newPhone = Phone::create(array_merge($device, ['type_id' => 0]));
+                $newPhone->store_id = 0;
+                $newPhone->save();
+            }
         }
         
         return $devicesDB->get();

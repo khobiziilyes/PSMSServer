@@ -1,10 +1,6 @@
 <?php
     /*
-        - What if he wants to sell 1 item for different prices.
-        - Should really Cart model use baseModel ?
-        - Phones created by Scraping has store_id = 0.
-        - Show records with store_id = 0.
-        
+        - Make sure every index method is paginated.
         - Think about doing calculations on client side.
         
         - Enable onlyJsonMiddleware.
@@ -15,7 +11,7 @@
 
     use Illuminate\Support\Facades\Route;
     
-    //Illuminate\Support\Facades\Auth::loginUsingId(1);
+    Illuminate\Support\Facades\Auth::loginUsingId(1);
 
     Route::prefix('auth')->group(function () {
         Route::post('login', 'AuthController@login');
@@ -44,6 +40,9 @@
             ], ['except' => ['update']]);
 
             Route::get('/', [App\Http\Controllers\TransactionsController::class, 'index']);
+            Route::get('/item/{item}', [App\Http\Controllers\TransactionsController::class, 'indexItem']);
+            Route::get('/phone/{phone}', [App\Http\Controllers\TransactionsController::class, 'indexPhone']);
+            Route::get('/accessory/{accessory}', [App\Http\Controllers\TransactionsController::class, 'indexAccessory']);
         });
 
         Route::apiResource('items', ItemsController::class)->except(['store']);

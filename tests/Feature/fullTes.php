@@ -11,7 +11,7 @@ class fullTest extends featureBase {
     public $transactions_endPoint = '/api/transactions/';
     public $people_endPoint = '/api/';
 
-    protected $cleanUp = true;
+    protected $cleanUp = false;
 
     public function testPeople() {
         foreach (['vendors', 'customers'] as $type) {
@@ -30,7 +30,7 @@ class fullTest extends featureBase {
     public function testAccessories() {
         $accessories_endPoint = $this->accessories_endPoint;
         
-        $accessory_id = $this->createAccessory($accessories_endPoint, 1);
+        $accessory_id = $this->createAccessory($accessories_endPoint);
         $this->checkExists($accessories_endPoint, $accessory_id);
 
         if ($this->cleanUp) {
@@ -42,7 +42,7 @@ class fullTest extends featureBase {
     public function testItems() {
         foreach (['phone', 'accessory'] as $i => $type) {
             $items_endPoint = $this->items_endPoint . $type . '/';
-            $item_id = $this->createItem($items_endPoint, $i + 1, 3500 * (10 ^ $i));
+            $item_id = $this->createItem($items_endPoint, $i + 1, 3500 * 10 ** $i);
             
             $this->checkExists($this->items_endPoint, $item_id);
 
@@ -53,20 +53,13 @@ class fullTest extends featureBase {
         }
     }
 
-    public function transactions() {
-        $transactions_endPoint = $this->transactions_endPoint;
-        $transaction_id = $this->createTransaction($transactions_endPoint . 'buy/', 13, 3,
-            [
-                '867142047842606',
-                //'867142048042602'
-            ]
-        );
-        
-        $transaction_id = $this->createTransaction($transactions_endPoint . 'sell/', 14, 3,
-            [
-                //'867142047842606',
-                '867142048042602'
-            ]
-        );
+    public function testTransactions() {
+        foreach(['buy', 'sell'] as $i => $operations_type) {
+            $transactions_endPoint = $this->transactions_endPoint . $operations_type . '/';
+            $transaction_id = $this->createTransaction($transactions_endPoint, $i + 1);
+
+            if ($this->cleanUp)
+                $this->performDelete($transactions_endPoint, $transaction_id);
+        }
     }
 }

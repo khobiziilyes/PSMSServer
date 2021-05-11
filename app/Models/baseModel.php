@@ -23,6 +23,7 @@ class baseModel extends Model {
 
         static::addGlobalScope('store_id', function (Builder $builder) {
             $builder->where('store_id', auth()->user()->Store->id);
+            if (in_array(strtoupper(request()->method()), ['GET', 'HEAD', 'POST'])) $builder->orWhere('store_id', 0);
         });
 
         static::creating(function($model) {
@@ -31,7 +32,7 @@ class baseModel extends Model {
             $model->created_by_id = $user->id;
             $model->updated_by_id = $user->id;
 
-            $model->store_id = $user->Store->id;
+            if (is_null($model->store_id)) $model->store_id = $user->Store->id;
         });
         
         static::updating(function ($model) { 

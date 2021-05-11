@@ -12,12 +12,12 @@ trait Traits {
         return $response['id'];
     }
 
-    public function createAccessory($endPoint, $type_id) {
+    public function createAccessory($endPoint) {
         $response = $this->postJson($endPoint, [
-            'name' => 'Galaxy S4',
+            'name' => 'Wirless Earphone',
             'brand' => 'Samsung',
             'notes' => 'Nothing to say',
-            'type_id' => $type_id
+            'type_id' => 1
         ]);
         
         return $response['id'];
@@ -33,20 +33,22 @@ trait Traits {
         return $response['id'];
     }
 
-    public function createTransaction($endPoint, $person_id, $item_id) {
+    public function createTransaction($endPoint, $person_id) {
         $response = $this->postJson($endPoint, [
             'person_id' => $person_id,
             'cart' => [
-                [
-                    'item_id' => 1,
-                    'Quantity' => 1,
-                    'costPerItem' => 40000 
+                [1, [
+                        [35000, 1],
+                        [34000, 2]
+                    ]
+                ],
+                [2, [
+                        [1000, 2]
+                    ]
                 ]
             ]
         ]);
         
-        $this->Log('idk', $response->original);
-
         return $response['id'];
     }
 }

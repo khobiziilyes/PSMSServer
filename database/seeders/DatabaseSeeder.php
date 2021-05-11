@@ -16,7 +16,6 @@ class DatabaseSeeder extends Seeder {
         $time = new \DateTime(now());
 
         $atby = [
-            'store_id' => 1,
             'created_at' => $time,
             'updated_at' => $time,
             'created_by_id' => 1,
@@ -46,14 +45,16 @@ class DatabaseSeeder extends Seeder {
         DB::table('goods')->insert(array_merge([
             'name' => 'Redmi Note 7',
             'brand' => 'Xiaomi',
-            'type_id' => 0
+            'type_id' => 0,
+            'store_id' => 0
         ], $atby));
 
         DB::table('goods')->insert(array_merge([
             'name' => 'AntiShock',
             'brand' => 'Gorilla',
             'type_id' => 1,
-            'notes' => 'Some notes to test'
+            'notes' => 'Some notes to test',
+            'store_id' => 0
         ], $atby));
 
         DB::table('items')->insert(array_merge([
@@ -65,7 +66,8 @@ class DatabaseSeeder extends Seeder {
             'totalBuyCost' => 0,
             'totalSellCost' => 0,
             'totalBuys' => 0,
-            'totalSells' => 0
+            'totalSells' => 0,
+            'store_id' => 1
         ], $atby));
 
         DB::table('items')->insert(array_merge([
@@ -77,7 +79,8 @@ class DatabaseSeeder extends Seeder {
             'totalBuyCost' => 0,
             'totalSellCost' => 0,
             'totalBuys' => 0,
-            'totalSells' => 0
+            'totalSells' => 0,
+            'store_id' => 1
         ], $atby));
 
         DB::table('people')->insert(array_merge([
@@ -87,6 +90,7 @@ class DatabaseSeeder extends Seeder {
             'phone1' => '0799244496',
             'phone2' => null,
             'fax' => null,
+            'store_id' => 0
         ], $atby));
 
         DB::table('people')->insert(array_merge([
@@ -96,6 +100,7 @@ class DatabaseSeeder extends Seeder {
             'phone1' => '0799244496',
             'phone2' => null,
             'fax' => null,
+            'store_id' => 0
         ], $atby));
     }
 }
