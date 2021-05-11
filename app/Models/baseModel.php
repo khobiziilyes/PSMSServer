@@ -40,12 +40,10 @@ class baseModel extends Model {
         });
 
         static::deleting(function($model) {
-            if (!$model->isForceDeleting()) {
-                $user_id = Auth::user()->id;
-                $model->updated_by_id = $user_id;
+            $user_id = Auth::user()->id;
+            $model->updated_by_id = $user_id;
 
-                $model->save();
-            }
+            $model->save();
         });
     }
 

@@ -35,6 +35,13 @@ class Transaction extends baseModel {
         static::creating(function($model) {
             $model->isBuy = static::$isBuy;
         });
+
+        static::deleting(function($model) {
+            $user_id = Auth::user()->id;
+            $model->updated_by_id = $user_id;
+
+            $model->save();
+        });
     }
     
     public function Carts() {

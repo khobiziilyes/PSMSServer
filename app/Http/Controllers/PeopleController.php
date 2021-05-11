@@ -2,11 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\ControllersTraits;
+
 use App\Http\Controllers\baseController;
 use App\Models\Vendor;
 use App\Models\Customer;
 
 class PeopleController extends baseController {
+    use ControllersTraits\storeModel;
+    use ControllersTraits\updateModel;
+    use ControllersTraits\destroyModel;
+    
     protected $beforeDestroy = 'transactions';
 
     function getValidationRules($isUpdate) {

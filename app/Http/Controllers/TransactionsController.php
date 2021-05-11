@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
@@ -22,7 +23,8 @@ use App\Models\Item;
 
 class TransactionsController extends baseController {
     protected $theClass = Transaction::class;
-    
+    protected $withTrashed = true;
+        
     function getValidationRules($isUpdate, $isBuy) {
         $validationRules = [
             'person_id' => 'required|exists:people,id,isVendor,' . ($isBuy ? '1' : '0'),
@@ -34,13 +36,6 @@ class TransactionsController extends baseController {
         ];
 
         return $validationRules;
-    }
-
-    public function indexQuery() {
-        $query = $this->theClass::query();
-        if (request()->query->has('withTrashed')) $query = $query->withTrashed();
-
-        return $query;
     }
 
     public function store(Request $request) {

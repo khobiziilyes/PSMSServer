@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\ControllersTraits;
+
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 
@@ -10,6 +12,9 @@ use App\Models\Phone;
 use App\Models\Accessory;
 
 class ItemsController extends baseController {
+    use ControllersTraits\updateModel;
+    use ControllersTraits\destroyModel;
+    
     protected $theClass = Item::class;
     protected $beforeDestroy = 'Carts';
 

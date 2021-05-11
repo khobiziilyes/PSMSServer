@@ -6,15 +6,14 @@ use Tests\Feature\Traits;
 class fullTest extends featureBase {
     use Traits;
 
-    public $goods_endPoint = '/api/goods/';
+    public $accessories_endPoint = '/api/accessories/';
     public $items_endPoint = '/api/items/';
     public $transactions_endPoint = '/api/transactions/';
+    public $people_endPoint = '/api/';
 
-    protected $cleanUp = false;
-    
+    protected $cleanUp = true;
+
     public function testPeople() {
-        public $people_endPoint = '/api/people/';
-
         foreach (['vendors', 'customers'] as $type) {
             $people_endPoint = $this->people_endPoint . $type . '/';
 
@@ -28,28 +27,33 @@ class fullTest extends featureBase {
         }
     }
 
-    public function testItem() {
-        foreach (['accessories', 'phones'] as $type) {
-            $goods_endPoint = $this->goods_endPoint . $type . '/';
-            $items_endPoint = $this->items_endPoint;
-            
-            $good_id = $this->createGood($goods_endPoint, ($type === 'phones') ? '0' : '1');
-            $this->checkExists($goods_endPoint, $good_id);
+    public function testAccessories() {
+        $accessories_endPoint = $this->accessories_endPoint;
+        
+        $accessory_id = $this->createAccessory($accessories_endPoint, 1);
+        $this->checkExists($accessories_endPoint, $accessory_id);
 
-            $item_id = $this->createItem($items_endPoint, $good_id);
-            $this->checkExists($items_endPoint, $item_id);
+        if ($this->cleanUp) {
+            $this->performDelete($accessories_endPoint, $accessory_id);
+            $this->checkDeleted($accessories_endPoint, $accessory_id);
+        }
+    }
+
+    public function testItems() {
+        foreach (['phone', 'accessory'] as $i => $type) {
+            $items_endPoint = $this->items_endPoint . $type . '/';
+            $item_id = $this->createItem($items_endPoint, $i + 1, 3500 * (10 ^ $i));
+            
+            $this->checkExists($this->items_endPoint, $item_id);
 
             if ($this->cleanUp) {
-                $this->performDelete($items_endPoint, $item_id);
-                $this->checkDeleted($items_endPoint, $item_id);
-
-                $this->performDelete($goods_endPoint, $good_id);
-                $this->checkDeleted($goods_endPoint, $good_id);
+                $this->performDelete($this->items_endPoint, $item_id);
+                $this->checkDeleted($this->items_endPoint, $item_id);
             }
         }
     }
 
-    public function testTransaction() {
+    public function transactions() {
         $transactions_endPoint = $this->transactions_endPoint;
         $transaction_id = $this->createTransaction($transactions_endPoint . 'buy/', 13, 3,
             [

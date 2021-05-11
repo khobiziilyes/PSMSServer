@@ -12,17 +12,20 @@ class PhonesScrapController extends baseController {
     public function searchDevices($term) {
     	try {
             $response = Http::timeout(5)->get('https://www.droidafrica.net/wp-admin/admin-ajax.php?action=aps-search&num=999&search=' . urlencode($term));
-        	$response = $response->json();
-            
-            if (isset($response['not'])) return [];
+        	
+            if ($response->successful()) {
+                $response = $response->json();
+                
+                if (!is_array($response) || isset($response['not'])) return [];
 
-        	$devices = array_map(function($HTML) {
-        		return $this->formatDevice($HTML);
-        	}, $response);
+            	$devices = array_map(function($HTML) {
+            		return $this->formatDevice($HTML);
+            	}, $response);
 
-        	$devices = Arr::except($devices, ['more']);
+            	$devices = Arr::except($devices, ['more']);
 
-        	return $devices;
+            	return $devices;
+            }
         } catch (\Exception $ex) {}
 
         return [];

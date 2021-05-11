@@ -12,36 +12,37 @@ trait Traits {
         return $response['id'];
     }
 
-    public function createGood($endPoint, $type_id) {
+    public function createAccessory($endPoint, $type_id) {
         $response = $this->postJson($endPoint, [
-            'name' => 'Redmi note 7',
-            'brand' => 'Xiaomi',
-            'notes' => 'Nothing',
+            'name' => 'Galaxy S4',
+            'brand' => 'Samsung',
+            'notes' => 'Nothing to say',
             'type_id' => $type_id
         ]);
         
         return $response['id'];
     }
 
-    public function createItem($endPoint, $good_id) {
-        $response = $this->postJson($endPoint, [
-            'good_id' => $good_id,
-            'delta' => '0',
+    public function createItem($endPoint, $good_id, $defaultPrice) {
+        $response = $this->postJson($endPoint . $good_id, [
+            'delta' => 1,
             'currentQuantity' => 0,
-            'defaultPrice' => 35000
+            'defaultPrice' => $defaultPrice
         ]);
         
-        $this->Log('idk', $response->original);
-
         return $response['id'];
     }
 
     public function createTransaction($endPoint, $person_id, $item_id) {
         $response = $this->postJson($endPoint, [
-            'costPerItem' => 34000,
-            'Quantity' => 1,
             'person_id' => $person_id,
-            'item_id' => $item_id
+            'cart' => [
+                [
+                    'item_id' => 1,
+                    'Quantity' => 1,
+                    'costPerItem' => 40000 
+                ]
+            ]
         ]);
         
         $this->Log('idk', $response->original);

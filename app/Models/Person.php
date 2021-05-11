@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Builder;
 use App\Models\baseModel;
+use App\Models\Transaction;
 
 class Person extends baseModel {
     protected $fillable = ['name', 'address', 'phone1', 'phone2', 'fax', 'notes'];
@@ -22,6 +23,10 @@ class Person extends baseModel {
         static::creating(function($model) {
             $model->isVendor = static::$isVendor;
         });
+    }
+
+    public function Transactions() {
+        return $this->hasMany(Transaction::class, 'person_id');
     }
 }
 
