@@ -15,12 +15,21 @@ class CreateUsersTable extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
+            
             $table->string('phone_number');
             $table->string('name');
-            $table->foreignId('store_id');
             $table->string('password');
+            $table->boolean('isAdmin')->default(0);
+
+            $table->foreignId('store_id');
             $table->rememberToken();
             $table->timestamps();
+
+            foreach (['vendors', 'customers', 'accessories', 'items', 'phones', 'buy', 'sell'] as $model) {
+                foreach (['I', 'O'] as $method) {
+                    $table->boolean('can' . $method . $model)->default(false);
+                }
+            }
         });
     }
 

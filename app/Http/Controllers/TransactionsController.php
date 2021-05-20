@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
@@ -46,6 +47,8 @@ class TransactionsController extends baseController {
     }
 
     public function store(Request $request) {
+        Gate::authorize('can', ['C', $this->modelName]);
+
         $isBuy = $this->theClass::$isBuy;
 
         $valArr = $this->getValidationRules(false, $isBuy);
@@ -86,6 +89,8 @@ class TransactionsController extends baseController {
     }
 
     public function destroy($id) {
+        Gate::authorize('can', ['D', $this->modelName]);
+
         $Transaction = $this->theClass::findOrFail($id);
 
         DB::transaction(function () use($Transaction) {
@@ -106,6 +111,8 @@ class TransactionsController extends baseController {
     }
 
     public function getItemsTransactions($items_ids) {
+        Gate::authorize('can', ['R', $this->modelName]);
+
         $transactions_ids = DB::table('carts')->whereIn('item_id', $items_ids)->pluck('transaction_id')->toArray();
         $transactions_ids = array_unique($transactions_ids);
         
@@ -121,10 +128,6 @@ class TransactionsController extends baseController {
         return $this->getItemsTransactions($items_ids);
     }
 
-    public function indexItem(Item $item) {
-        return $this->getItemsTransactions([$item->id]);
-    }
-
     public function indexPhone(Phone $phone) {
         return $this->getGoodTransactions($phone);
     }
@@ -132,7 +135,11 @@ class TransactionsController extends baseController {
     public function indexAccessory(Accessory $accessory) {
         return $this->getGoodTransactions($accessory);
     }
+
+    public function indexItem(Item $item) {
+        return $this->getItemsTransactions([$item->id]);
+    }
 }
 
-class BuyController extends TransactionsController { public $theClass = Buy::class; }
-class SellController extends TransactionsController { public $theClass = Sell::class; }
+class BuyController extends TransactionsController { public $theClass = Buy::class; protected $modelName = 'buy'; }
+class SellController extends TransactionsController { public $theClass = Sell::class; protected $modelName = 'sell'; }

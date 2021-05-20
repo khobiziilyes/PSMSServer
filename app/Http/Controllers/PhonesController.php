@@ -9,7 +9,8 @@ use App\Models\Phone;
 
 class PhonesController extends PhonesScrapController {
     protected $theClass = Phone::class;
-
+    protected $modelName = 'phones';
+    
     public function search(Request $request) {
         $validatedData = Validator::make($request->input(), [
             'query' => 'required|regex:/^[\w\d ]+$/'

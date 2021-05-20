@@ -14,7 +14,8 @@ class AccessoriesController extends baseController {
 
     protected $beforeDestroy = 'items';
     protected $theClass = Accessory::class;
-
+    protected $modelName = 'accessories';
+    
     function getValidationRules($isUpdate) {
     	$requiredName = ($isUpdate ? '' : 'required|') . 'name';
 

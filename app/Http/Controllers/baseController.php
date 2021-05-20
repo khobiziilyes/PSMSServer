@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Http\Request;
 use App\Http\Resources\AppendablePaginator;
 
@@ -11,6 +12,8 @@ class baseController extends Controller {
     }
 
     public function index(Request $request) {
+        Gate::authorize('can', ['R', $this->modelName]);
+
         $query = $this->indexQuery();
         if (($this->withTrashed ?? false) && $request->query->has('withTrashed')) $query->withTrashed();
         
@@ -31,6 +34,7 @@ class baseController extends Controller {
     }
     
     public function show($id) {
+        Gate::authorize('can', ['R', $this->modelName]);
         return $this->theClass::findOrFail($id);
     }
 }

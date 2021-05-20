@@ -1,6 +1,7 @@
 <?php
     /*
-        - Make sure every index method is paginated.
+        - Filters
+        - Edit users scopes.
         - Think about doing calculations on client side.
         
         - Enable onlyJsonMiddleware.
@@ -8,7 +9,7 @@
         - https://laravel.com/docs/8.x/deployment
         - https://laravel.com/docs/8.x/passport#deploying-passport
     */
-
+    
     use Illuminate\Support\Facades\Route;
     
     Illuminate\Support\Facades\Auth::loginUsingId(1);

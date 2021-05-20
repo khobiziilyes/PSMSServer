@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\ControllersTraits;
 
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 
@@ -17,6 +18,7 @@ class ItemsController extends baseController {
     
     protected $theClass = Item::class;
     protected $beforeDestroy = 'Carts';
+    protected $modelName = 'items';
 
     function getValidationRules($isUpdate, $itemable_id = null) {
         $required = $isUpdate ? '' : 'required|';
@@ -35,6 +37,8 @@ class ItemsController extends baseController {
     }
 
     public function storeItemable($type, $Itemable) {
+        Gate::authorize('can', ['C', $this->modelName]);
+        
         $Itemable = ($type === 'phone' ? Phone::class : Accessory::class)::findOrFail($Itemable);
         
         $valArr = $this->getValidationRules(false, $Itemable->id);

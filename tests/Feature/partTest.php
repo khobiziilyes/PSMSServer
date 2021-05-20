@@ -7,7 +7,7 @@ class partTest extends featureBase {
     use Traits;
 
     public function testEdit() {
-        $response = $this->postJson('/api/phones', ['query' => 'Redmi Note 10']);
+        $response = $this->postJson('/api/vendors', ['query' => 'Redmi Note 10']);
         $this->Log('idk', $response->json());
     }
 

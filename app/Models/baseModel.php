@@ -5,12 +5,8 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 
-use Mehradsadeghi\FilterQueryString\FilterQueryString;
-
 class baseModel extends Model {
-    use FilterQueryString;
-    
-    protected $filters = ['like'];
+
     protected $hidden = ['store_id', 'created_by_id', 'updated_by_id', 'created_by_obj', 'updated_by_obj'];
     
     public function __construct(array $attributes = []) {
