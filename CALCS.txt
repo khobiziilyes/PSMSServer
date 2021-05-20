@@ -1,19 +1,12 @@
-BE SURE THAT USER CANNOT CONVERT A PHONE TO A ACCESSORY / Vendor to Customer / Buy to Sell ...
-Separate between fonoApi and user using (created_by).
-ACCESSORY TYPE ID.
-fonoApi
-Social Media Share
-Store Website
-
 FILTERS:
     OPERATION TYPE
+    PERSON ID
+    GOOD ID
+    ITEM ID
+    GOOD TYPE
+    
     TIME
     USER ID
-    PERSON ID
-    ITEM TYPE
-    ITEM ID
-    DELTA
-    GOOD ID
 
 FIELDS:
     OPERATIONS COUNT

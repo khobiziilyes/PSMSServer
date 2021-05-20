@@ -52,6 +52,10 @@ class Transaction extends baseModel {
     public function Person() {
         return $this->belongsTo(Person::class);
     }
+
+    public function modelFilter() {
+        return $this->provideFilter(\App\ModelFilters\TransactionFilter::class);
+    }
 }
 
 class Buy extends Transaction { static $isBuy = true; }

@@ -6,24 +6,28 @@ use Tests\Feature\Traits;
 class partTest extends featureBase {
     use Traits;
 
-    public function testEdit() {
+    public function search() {
         $response = $this->postJson('/api/vendors', ['query' => 'Redmi Note 10']);
         $this->Log('idk', $response->json());
     }
 
-    public function does() {
+    public function testA() {
         $delete = false;
         $type = 'buy';
 
         $endPoint = "/api/transactions/$type";
 
         $response = $delete ? $this->deleteJson("$endPoint/$delete") : $this->postJson($endPoint, [
-            'person_id' => 13,
+            'person_id' => 1,
             'cart' => [
-                [
-                    'item_id' => 6,
-                    'costPerItem' => 38670,
-                    'Quantity' => 3
+                /*[1, [
+                        [35000, 1],
+                        [34000, 2]
+                    ]
+                ],*/
+                [2, [
+                        [1000, 2]
+                    ]
                 ]
             ]
         ]);

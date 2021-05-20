@@ -1,9 +1,15 @@
 <?php
     /*
-        - Filters
+        - Separete Phones and Goods table.
+        - Maybe remove buy/sell models.
+        - Accessories should have "for_phone".
+        
         - Edit users scopes.
         - Think about doing calculations on client side.
         
+        - Social Media Share
+        - Store Website
+
         - Enable onlyJsonMiddleware.
         
         - https://laravel.com/docs/8.x/deployment

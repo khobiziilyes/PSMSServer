@@ -9,6 +9,7 @@ use App\Models\Item;
 class Good extends baseModel {
     protected $fillable = ['name', 'brand', 'notes', 'type_id'];
     protected $table = 'goods';
+    protected $appends = ['isPhone'];
 
     public function __construct(array $attributes = []) {
         parent::__construct($attributes);

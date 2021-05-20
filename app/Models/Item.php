@@ -22,7 +22,7 @@ class Item extends baseModel {
         'expectedTotalProfitPrice',
         'requiredMinimumPrice',
 
-        'isPhone'
+        // 'isPhone'
     ];
 
     public function itemable() {

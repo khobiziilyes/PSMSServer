@@ -28,9 +28,9 @@ use App\Models\Accessory;
 class TransactionsController extends baseController {
     protected $theClass = Transaction::class;
     protected $withTrashed = true;
-    
+
     public function indexQuery() {
-        return Transaction::with['Carts'];
+        return $this->theClass::with(['Carts']);
     }
     
     function getValidationRules($isUpdate, $isBuy) {

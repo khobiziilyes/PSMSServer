@@ -21,7 +21,7 @@ class baseController extends Controller {
     }
 
     public function paginateQuery($query) {
-        $query = $query->with(['created_by_obj:id,name', 'updated_by_obj:id,name'])->filter();
+        $query = $query->with(['created_by_obj:id,name', 'updated_by_obj:id,name'])->filter(request()->all());;
         $paginator = $query->paginateAuto();
 
         $appendablePaginator = new AppendablePaginator($paginator);

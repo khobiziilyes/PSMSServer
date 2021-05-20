@@ -6,11 +6,15 @@ use Illuminate\Database\Eloquent\Builder;
 use App\Models\baseModel;
 use App\Models\Transaction;
 
-class Person extends baseModel {
+class Person extends baseModel {    
     protected $fillable = ['name', 'address', 'phone1', 'phone2', 'fax', 'notes'];
     protected $table = 'people';
     protected $_hidden = ['isVendor'];
     
+    public function modelFilter() {
+        return $this->provideFilter(\App\ModelFilters\PersonFilter::class);
+    }
+
     public static function boot() {
         parent::boot();
 
