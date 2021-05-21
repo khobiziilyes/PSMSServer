@@ -15,9 +15,6 @@ use App\Http\Controllers\baseController;
 use App\Models\Customer;
 use App\Models\Vendor;
 
-use App\Models\Buy;
-use App\Models\Sell;
-
 use App\Models\Transaction;
 use App\Models\Item;
 use App\Models\Cart;
@@ -28,7 +25,8 @@ use App\Models\Accessory;
 class TransactionsController extends baseController {
     protected $theClass = Transaction::class;
     protected $withTrashed = true;
-
+    protected $modelName = 'transaction';
+    
     public function indexQuery() {
         return $this->theClass::with(['Carts']);
     }
@@ -47,15 +45,16 @@ class TransactionsController extends baseController {
     }
 
     public function store(Request $request) {
-        Gate::authorize('can', ['C', $this->modelName]);
+        //Gate::authorize('can', ['C', $this->modelName]);
 
-        $isBuy = $this->theClass::$isBuy;
+        $isBuy = $request->has('isBuy');
 
         $valArr = $this->getValidationRules(false, $isBuy);
         $validatedData = Validator::make(request()->input(), $valArr)->validate();
 
         $theInstance = new $this->theClass(Arr::except($validatedData, ['cart']));
-        
+        $theInstance->isBuy = $isBuy;
+
         DB::transaction(function () use($theInstance, $validatedData, $isBuy) {
             $theInstance->save();
 
@@ -89,7 +88,7 @@ class TransactionsController extends baseController {
     }
 
     public function destroy($id) {
-        Gate::authorize('can', ['D', $this->modelName]);
+        //Gate::authorize('can', ['D', $this->modelName]);
 
         $Transaction = $this->theClass::findOrFail($id);
 
@@ -109,37 +108,4 @@ class TransactionsController extends baseController {
 
         return ['deleted' => true];
     }
-
-    public function getItemsTransactions($items_ids) {
-        Gate::authorize('can', ['R', $this->modelName]);
-
-        $transactions_ids = DB::table('carts')->whereIn('item_id', $items_ids)->pluck('transaction_id')->toArray();
-        $transactions_ids = array_unique($transactions_ids);
-        
-        $query = Transaction::where('id', $transactions_ids);
-        
-        return $this->paginateQuery($query);
-    }
-
-    public function getGoodTransactions($good) {
-        $items_ids = $good->Items->toArray();
-        $items_ids = Arr::pluck($items_ids, 'id');
-
-        return $this->getItemsTransactions($items_ids);
-    }
-
-    public function indexPhone(Phone $phone) {
-        return $this->getGoodTransactions($phone);
-    }
-
-    public function indexAccessory(Accessory $accessory) {
-        return $this->getGoodTransactions($accessory);
-    }
-
-    public function indexItem(Item $item) {
-        return $this->getItemsTransactions([$item->id]);
-    }
 }
-
-class BuyController extends TransactionsController { public $theClass = Buy::class; protected $modelName = 'buy'; }
-class SellController extends TransactionsController { public $theClass = Sell::class; protected $modelName = 'sell'; }

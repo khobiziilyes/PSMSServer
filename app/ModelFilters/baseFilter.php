@@ -2,6 +2,7 @@
 
 namespace App\ModelFilters;
 
+use Illuminate\Support\Carbon;
 use EloquentFilter\ModelFilter;
 
 class baseFilter extends ModelFilter {

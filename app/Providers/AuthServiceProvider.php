@@ -24,9 +24,17 @@ class AuthServiceProvider extends ServiceProvider {
      */
     public function boot() {
         $this->registerPolicies();
-        //Passport::routes();
-        Gate::define('can', function (User $user, $method, $model) {
-            return ($user->isAdmin || ($user->{'can' . $method . $model} === 1));
+        
+        Gate::define('canRead', function (User $user, $method, $model) {
+            return (($user->isAdmin === 1) || ($user->{"canRead$model"} === 1 || $user->{"canWrite$model"} === 1 || $user->{"canUpdate$model"} === 1));
+        });
+
+        Gate::define('canUpdate', function (User $user, $method, $model) {
+            return (($user->isAdmin === 1) || ($user->{"canUpdate$model"} === 1));
+        });
+
+        Gate::define('canWrite', function (User $user, $method, $model) {
+            return (($user->isAdmin === 1) || ($user->{"canWrite$model"} === 1));
         });
     }
 }

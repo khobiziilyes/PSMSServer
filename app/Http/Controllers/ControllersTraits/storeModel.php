@@ -9,7 +9,7 @@ trait storeModel {
 	use storeOrUpdateModel;
 
 	public function store(Request $request) {
-		Gate::authorize('can', ['C', $this->modelName]);
+		//Gate::authorize('can', ['C', $this->modelName]);
         return $this->storeOrUpdate($request->input());
     }
 }

@@ -41,5 +41,12 @@ class Good extends baseModel {
     }
 }
 
-class Phone extends Good { static $isPhone = true; }
+class Phone extends Good {
+    static $isPhone = true;
+
+    public function __construct($attributes = []) {
+        parent::__construct($attributes);
+        $this->fillable = array_merge(['store_id'], $this->fillable);
+    }
+}
 class Accessory extends Good { static $isPhone = false; }

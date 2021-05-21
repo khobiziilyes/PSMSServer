@@ -37,7 +37,7 @@ class ItemsController extends baseController {
     }
 
     public function storeItemable($type, $Itemable) {
-        Gate::authorize('can', ['C', $this->modelName]);
+        //Gate::authorize('can', ['C', $this->modelName]);
         
         $Itemable = ($type === 'phone' ? Phone::class : Accessory::class)::findOrFail($Itemable);
         

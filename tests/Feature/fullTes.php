@@ -8,7 +8,7 @@ class fullTest extends featureBase {
 
     public $accessories_endPoint = '/api/accessories/';
     public $items_endPoint = '/api/items/';
-    public $transactions_endPoint = '/api/transactions/';
+    public $transactions_endPoint = '/api/transactions';
     public $people_endPoint = '/api/';
 
     protected $cleanUp = false;
@@ -54,12 +54,11 @@ class fullTest extends featureBase {
     }
 
     public function testTransactions() {
-        foreach(['buy', 'sell'] as $i => $operations_type) {
-            $transactions_endPoint = $this->transactions_endPoint . $operations_type . '/';
-            $transaction_id = $this->createTransaction($transactions_endPoint, $i + 1);
+        for ($i = 0; $i < 2; $i++){
+            $transactions_endPoint = $this->transactions_endPoint;
+            $transaction_id = $this->createTransaction($transactions_endPoint . ($i === 0 ? '?isBuy' : ''), $i + 1);
 
-            if ($this->cleanUp)
-                $this->performDelete($transactions_endPoint, $transaction_id);
+            if ($this->cleanUp) $this->performDelete($transactions_endPoint . '/', $transaction_id);
         }
     }
 }

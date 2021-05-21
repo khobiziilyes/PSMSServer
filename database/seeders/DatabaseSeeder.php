@@ -32,6 +32,7 @@ class DatabaseSeeder extends Seeder {
             'phone_number' => '0667809272',
             'name' => 'Khobizi Ilyes',
             'store_id' => 1,
+            'isAdmin' => 1,
             'password' => Hash::make('0')
         ]);
 

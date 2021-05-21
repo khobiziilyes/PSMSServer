@@ -2,7 +2,6 @@
 
 namespace App\ModelFilters;
 
-use Illuminate\Support\Carbon;
 use App\ModelFilters\baseFilter;
 use App\Models\Phone;
 use App\Models\Accessory;
@@ -44,5 +43,9 @@ class TransactionFilter extends baseFilter {
     			$query2->whereHasMorph('itemable', [$isPhone ? Phone::class : Accessory::class]);
     		});
     	});
+    }
+
+    public function isBuy($isBuy) {
+        return $this->where('isBuy', (bool) $isBuy);
     }
 }

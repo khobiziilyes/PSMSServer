@@ -6,12 +6,12 @@ use Tests\Feature\Traits;
 class partTest extends featureBase {
     use Traits;
 
-    public function search() {
-        $response = $this->postJson('/api/vendors', ['query' => 'Redmi Note 10']);
+    public function testSearch() {
+        $response = $this->postJson('/api/phones', ['query' => 'Gal']);
         $this->Log('idk', $response->json());
     }
 
-    public function testA() {
+    public function A() {
         $delete = false;
         $type = 'buy';
 

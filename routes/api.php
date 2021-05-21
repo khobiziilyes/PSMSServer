@@ -1,14 +1,16 @@
 <?php
     /*
-        - Separete Phones and Goods table.
-        - Maybe remove buy/sell models.
-        - Accessories should have "for_phone".
+        - Sorting by query.
+        - use WhereIn instead in search.
+        - add search instead of name and brand.
+        - Select Fields to be filtered instead of input->all().
+        - Accessories should have "for_phone", Therefor separete Phones and Goods table.
         
-        - Edit users scopes.
+        - Update users scopes.
         - Think about doing calculations on client side.
         
-        - Social Media Share
-        - Store Website
+        - Social Media Share.
+        - Store Website.
 
         - Enable onlyJsonMiddleware.
         
@@ -17,7 +19,8 @@
     */
     
     use Illuminate\Support\Facades\Route;
-    
+    use App\Models\Phone;
+
     Illuminate\Support\Facades\Auth::loginUsingId(1);
 
     Route::prefix('auth')->group(function () {
@@ -40,19 +43,9 @@
         Route::apiResource('phones', PhonesController::class)->except(['store', 'update', 'destroy']);
         Route::post('/phones', [App\Http\Controllers\PhonesController::class, 'search']);
 
-        Route::prefix('transactions')->group(function() {
-            Route::apiResources([
-                'buy' => BuyController::class,
-                'sell' => SellController::class
-            ], ['except' => ['update']]);
-
-            Route::get('/', [App\Http\Controllers\TransactionsController::class, 'index']);
-            Route::get('/item/{item}', [App\Http\Controllers\TransactionsController::class, 'indexItem']);
-            Route::get('/phone/{phone}', [App\Http\Controllers\TransactionsController::class, 'indexPhone']);
-            Route::get('/accessory/{accessory}', [App\Http\Controllers\TransactionsController::class, 'indexAccessory']);
-        });
-
+        Route::apiResource('transactions', TransactionsController::class)->except(['update']);
         Route::apiResource('items', ItemsController::class)->except(['store']);
+        
         Route::post('items/{type}/{Itemable}',
             [App\Http\Controllers\ItemsController::class, 'storeItemable'])
         ->where(['type' => '(?:phone|accessory)', 'Itemable' => '[0-9]+']);

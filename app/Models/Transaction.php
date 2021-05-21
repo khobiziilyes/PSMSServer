@@ -19,24 +19,9 @@ class Transaction extends baseModel {
     protected $with = ['Person:id,name', 'Carts'];
     protected $_hidden = ['updated_at', 'updated_by', 'person_id'];
     
-    public function __construct(array $attributes = []) {
-        parent::__construct($attributes);
-        $this->makeHiddenIf(isset(static::$isBuy), 'isBuy');
-    }
-    
     public static function boot() {
         parent::boot();
-
-        if (isset(static::$isBuy)) {
-            static::addGlobalScope('isBuy', function (Builder $builder) {
-                $builder->where('isBuy', static::$isBuy);
-            });
-        }
         
-        static::creating(function($model) {
-            $model->isBuy = static::$isBuy;
-        });
-
         static::deleting(function($model) {
             $user_id = Auth::user()->id;
             $model->updated_by_id = $user_id;
@@ -57,6 +42,3 @@ class Transaction extends baseModel {
         return $this->provideFilter(\App\ModelFilters\TransactionFilter::class);
     }
 }
-
-class Buy extends Transaction { static $isBuy = true; }
-class Sell extends Transaction { static $isBuy = false; }

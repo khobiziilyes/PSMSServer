@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 
 trait destroyModel {
 	public function destroy($id) {
-        Gate::authorize('can', ['D', $this->modelName]);
+        //Gate::authorize('can', ['D', $this->modelName]);
 
         if (property_exists($this, 'beforeDestroy')) {
             $theInstance = $this->theClass::findOrFail($id);

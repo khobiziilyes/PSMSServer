@@ -12,7 +12,7 @@ class baseController extends Controller {
     }
 
     public function index(Request $request) {
-        Gate::authorize('can', ['R', $this->modelName]);
+        //Gate::authorize('can', ['R', $this->modelName]);
 
         $query = $this->indexQuery();
         if (($this->withTrashed ?? false) && $request->query->has('withTrashed')) $query->withTrashed();
@@ -21,7 +21,17 @@ class baseController extends Controller {
     }
 
     public function paginateQuery($query) {
-        $query = $query->with(['created_by_obj:id,name', 'updated_by_obj:id,name'])->filter(request()->all());;
+        $query = $query->with(['created_by_obj:id,name', 'updated_by_obj:id,name']);
+        $query = $query->filter(request()->all());
+
+        $orderBy = request()->query('orderBy', null);
+        if (filled($orderBy) && is_string($orderBy)) {
+            $direction = request()->query('dir', 'asc');
+            if (!(filled($direction) && is_string($direction) && $direction === 'desc')) $direction = 'asc';
+
+            $query = $query->orderBy($orderBy, $direction);
+        }
+
         $paginator = $query->paginateAuto();
 
         $appendablePaginator = new AppendablePaginator($paginator);
@@ -34,7 +44,7 @@ class baseController extends Controller {
     }
     
     public function show($id) {
-        Gate::authorize('can', ['R', $this->modelName]);
+        //Gate::authorize('can', ['R', $this->modelName]);
         return $this->theClass::findOrFail($id);
     }
 }
