@@ -14,6 +14,7 @@ use App\Models\Phone;
 class PhonesController extends baseController {
     protected $theClass = Phone::class;
     protected $modelName = 'phones';
+    protected $whiteListOrderBy = ['name', 'brand'];
     
     public function search(Request $request) {
         $validatedData = Validator::make($request->input(), [
@@ -21,20 +22,16 @@ class PhonesController extends baseController {
         ])->validate();
 
         $query = $validatedData['query'];
-        $devicesDB = Phone::whereRaw('LOWER(name) LIKE ?', ['%' . strtolower($query) . '%']);
+        $devicesDB = Phone::whereRaw('LOWER(name) LIKE ?', ['%' . strtolower($query) . '%'])->select('name', 'id');
         
         if ($devicesDB->count() === 0) {
             $devices = $this->searchDevices($query);
             if (count($devices) === 0) return [];
             
-            foreach ($devices as $device) {
-                $newPhone = Phone::create(array_merge($device, ['type_id' => 0]));
-                $newPhone->store_id = 0;
-                $newPhone->save();
-            }
+            Phone::insert($devices);
         }
         
-        return $devicesDB->get();
+        return $devicesDB->get(); //->makeHidden('isPhone');
     }
 
     public function searchDevices($term) {
@@ -65,16 +62,25 @@ class PhonesController extends baseController {
         
         if (count($links) < 4) return null;
 
-        //preg_match('/<img src="(.+?wp-content\/uploads\/.+?)"/', $links[0], $image);
-        
         preg_match('/>(.+?)</', $links[1], $PhoneName);
-        //preg_match('/gadget\/(.+?)\//', $links[1], $PhoneLink);       
         preg_match('/strong>(.+?)</', $links[2], $BrandName);
+        
+        //preg_match('/<img src="(.+?wp-content\/uploads\/.+?)"/', $links[0], $image);
+        //preg_match('/gadget\/(.+?)\//', $links[1], $PhoneLink);       
         //preg_match('/brand\/(.+?)\//', $links[2], $BrandLink);
+
+        $time = now();
 
         return [
             'name' => $PhoneName[1],
             'brand' => $BrandName[1],
+            'type_id' => 0,
+            'store_id' => 0,
+            'created_by_id' => 0,
+            'updated_by_id' => 0,
+            'created_at' => $time,
+            'updated_at' => $time
+            
             //'link' => $PhoneLink[1],
             //'brandLink' => $BrandLink[1],
             //'image' => $image[1]

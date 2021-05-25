@@ -18,11 +18,11 @@ class Item extends baseModel {
         'averageTotalProfitPrice',
         'currentQuantityBuyWorth',
         'currentQuantitySellWorth',
-        'ExpectedCurrentQuantityProfitPrice',
+        'expectedCurrentQuantityProfitPrice',
         'expectedTotalProfitPrice',
         'requiredMinimumPrice',
 
-        // 'isPhone'
+        'isPhone'
     ];
 
     public function itemable() {

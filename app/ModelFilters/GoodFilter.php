@@ -4,7 +4,7 @@ namespace App\ModelFilters;
 
 use App\ModelFilters\baseFilter;
 
-class AccessoryFilter extends baseFilter {
+class GoodFilter extends baseFilter {
     public function name($name) {
     	return $this->whereLike('name', $name);
     }

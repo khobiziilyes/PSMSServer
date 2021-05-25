@@ -43,7 +43,7 @@ class AppServiceProvider extends ServiceProvider {
 
         Builder::macro('paginateAuto', function ($perPage = null, ...$args) {
             if ($perPage === null) {
-                $perPage = request()->query('per_page');
+                $perPage = request()->query('perPage');
                 $defaultPerPage = 10;
                 $maxPerPage = 100;
 

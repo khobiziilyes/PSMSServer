@@ -10,18 +10,11 @@ class Good extends baseModel {
     protected $fillable = ['name', 'brand', 'notes', 'type_id'];
     protected $table = 'goods';
     protected $appends = ['isPhone'];
+    protected $_hidden = ['isPhone'];
 
     public function __construct(array $attributes = []) {
         parent::__construct($attributes);
-        
-        $this->makeHiddenIf(static::$isPhone, [
-            'type_id',
-            'created_by',
-            'created_at',
-            'updated_by',
-            'updated_at',
-            'notes'
-        ]);
+        $this->makeHiddenIf(static::$isPhone, ['type_id']);
     }
 
     public static function boot() {
@@ -39,14 +32,11 @@ class Good extends baseModel {
     public function Items() {
         return $this->morphMany(Item::class, 'itemable');
     }
-}
 
-class Phone extends Good {
-    static $isPhone = true;
-
-    public function __construct($attributes = []) {
-        parent::__construct($attributes);
-        $this->fillable = array_merge(['store_id'], $this->fillable);
+    public function modelFilter() {
+        return $this->provideFilter(\App\ModelFilters\GoodFilter::class);
     }
 }
+
+class Phone extends Good { static $isPhone = true; }
 class Accessory extends Good { static $isPhone = false; }

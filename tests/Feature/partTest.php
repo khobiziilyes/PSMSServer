@@ -7,7 +7,8 @@ class partTest extends featureBase {
     use Traits;
 
     public function testSearch() {
-        $response = $this->postJson('/api/phones', ['query' => 'Gal']);
+        //$response = $this->postJson('/api/phones', ['query' => 'Gal']);
+        $response = $this->putJson('/api/accessories/2', ['name' => 'Tnaket']);
         $this->Log('idk', $response->json());
     }
 

@@ -55,10 +55,10 @@ class baseModel extends Model {
     }
 
     public function getCreatedByAttribute () {
-        return $this->created_by_obj->name;
+        return $this->created_by_obj->name ?? 'PSMS';
     }
 
     public function getUpdatedByAttribute () {
-        return $this->updated_by_obj->name;
+        return $this->updated_by_obj->name ?? 'PSMS';
     }
 }

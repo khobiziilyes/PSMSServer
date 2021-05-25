@@ -1,10 +1,10 @@
 <?php
     /*
-        - Sorting by query.
-        - use WhereIn instead in search.
-        - add search instead of name and brand.
-        - Select Fields to be filtered instead of input->all().
-        - Accessories should have "for_phone", Therefor separete Phones and Goods table.
+        - use WhereIn instead in search to search by request query string.
+        - add global search field.
+        
+        - Should add a Gate in updating && deleting (user.store_id === item.store_id).
+        - Accessories should have "for_phones", Therefor separete Phones and Goods table.
         
         - Update users scopes.
         - Think about doing calculations on client side.

@@ -25,10 +25,11 @@ class baseController extends Controller {
         $query = $query->filter(request()->all());
 
         $orderBy = request()->query('orderBy', null);
-        if (filled($orderBy) && is_string($orderBy)) {
+        
+        if (filled($orderBy) && is_string($orderBy) && in_array($orderBy, array_merge($this->whiteListOrderBy ?? [], ['id', 'created_at']))) {
             $direction = request()->query('dir', 'asc');
             if (!(filled($direction) && is_string($direction) && $direction === 'desc')) $direction = 'asc';
-
+            
             $query = $query->orderBy($orderBy, $direction);
         }
 
