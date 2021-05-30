@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Builder;
@@ -17,7 +19,7 @@ class Transaction extends baseModel {
     protected $table = 'transactions';
     protected $casts = ['isBuy' => 'boolean'];
     protected $with = ['Person:id,name', 'Carts'];
-    protected $_hidden = ['updated_at', 'updated_by', 'person_id'];
+    protected $_hidden = ['updated_at', 'person_id'];
     
     public static function boot() {
         parent::boot();
@@ -36,5 +38,9 @@ class Transaction extends baseModel {
 
     public function Person() {
         return $this->belongsTo(Person::class);
+    }
+
+    public function getDeletedAtAttribute($value) {
+        return $this->formatDateTime($value);
     }
 }

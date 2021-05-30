@@ -1,6 +1,7 @@
 <?php
 namespace App\Models;
 
+use Carbon\Carbon;
 use EloquentFilter\Filterable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -60,5 +61,17 @@ class baseModel extends Model {
 
     public function getUpdatedByAttribute () {
         return $this->updated_by_obj->name ?? 'PSMS';
+    }
+
+    public function getCreatedAtAttribute($value) {
+        return $this->formatDateTime($value);
+    }
+
+    public function getUpdatedAtAttribute($value) {
+        return $this->formatDateTime($value);
+    }
+
+    public function formatDateTime($value) {
+        return $value ? (new Carbon($value, 'UTC'))->setTimezone('Africa/Algiers')->toDateTimeString() : $value;
     }
 }

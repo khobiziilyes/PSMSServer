@@ -1,7 +1,12 @@
 <?php
     /*
-        - use WhereIn instead in search to search by request query string.
+        - Profit in Transaction details.
+        - Stats should be casted to int.
+        
+        - Rename 'Good' to 'Product'
+        
         - add global search field.
+        - use WhereIn instead in search to search by request query string.
         
         - Should add a Gate in updating && deleting (user.store_id === item.store_id).
         - Accessories should have "for_phones", Therefor separete Phones and Goods table.

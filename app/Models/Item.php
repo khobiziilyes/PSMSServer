@@ -8,6 +8,8 @@ class Item extends baseModel {
     protected $fillable = ['delta', 'currentQuantity', 'defaultPrice', 'notes'];
     protected $with = ['itemable:id,name,brand'];
     protected $_hidden = ['itemable_id', 'itemable_type'];
+    protected $appends = ['isPhone'];
+    
     static $indexAppends = [
         'totalProfitPrice',
 
