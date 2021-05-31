@@ -23,9 +23,9 @@ class PeopleController extends baseController {
             'name' => $required . 'name',
             'phone1' => $required . "regex:$phoneRegex",  
 
-            'address' => 'notes',
-            'phone2' => "regex:$phoneRegex",
-            'fax' => 'regex:/^0\d{8}$/',
+            'address' => 'nullable|notes',
+            'phone2' => "nullable|regex:$phoneRegex",
+            'fax' => 'nullable|regex:/^0\d{8}$/',
             'notes' => 'notes'
         ];
     }

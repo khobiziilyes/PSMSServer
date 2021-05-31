@@ -10,6 +10,12 @@ trait storeModel {
 
 	public function store(Request $request) {
 		//Gate::authorize('can', ['C', $this->modelName]);
-        return $this->storeOrUpdate($request->input());
+        $resource = $this->storeOrUpdate($request->input());
+        $totalRows = $this->theClass::count();
+        
+        return [
+            'data' => $resource,
+            'totalRows' => $totalRows
+        ];
     }
 }

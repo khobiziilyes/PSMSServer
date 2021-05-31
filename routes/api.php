@@ -1,5 +1,6 @@
 <?php
     /*
+        - Should use resource instead of sending raw responses in creating & updating.
         - Profit in Transaction details.
         - Stats should be casted to int.
         
