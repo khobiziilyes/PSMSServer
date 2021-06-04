@@ -1,33 +1,39 @@
 <?php
     /*
-        - BUY 1 PHONE FOR 35000.
-        - BUY 2 PHONE FOR 34000.
-        - BUY 2 PRDCT FOR 1000.
+        - BUY
+            2 PHONE 35000
+            2 ACCES 1000
+    
+        - BUY
+            1 PHONE 36000
+            1 PHONE 35000
 
-        - SEL 2 PHONE FOR 36000.
+        - SELL
+            1 ACCES 1200
 
-        - SEL 2 PRDCT FOR 1200.
-
-        - SEL 1 PHONE FOR 32000.
-    */
-
-    /*
+        - BUY
+            1 PHONE 34000
         
+        - SELL
+            1 ACCES 900
+            1 PHONE 35000
+
+        - BUY
+            3 ACCES 1000
+            2 ACCES 900
+            1 PHONE 35000
+            1 PHONE 33000
     */
     
     /*
-        - Stats should be casted to int.
-        - Should use resource instead of sending raw responses in creating & updating.
-        
-        - add global search field.
-        - use WhereIn instead in search to search by request query string.
-        
-        - Should add a Gate in updating && deleting (user.store_id === item.store_id).
         - Accessories should have "for_phones", Therefor separete Phones and Products table.
+        - Should add a Gate in updating && deleting (user.store_id === item.store_id).
         
         - Update users scopes.
         - Think about doing calculations on client side.
         
+        - Do i need show resource?
+
         - Social Media Share.
         - Store Website.
 
@@ -40,7 +46,7 @@
     use Illuminate\Support\Facades\Route;
     use App\Models\Phone;
 
-//    Illuminate\Support\Facades\Auth::loginUsingId(1);
+    Illuminate\Support\Facades\Auth::loginUsingId(1);
 
     Route::prefix('auth')->group(function () {
         Route::post('login', 'AuthController@login');
@@ -59,14 +65,17 @@
         ]);
 
         Route::apiResource('accessories', AccessoriesController::class);
-        Route::apiResource('phones', PhonesController::class)->except(['store', 'update', 'destroy']);
+        Route::apiResource('phones', PhonesController::class)->only(['index']);
         Route::post('/phones', [App\Http\Controllers\PhonesController::class, 'search']);
 
-        Route::apiResource('transactions', TransactionsController::class)->except(['update', 'index']);
+        Route::apiResource('transactions', TransactionsController::class)->only(['show']);
         
         Route::get('/buy', ['uses' => 'TransactionsController@index', 'isBuy' => true]);
         Route::get('/sell', ['uses' => 'TransactionsController@index', 'isBuy' => false]);
         
+        Route::post('/buy', ['uses' => 'TransactionsController@store', 'isBuy' => true]);
+        Route::post('/sell', ['uses' => 'TransactionsController@store', 'isBuy' => false]);
+
         Route::apiResource('items', ItemsController::class)->except(['store']);
         
         Route::post('items/{type}/{Itemable}',

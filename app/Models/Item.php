@@ -22,9 +22,7 @@ class Item extends baseModel {
         'currentQuantitySellWorth',
         'expectedCurrentQuantityProfitPrice',
         'expectedTotalProfitPrice',
-        'requiredMinimumPrice',
-
-        'isPhone'
+        'requiredMinimumPrice'
     ];
 
     public function itemable() {

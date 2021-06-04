@@ -35,9 +35,9 @@ class AppServiceProvider extends ServiceProvider {
             return ($value === null || preg_match('/^[\w\d\s,.\-\n]{1,250}$/', $value));
         }, 'The field characters are invalid, Or too long.');
 
-        Builder::macro('filterByMorph', function ($morphRelations, $name, $value) {
-            return $this->whereHasMorph('itemable', $morphRelations, function($query) use($name, $value) {
-                return $query->whereRaw("LOWER($name) LIKE ?", ['%' . strtolower($value) . '%']);
+        Builder::macro('filterByMorph', function ($relationName, $morphRelations, $name, $value) {
+            return $this->filterByMorph($relationName, $morphRelations, function($query) use($name, $value) {
+                return $query->whereLike($name, $value);
             });
         });
 

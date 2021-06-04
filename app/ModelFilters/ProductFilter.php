@@ -5,6 +5,12 @@ namespace App\ModelFilters;
 use App\ModelFilters\baseFilter;
 
 class ProductFilter extends baseFilter {
+	public function search($term) {
+        return $this
+            ->whereLike('name', $term)
+            ->whereLike('brand', $term, 'or');
+    } 
+
     public function name($name) {
     	return $this->whereLike('name', $name);
     }

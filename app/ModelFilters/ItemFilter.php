@@ -7,14 +7,20 @@ use App\Models\Phone;
 use App\Models\Accessory;
 
 class ItemFilter extends baseFilter {
-    protected $morphRrelations = [Phone::class, Accessory::class];
+    protected $morphRelations = [Accessory::class, Phone::class];
+
+    public function search($term) {
+        return $this->whereHasMorph('itemable', $this->morphRelations, function($query) use($term) {
+            return $query->whereLike('name', $term)->whereLike('brand', $term, 'or');
+        });
+    }
 
     public function name($name) {
-    	return $this->filterByMorph($this->morphRrelations, 'name', $name);
+    	return $this->filterByMorph('itemable', $this->morphRelations, 'name', $name);
     }
 
     public function brand($brand) {
-    	return $this->filterByMorph($this->morphRrelations, 'brand', $brand);
+    	return $this->filterByMorph('itemable', $this->morphRelations, 'brand', $brand);
     }
 
     public function currentQuantity($currentQuantity) {
@@ -26,6 +32,6 @@ class ItemFilter extends baseFilter {
     }
     
     public function isPhone($isPhone) {
-    	return $this->whereHasMorph('itemable', [$isPhone ? Phone::class : Accessory::class]);
+        return $this->whereHasMorph('itemable', [$this->morphRelations[(int) $isPhone]]);
     }
 }

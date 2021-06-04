@@ -20,7 +20,11 @@ class Cart extends baseModel {
     	return $this->belongsTo(Transaction::class, 'transaction_id', 'id');
     }
 
-    public function getProfitAttribute() {
-        return ($this->costPerItem - $this->Item->averageBuyPricePerItem) * $this->Quantity;
+    public function getProfitPerItemAttribute() {
+        return $this->costPerItem - $this->Item->averageBuyPricePerItem;
+    }
+
+    public function getTotalProfitAttribute() {
+        return $this->profitPerItem * $this->Quantity;
     }
 }

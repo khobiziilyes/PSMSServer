@@ -16,6 +16,10 @@ class AccessoriesController extends baseController {
     protected $theClass = Accessory::class;
     protected $modelName = 'accessories';
     
+    public function allowedFilters() {
+        return ['name', 'brand', 'search', 'type'];
+    }
+    
     function getValidationRules($isUpdate) {
     	$requiredName = ($isUpdate ? '' : 'required|') . 'name';
 

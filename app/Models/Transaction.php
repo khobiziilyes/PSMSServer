@@ -41,6 +41,6 @@ class Transaction extends baseModel {
     }
 
     public function getProfitAttribute() {
-        return $this->Carts->sum('Profit');
+        return $this->Carts->sum('totalProfit');
     }
 }

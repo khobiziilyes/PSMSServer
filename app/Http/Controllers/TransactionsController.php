@@ -119,7 +119,7 @@ class TransactionsController extends baseController {
 
     public function formatData($collection, $request) {
         if (!$this->isBuy($request)) $collection->map(function ($transaction) {
-            $transaction->Carts->append('Profit');
+            $transaction->Carts->append(['profitPerItem', 'totalProfit']);
             $transaction->append('Profit');
         });
     }

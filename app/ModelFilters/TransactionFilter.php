@@ -16,7 +16,7 @@ class TransactionFilter extends baseFilter {
     public function productName($name) {
     	return $this->whereHas('Carts', function($query) use ($name){
     		$query->whereHas('Item', function($query2) use($name) {
-    			$query2->filterByMorph($this->morphRelations, 'name', $name);
+    			$query2->filterByMorph('itemable', $this->morphRelations, 'name', $name);
     		});
     	});
     }

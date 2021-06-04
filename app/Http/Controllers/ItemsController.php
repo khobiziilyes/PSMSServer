@@ -19,6 +19,10 @@ class ItemsController extends baseController {
     protected $theClass = Item::class;
     protected $beforeDestroy = 'Carts';
     protected $modelName = 'items';
+    
+    public function allowedFilters() {
+        return ['name', 'brand', 'search', 'isPhone', 'currentQuantity', 'delta'];
+    }
 
     function getValidationRules($isUpdate, $itemable_id = null) {
         $required = $isUpdate ? '' : 'required|';
@@ -48,5 +52,11 @@ class ItemsController extends baseController {
         $theInstance->save();
         
         return $theInstance;
+    }
+
+    function formatData($collection, $request) {
+        $collection->map(function($item) {
+            $item->append(Item::$indexAppends);
+        });
     }
 }
