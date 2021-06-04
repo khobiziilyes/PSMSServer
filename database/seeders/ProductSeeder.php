@@ -4,7 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 
-class GoodSeeder extends Seeder {
+class ProductSeeder extends Seeder {
     public function run() {
         DB::table('users')->insert([
             'name' => Str::random(10),

@@ -1,9 +1,9 @@
 FILTERS:
     OPERATION TYPE
     PERSON ID
-    GOOD ID
+    PRODUCT ID
     ITEM ID
-    GOOD TYPE
+    PRODUCT TYPE
     
     TIME
     USER ID

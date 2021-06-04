@@ -11,12 +11,16 @@ class Cart extends baseModel {
     protected $casts = ['priceChanged' => 'boolean'];
     protected $_hidden = ['id', 'transaction_id', 'item_id', 'created_at', 'updated_at'];
     protected $with = ['item:id,delta,itemable_id,itemable_type'];
-
+    
     public function Item() {
         return $this->belongsTo(Item::class);
     }
 
     public function Transaction() {
     	return $this->belongsTo(Transaction::class, 'transaction_id', 'id');
+    }
+
+    public function getProfitAttribute() {
+        return ($this->costPerItem - $this->Item->averageBuyPricePerItem) * $this->Quantity;
     }
 }

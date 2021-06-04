@@ -2,11 +2,11 @@
 
 namespace Database\Factories;
 
-use App\Models\Good;
+use App\Models\Product;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-class GoodFactory extends Factory {
-    protected $model = Good::class;
+class ProductFactory extends Factory {
+    protected $model = Product::class;
 
     public function definition() {
         return [

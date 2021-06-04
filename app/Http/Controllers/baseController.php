@@ -2,32 +2,42 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Http\Request;
-use App\Http\Resources\AppendablePaginator;
 
 class baseController extends Controller {
-    public function indexQuery() {
+    public function indexQuery($request) {
         return $this->theClass::query();
     }
 
     public function index(Request $request) {
         //Gate::authorize('can', ['R', $this->modelName]);
 
-        $query = $this->indexQuery();
+        $query = $this->indexQuery($request);
         if (($this->withTrashed ?? false) && $request->query->has('withTrashed')) $query->withTrashed();
         
-        return $this->paginateQuery($query);
+        return $this->paginateQuery($query, $request);
     }
 
-    public function paginateQuery($query) {
+    public function paginateQuery($query, $request) {
         $query = $query->with(['created_by_obj:id,name', 'updated_by_obj:id,name']);
-        $query = $query->filter(request()->all());
+        $filterFields = array_merge(method_exists($this, 'allowedFilters') ? $this->allowedFilters() : [], [
+            'createdBy',
+            'createdBefore',
+            'createdAfter',
 
-        $orderBy = request()->query('orderBy', null);
+            'updatedBy',
+            'updatedBefore',
+            'updatedAfter'
+        ]);
+        
+        $query = $query->filter(Arr::only($request->query(), $filterFields));
+
+        $orderBy = $request->query('orderBy', null);
         
         if (filled($orderBy) && is_string($orderBy) && in_array($orderBy, array_merge($this->whiteListOrderBy ?? [], ['id', 'created_at']))) {
-            $direction = request()->query('dir', 'asc');
+            $direction = $request->query('dir', 'asc');
             if (!(filled($direction) && is_string($direction) && $direction === 'desc')) $direction = 'asc';
             
             $query = $query->orderBy($orderBy, $direction);
@@ -35,13 +45,13 @@ class baseController extends Controller {
 
         $paginator = $query->paginateAuto();
 
-        $appendablePaginator = new AppendablePaginator($paginator);
-        $appendablePaginator = $appendablePaginator->modelAppend(array_merge(
-            ['created_by', 'updated_by'],
-            $this->theClass::$indexAppends ?? []
-        ));
+        $paginator->getCollection()->map(function($a) use ($request) {
+            $a->append(['created_by', 'updated_by']);
+        });
 
-        return $appendablePaginator;
+        if (method_exists($this, 'formatData')) $this->formatData($paginator->getCollection(), $request);
+
+        return Arr::only($paginator->toArray(), ['data', 'current_page', 'from', 'last_page', 'per_page', 'to', 'total']);
     }
     
     public function show($id) {

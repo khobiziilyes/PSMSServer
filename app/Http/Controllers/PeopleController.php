@@ -29,6 +29,10 @@ class PeopleController extends baseController {
             'notes' => 'notes'
         ];
     }
+
+    function allowedFilters() {
+        return ['name'];
+    }
 }
 
 class CustomersController extends PeopleController { protected $theClass = Customer::class; protected $modelName = 'customers'; }

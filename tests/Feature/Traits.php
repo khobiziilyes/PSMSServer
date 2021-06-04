@@ -23,8 +23,8 @@ trait Traits {
         return $response['id'];
     }
 
-    public function createItem($endPoint, $good_id, $defaultPrice) {
-        $response = $this->postJson($endPoint . $good_id, [
+    public function createItem($endPoint, $product_id, $defaultPrice) {
+        $response = $this->postJson($endPoint . $product_id, [
             'delta' => 1,
             'currentQuantity' => 0,
             'defaultPrice' => $defaultPrice

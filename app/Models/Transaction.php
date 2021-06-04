@@ -40,7 +40,7 @@ class Transaction extends baseModel {
         return $this->belongsTo(Person::class);
     }
 
-    public function getDeletedAtAttribute($value) {
-        return $this->formatDateTime($value);
+    public function getProfitAttribute() {
+        return $this->Carts->sum('Profit');
     }
 }

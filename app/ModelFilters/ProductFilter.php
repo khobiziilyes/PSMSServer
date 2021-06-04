@@ -4,7 +4,7 @@ namespace App\ModelFilters;
 
 use App\ModelFilters\baseFilter;
 
-class GoodFilter extends baseFilter {
+class ProductFilter extends baseFilter {
     public function name($name) {
     	return $this->whereLike('name', $name);
     }

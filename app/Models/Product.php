@@ -6,9 +6,9 @@ use Illuminate\Database\Eloquent\Builder;
 use App\Models\baseModel;
 use App\Models\Item;
 
-class Good extends baseModel {
+class Product extends baseModel {
     protected $fillable = ['name', 'brand', 'notes', 'type_id'];
-    protected $table = 'goods';
+    protected $table = 'products';
     protected $appends = ['isPhone'];
     protected $_hidden = ['isPhone'];
 
@@ -34,9 +34,9 @@ class Good extends baseModel {
     }
 
     public function modelFilter() {
-        return $this->provideFilter(\App\ModelFilters\GoodFilter::class);
+        return $this->provideFilter(\App\ModelFilters\ProductFilter::class);
     }
 }
 
-class Phone extends Good { static $isPhone = true; }
-class Accessory extends Good { static $isPhone = false; }
+class Phone extends Product { static $isPhone = true; }
+class Accessory extends Product { static $isPhone = false; }

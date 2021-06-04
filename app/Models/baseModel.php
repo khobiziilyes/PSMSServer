@@ -11,7 +11,7 @@ class baseModel extends Model {
     use Filterable;
     
     protected $hidden = ['store_id', 'created_by_id', 'updated_by_id', 'created_by_obj', 'updated_by_obj'];
-    
+
     public function __construct(array $attributes = []) {
         parent::__construct($attributes);
         $this->hidden = array_merge($this->hidden ?? [], $this->_hidden ?? []);
@@ -48,30 +48,22 @@ class baseModel extends Model {
     }
 
     public function created_by_obj() {
-        return $this->hasOne(\App\Models\User::class, 'id', 'created_by_id');
+        return $this->creatorUpdator('created_by_id');
     }
 
     public function updated_by_obj() {
-        return $this->hasOne(\App\Models\User::class, 'id', 'updated_by_id');   
+        return $this->creatorUpdator('updated_by_id');
+    }
+
+    public function creatorUpdator($field) {
+        return $this->hasOne(\App\Models\User::class, 'id', $field)->withDefault(['id' => 0, 'name' => 'PSMS']);
     }
 
     public function getCreatedByAttribute () {
-        return $this->created_by_obj->name ?? 'PSMS';
+        return $this->created_by_obj->name;
     }
 
     public function getUpdatedByAttribute () {
-        return $this->updated_by_obj->name ?? 'PSMS';
-    }
-
-    public function getCreatedAtAttribute($value) {
-        return $this->formatDateTime($value);
-    }
-
-    public function getUpdatedAtAttribute($value) {
-        return $this->formatDateTime($value);
-    }
-
-    public function formatDateTime($value) {
-        return $value ? (new Carbon($value, 'UTC'))->setTimezone('Africa/Algiers')->toDateTimeString() : $value;
+        return $this->updated_by_obj->name;
     }
 }

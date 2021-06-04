@@ -43,14 +43,14 @@ class DatabaseSeeder extends Seeder {
             'password' => Hash::make('0')
         ]);
 
-        DB::table('goods')->insert(array_merge([
+        DB::table('products')->insert(array_merge([
             'name' => 'Redmi Note 7',
             'brand' => 'Xiaomi',
             'type_id' => 0,
             'store_id' => 0
         ], $atby));
 
-        DB::table('goods')->insert(array_merge([
+        DB::table('products')->insert(array_merge([
             'name' => 'AntiShock',
             'brand' => 'Gorilla',
             'type_id' => 1,

@@ -26,9 +26,17 @@ class TransactionsController extends baseController {
     protected $theClass = Transaction::class;
     protected $withTrashed = true;
     protected $modelName = 'transaction';
+
+    public function isBuy($request) {
+        return $request->route()->getAction()['isBuy'];
+    }
+
+    public function allowedFilters() {
+        return ['isBuy', 'isPhone', 'personId', 'productName', 'itemId', 'productId'];
+    }
     
-    public function indexQuery() {
-        return $this->theClass::with(['Carts']);
+    public function indexQuery($request) {
+        return $this->theClass::with(['Carts'])->where('isBuy', $this->isBuy($request));
     }
     
     function getValidationRules($isUpdate, $isBuy) {
@@ -47,7 +55,7 @@ class TransactionsController extends baseController {
     public function store(Request $request) {
         //Gate::authorize('can', ['C', $this->modelName]);
 
-        $isBuy = $request->has('isBuy');
+        $isBuy = $this->isBuy($request);
 
         $valArr = $this->getValidationRules(false, $isBuy);
         $validatedData = Validator::make(request()->input(), $valArr)->validate();
@@ -107,5 +115,12 @@ class TransactionsController extends baseController {
         });
 
         return ['deleted' => true];
+    }
+
+    public function formatData($collection, $request) {
+        if (!$this->isBuy($request)) $collection->map(function ($transaction) {
+            $transaction->Carts->append('Profit');
+            $transaction->append('Profit');
+        });
     }
 }

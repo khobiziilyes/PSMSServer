@@ -54,7 +54,6 @@ class AppServiceProvider extends ServiceProvider {
             
             $currentPage = request()->query('page', null);
             if (filter_var($currentPage, FILTER_VALIDATE_INT) === false || (int) $currentPage < 0) $currentPage = 1;
-            if ((int) $currentPage === 0) $currentPage = floor($this->count() / $perPage);
 
             LengthAwarePaginator::currentPageResolver(function () use ($currentPage) {
                 return $currentPage;
