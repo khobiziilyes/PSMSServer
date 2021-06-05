@@ -12,8 +12,8 @@ class baseController extends Controller {
     }
 
     public function index(Request $request) {
-        //Gate::authorize('can', ['R', $this->modelName]);
-
+        $this->authorizeAction('Read');
+        
         $query = $this->indexQuery($request);
         if (($this->withTrashed ?? false) && $request->query->has('withTrashed')) $query->withTrashed();
         
@@ -55,7 +55,11 @@ class baseController extends Controller {
     }
     
     public function show($id) {
-        //Gate::authorize('can', ['R', $this->modelName]);
+        $this->authorizeAction('Read');
         return $this->theClass::findOrFail($id);
+    }
+
+    public function authorizeAction($type, $name = null) {
+        return Gate::authorize('can' . $type, $name ? $name : $this->theClass::getClassName());
     }
 }

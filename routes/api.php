@@ -26,12 +26,11 @@
     */
     
     /*
-        - Accessories should have "for_phones", Therefor separete Phones and Products table.
-        - Should add a Gate in updating && deleting (user.store_id === item.store_id).
-        
         - Update users scopes.
-        - Think about doing calculations on client side.
+        - Devices Specs.
+        - $this->whiteListOrderBy
         
+        - Auto add Accessories for new phones.
         - Do i need show resource?
 
         - Social Media Share.
@@ -65,8 +64,9 @@
         ]);
 
         Route::apiResource('accessories', AccessoriesController::class);
+        
         Route::apiResource('phones', PhonesController::class)->only(['index']);
-        Route::post('/phones', [App\Http\Controllers\PhonesController::class, 'search']);
+        Route::get('/phones/search', [App\Http\Controllers\PhonesController::class, 'search']);
 
         Route::apiResource('transactions', TransactionsController::class)->only(['show']);
         

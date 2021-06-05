@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\ControllersTraits;
 
-use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 
@@ -18,7 +17,6 @@ class ItemsController extends baseController {
     
     protected $theClass = Item::class;
     protected $beforeDestroy = 'Carts';
-    protected $modelName = 'items';
     
     public function allowedFilters() {
         return ['name', 'brand', 'search', 'isPhone', 'currentQuantity', 'delta'];
@@ -41,7 +39,7 @@ class ItemsController extends baseController {
     }
 
     public function storeItemable($type, $Itemable) {
-        //Gate::authorize('can', ['C', $this->modelName]);
+        $this->authorizeAction('Write');
         
         $Itemable = ($type === 'phone' ? Phone::class : Accessory::class)::findOrFail($Itemable);
         

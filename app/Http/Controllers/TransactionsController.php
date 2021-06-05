@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
@@ -25,7 +24,6 @@ use App\Models\Accessory;
 class TransactionsController extends baseController {
     protected $theClass = Transaction::class;
     protected $withTrashed = true;
-    protected $modelName = 'transaction';
 
     public function isBuy($request) {
         return $request->route()->getAction()['isBuy'];
@@ -53,9 +51,9 @@ class TransactionsController extends baseController {
     }
 
     public function store(Request $request) {
-        //Gate::authorize('can', ['C', $this->modelName]);
-
         $isBuy = $this->isBuy($request);
+        
+        $this->authorizeAction('Write', $isBuy ? 'Buy' : 'Sell');
 
         $valArr = $this->getValidationRules(false, $isBuy);
         $validatedData = Validator::make(request()->input(), $valArr)->validate();
@@ -96,12 +94,13 @@ class TransactionsController extends baseController {
     }
 
     public function destroy($id) {
-        //Gate::authorize('can', ['D', $this->modelName]);
-
         $Transaction = $this->theClass::findOrFail($id);
+        $isBuy = $Transaction->isBuy;
 
-        DB::transaction(function () use($Transaction) {
-            $isBuy = $Transaction->isBuy;
+        $this->authorizeAction('Update', $isBuy ? 'Buy' : 'Sell');
+        
+        DB::transaction(function () use($Transaction, $isBuy) {
+            
 
             $Transaction->Carts->each(function($Cart) use ($isBuy) {
                 $Item = $Cart->Item;

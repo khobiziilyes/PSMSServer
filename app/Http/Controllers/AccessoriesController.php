@@ -14,7 +14,6 @@ class AccessoriesController extends baseController {
 
     protected $beforeDestroy = 'items';
     protected $theClass = Accessory::class;
-    protected $modelName = 'accessories';
     
     public function allowedFilters() {
         return ['name', 'brand', 'search', 'type'];
@@ -34,20 +33,25 @@ class AccessoriesController extends baseController {
         return $baseRules;
     }
 
+    public function indexQuery($request) {
+        return Accessory::with('Phones:phone_id,name,brand');
+    }
+
     /*
         1, 'Shock Proof'
-        2, 'Pouch'
-        3, 'Glass'
+        2, 'Glass'
+        3, 'Pouch'
         4, 'Charger Cable'
         5, 'Charger Box'
         6, 'Full Charger'
-        7, 'Memory Card'
-        8, 'Flash Disk'
-        9, 'Kit-man'
-        10, 'Bluetooth'
+        7, 'Kit-man'
+        8, 'Bluetooth'
+
+        9, 'Memory Card'
+        10, 'Flash Disk'
         11, 'Power Bank'
         12, 'Auto-Accessories'
-        13, 'Ringes'
+        13, 'Ring'
         14, 'Selfie'
         15, 'Adapter'
         16, 'Casque'

@@ -13,7 +13,6 @@ use App\Models\Phone;
 
 class PhonesController extends baseController {
     protected $theClass = Phone::class;
-    protected $modelName = 'phones';
     protected $whiteListOrderBy = ['name', 'brand'];
     
     public function search(Request $request) {
@@ -22,7 +21,7 @@ class PhonesController extends baseController {
         ])->validate();
 
         $query = $validatedData['query'];
-        $devicesDB = Phone::whereRaw('LOWER(name) LIKE ?', ['%' . strtolower($query) . '%'])->select('name', 'id');
+        $devicesDB = Phone::whereLike('name', $query)->select('name', 'id');
         
         if ($devicesDB->count() === 0) {
             $devices = $this->searchDevices($query);
@@ -31,7 +30,7 @@ class PhonesController extends baseController {
             Phone::insert($devices);
         }
         
-        return $devicesDB->get(); //->makeHidden('isPhone');
+        return $devicesDB->get();
     }
 
     public function searchDevices($term) {
@@ -74,7 +73,6 @@ class PhonesController extends baseController {
         return [
             'name' => $PhoneName[1],
             'brand' => $BrandName[1],
-            'type_id' => 0,
             'store_id' => 0,
             'created_by_id' => 0,
             'updated_by_id' => 0,
@@ -118,5 +116,9 @@ class PhonesController extends baseController {
         }, $Specs);
 
         return $Specs;
+    }
+
+    public function indexQuery($request) {
+        return Phone::with('Accessories:accessory_id,name,brand,type_id');
     }
 }

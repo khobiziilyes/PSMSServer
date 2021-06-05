@@ -25,16 +25,24 @@ class AuthServiceProvider extends ServiceProvider {
     public function boot() {
         $this->registerPolicies();
         
-        Gate::define('canRead', function (User $user, $method, $model) {
-            return (($user->isAdmin === 1) || ($user->{"canRead$model"} === 1 || $user->{"canWrite$model"} === 1 || $user->{"canUpdate$model"} === 1));
+        Gate::define('canRead', function (User $user, $model) {
+            return (($user->isAdmin) || ($user->{"canRead$model"} || $user->{"canWrite$model"} || $user->{"canUpdate$model"}));
         });
 
-        Gate::define('canUpdate', function (User $user, $method, $model) {
-            return (($user->isAdmin === 1) || ($user->{"canUpdate$model"} === 1));
+        Gate::define('canWrite', function (User $user, $model) {
+            return (($user->isAdmin) || ($user->{"canWrite$model"}));
         });
 
-        Gate::define('canWrite', function (User $user, $method, $model) {
-            return (($user->isAdmin === 1) || ($user->{"canWrite$model"} === 1));
+        Gate::define('canUpdate', function (User $user, $model) {
+            return (($user->isAdmin) || ($user->{"canUpdate$model"}));
+        });
+
+        Gate::define('isAdmin', function(User $user) {
+            return ($user->isAdmin);
+        });
+
+        Gate::define('update-delete', function (User $user, $model) {
+            return $user->store_id === $model->store_id;
         });
     }
 }

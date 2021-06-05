@@ -21,8 +21,10 @@ class baseModel extends Model {
         parent::boot();
 
         static::addGlobalScope('store_id', function (Builder $builder) {
-            $builder->where('store_id', auth()->user()->Store->id);
-            if (in_array(strtoupper(request()->method()), ['GET', 'HEAD', 'POST'])) $builder->orWhere('store_id', 0);
+            $storeIdColumn = (new static)->getTable() . '.store_id';
+
+            $builder->where($storeIdColumn, auth()->user()->Store->id);
+            if (in_array(strtoupper(request()->method()), ['GET', 'HEAD', 'POST'])) $builder->orWhere($storeIdColumn, 0);
         });
 
         static::creating(function($model) {
@@ -65,5 +67,9 @@ class baseModel extends Model {
 
     public function getUpdatedByAttribute () {
         return $this->updated_by_obj->name;
+    }
+
+    static function getClassName() {
+        return (new \ReflectionClass(new static))->getShortName();
     }
 }

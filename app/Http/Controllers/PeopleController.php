@@ -35,5 +35,5 @@ class PeopleController extends baseController {
     }
 }
 
-class CustomersController extends PeopleController { protected $theClass = Customer::class; protected $modelName = 'customers'; }
-class VendorsController extends PeopleController { protected $theClass = Vendor::class; protected $modelName = 'vendors'; }
+class CustomersController extends PeopleController { protected $theClass = Customer::class; }
+class VendorsController extends PeopleController { protected $theClass = Vendor::class; }

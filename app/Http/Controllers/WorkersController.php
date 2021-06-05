@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-class UsersController extends Controller {
+class WorkersController extends Controller {
     /*
 		Create new user
 		Update user
