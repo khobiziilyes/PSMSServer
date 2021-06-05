@@ -1,36 +1,13 @@
 <?php
     /*
-        - BUY
-            2 PHONE 35000
-            2 ACCES 1000
-    
-        - BUY
-            1 PHONE 36000
-            1 PHONE 35000
-
-        - SELL
-            1 ACCES 1200
-
-        - BUY
-            1 PHONE 34000
-        
-        - SELL
-            1 ACCES 900
-            1 PHONE 35000
-
-        - BUY
-            3 ACCES 1000
-            2 ACCES 900
-            1 PHONE 35000
-            1 PHONE 33000
-    */
-    
-    /*
-        - Update users scopes.
-        - Devices Specs.
+        - Switch store.
         - $this->whiteListOrderBy
+        - Flexy Support.
         
+        - Generate PDFs
+        - Devices Specs.
         - Auto add Accessories for new phones.
+        
         - Do i need show resource?
 
         - Social Media Share.
@@ -42,6 +19,7 @@
         - https://laravel.com/docs/8.x/passport#deploying-passport
     */
     
+    use App\Http\Middleware\isAdminMiddleware;
     use Illuminate\Support\Facades\Route;
     use App\Models\Phone;
 
@@ -66,7 +44,7 @@
         Route::apiResource('accessories', AccessoriesController::class);
         
         Route::apiResource('phones', PhonesController::class)->only(['index']);
-        Route::get('/phones/search', [App\Http\Controllers\PhonesController::class, 'search']);
+        Route::post('/phones', [App\Http\Controllers\PhonesController::class, 'search']);
 
         Route::apiResource('transactions', TransactionsController::class)->only(['show']);
         
@@ -81,4 +59,35 @@
         Route::post('items/{type}/{Itemable}',
             [App\Http\Controllers\ItemsController::class, 'storeItemable'])
         ->where(['type' => '(?:phone|accessory)', 'Itemable' => '[0-9]+']);
+
+        Route::middleware(isAdminMiddleware::class)->group(function() {
+            Route::apiResource('users', UsersController::class)->except(['show']);
+        });
     //});
+
+
+/*
+    - BUY
+        2 PHONE 35000
+        2 ACCES 1000
+
+    - BUY
+        1 PHONE 36000
+        1 PHONE 35000
+
+    - SELL
+        1 ACCES 1200
+
+    - BUY
+        1 PHONE 34000
+    
+    - SELL
+        1 ACCES 900
+        1 PHONE 35000
+
+    - BUY
+        3 ACCES 1000
+        2 ACCES 900
+        1 PHONE 35000
+        1 PHONE 33000
+*/
