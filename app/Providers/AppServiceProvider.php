@@ -2,16 +2,22 @@
 
 namespace App\Providers;
 
-use Illuminate\Pagination\LengthAwarePaginator;
+use Bouncer;
+
+use Illuminate\Support\Arr;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Validator;
+
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\ServiceProvider;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class AppServiceProvider extends ServiceProvider {
     public function boot() {
         Schema::defaultStringLength(191);
+        Bouncer::dontCache();
         
         Blueprint::macro('notes', function(){
             $this->string('notes')->nullable()->default(null);
@@ -42,16 +48,19 @@ class AppServiceProvider extends ServiceProvider {
         });
 
         Builder::macro('paginateAuto', function ($perPage = null, ...$args) {
+            $maxPerPage = 100;
+
             if ($perPage === null) {
                 $perPage = request()->query('perPage');
                 $defaultPerPage = 10;
-                $maxPerPage = 100;
 
                 $perPage = (filter_var($perPage, FILTER_VALIDATE_INT) === false || (int) $perPage < 1)
                 ? $defaultPerPage
                 : min((int) $perPage, $maxPerPage);
             }
             
+            if ($perPage === false) $perPage = $maxPerPage;
+
             $currentPage = request()->query('page', null);
             if (filter_var($currentPage, FILTER_VALIDATE_INT) === false || (int) $currentPage < 0) $currentPage = 1;
 
@@ -61,7 +70,7 @@ class AppServiceProvider extends ServiceProvider {
 
             return $this->paginate($perPage, ...$args);
         });
-        
+
         Validator::extendImplicit('imei', function ($attribute, $value, $parameters, $validator) {
             if(strlen($value) != 15 || !ctype_digit($value)) return false;
             

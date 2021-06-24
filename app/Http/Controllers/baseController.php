@@ -51,7 +51,7 @@ class baseController extends Controller {
 
         if (method_exists($this, 'formatData')) $this->formatData($paginator->getCollection(), $request);
 
-        return Arr::only($paginator->toArray(), ['data', 'current_page', 'from', 'last_page', 'per_page', 'to', 'total']);
+        return $this->paginatorResponse($paginator);
     }
     
     public function show($id) {

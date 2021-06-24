@@ -2,6 +2,7 @@
 namespace App\Models;
 
 use Carbon\Carbon;
+use App\Scopes\GroupScope;
 use EloquentFilter\Filterable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -26,6 +27,8 @@ class baseModel extends Model {
             $builder->where($storeIdColumn, auth()->user()->Store->id);
             if (in_array(strtoupper(request()->method()), ['GET', 'HEAD', 'POST'])) $builder->orWhere($storeIdColumn, 0);
         });
+
+        static::addGlobalScope(new GroupScope);
 
         static::creating(function($model) {
             $user = Auth::user();
@@ -58,7 +61,7 @@ class baseModel extends Model {
     }
 
     public function creatorUpdator($field) {
-        return $this->hasOne(\App\Models\User::class, 'id', $field)->withDefault(['id' => 0, 'name' => 'PSMS']);
+        return $this->hasOne(\App\Models\User::class, 'id', $field)->withDefault(['id' => -1, 'name' => 'DELETED']);
     }
 
     public function getCreatedByAttribute () {

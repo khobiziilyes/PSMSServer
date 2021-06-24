@@ -1,15 +1,14 @@
-FILTERS:
-    OPERATION TYPE
-    PERSON ID
-    PRODUCT ID
-    ITEM ID
-    PRODUCT TYPE
-    
-    TIME
-    USER ID
+- Group 1
+    Owner: Ilyes
+    Stores:
+        Ilyes's Store
+            Mohammed Chelbeb
+            Mahdi Mameche
 
-FIELDS:
-    OPERATIONS COUNT
-    TOTAL CASH (/COUNT)
-    TOTAL QUANTITY
-    TOTAL PROFIT (FOR BUYING) (/COUNT)
+- Group 2
+    Owner: Abdou
+    Stores:
+        Abdou's Store
+            Oussama Kassed
+        Mohamed's Store
+            Mohamed Mokadam

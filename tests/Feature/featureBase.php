@@ -13,7 +13,7 @@ class featureBase extends TestCase {
             'Accept' => 'application/json'
         ]);
         
-        $user = User::find(1);
+        $user = User::find(config('app.FAKE_LOGIN_ID'));
         $this->actingAs($user, 'api')->assertAuthenticated('api');
     }
 
