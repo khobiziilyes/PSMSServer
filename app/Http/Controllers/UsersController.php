@@ -19,7 +19,7 @@ class UsersController extends Controller {
     	return $this->paginatorResponse($paginator);
 	}
 
-	public function update(Request $request, User $user) {
+	public function updatePermissions(Request $request, User $user) {
 		$CRUD_PERMISSIONS = config('app.CRUD_PERMISSIONS');
 		
 		$validationRules = $CRUD_PERMISSIONS->flatMap(function($permission) {
@@ -33,6 +33,10 @@ class UsersController extends Controller {
 		return $user;
 	}
 
+	public function update() {
+
+	}
+	
 	public function destroy() {
 		// SoftDelete user
 	}

@@ -29,6 +29,15 @@ class TransactionsController extends baseController {
         return $request->route()->getAction()['isBuy'];
     }
 
+    public function index(Request $request) {
+        $this->authorizeAction('Read', $this->isBuy($request) ? 'Buy' : 'Sell');
+        
+        $query = $this->indexQuery($request);
+        if ($request->query->has('withTrashed')) $query->withTrashed();
+        
+        return $this->paginateQuery($query, $request);
+    }
+
     public function allowedFilters() {
         return ['isBuy', 'isPhone', 'personId', 'productName', 'itemId', 'productId'];
     }

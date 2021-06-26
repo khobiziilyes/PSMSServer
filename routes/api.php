@@ -1,10 +1,6 @@
 <?php
     /*
-        - canChangeSellPrice should be validated before changing defaultPrice.
-        - store_id Scope isn't required always.
-
         - User stats.
-        - Fallback to "DELETED" in create_by_id and updated_by_id when not found.
         - $this->whiteListOrderBy
         
         - Auto add Accessories for new phones.
@@ -18,7 +14,8 @@
         - Store Website.
 
         - Enable onlyJsonMiddleware.
-        
+        - Bouncer cache.
+
         - My Control Panel.
         - https://laravel.com/docs/8.x/deployment
         - https://laravel.com/docs/8.x/passport#deploying-passport
@@ -56,24 +53,20 @@
             });
 
             Route::get('/users', 'UsersController@index');
+            Route::patch('/users/{user}/permissions', 'UsersController@updatePermissions');
             Route::patch('/users/{user}', 'UsersController@update');
-        });
-
-        Route::prefix('admin')->middleware(isAdminMiddleware::class)->group(function () {
-
         });
 
         Route::apiResources([
             'vendors' => VendorsController::class,
             'customers' => CustomersController::class,
+            'accessories' => AccessoriesController::class
         ]);
-
-        Route::apiResource('accessories', AccessoriesController::class);
         
         Route::apiResource('phones', PhonesController::class)->only(['index']);
-        Route::post('/phones', [App\Http\Controllers\PhonesController::class, 'search']);
+        Route::post('/phones', 'PhonesController@search');
 
-        Route::apiResource('transactions', TransactionsController::class)->only(['show']);
+        // Route::apiResource('transactions', TransactionsController::class)->only(['show']);
         
         Route::get('/buy', ['uses' => 'TransactionsController@index', 'isBuy' => true]);
         Route::get('/sell', ['uses' => 'TransactionsController@index', 'isBuy' => false]);
@@ -84,7 +77,7 @@
         Route::apiResource('items', ItemsController::class)->except(['store']);
         
         Route::post('items/{type}/{Itemable}',
-            [App\Http\Controllers\ItemsController::class, 'storeItemable'])
+            'ItemsController@storeItemable')
         ->where(['type' => '(?:phone|accessory)', 'Itemable' => '[0-9]+']);
 
     //});

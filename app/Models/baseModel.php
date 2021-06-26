@@ -2,15 +2,16 @@
 namespace App\Models;
 
 use Carbon\Carbon;
-use App\Scopes\GroupScope;
 use EloquentFilter\Filterable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Store;
 
 class baseModel extends Model {
     use Filterable;
     
+    static $storeIdScope = true;
     protected $hidden = ['store_id', 'created_by_id', 'updated_by_id', 'created_by_obj', 'updated_by_obj'];
 
     public function __construct(array $attributes = []) {
@@ -21,14 +22,23 @@ class baseModel extends Model {
     public static function boot() {
         parent::boot();
 
-        static::addGlobalScope('store_id', function (Builder $builder) {
-            $storeIdColumn = (new static)->getTable() . '.store_id';
-
-            $builder->where($storeIdColumn, auth()->user()->Store->id);
-            if (in_array(strtoupper(request()->method()), ['GET', 'HEAD', 'POST'])) $builder->orWhere($storeIdColumn, 0);
+        $storeIdColumn = (new static)->getTable() . '.store_id';
+        $Store = auth()->user()->Store;
+        
+        static::addGlobalScope('store_group', function (Builder $builder) use ($storeIdColumn, $Store) {
+            if (static::$storeIdScope) {
+                $builder->where($storeIdColumn, $Store->id);
+            } else {
+                $builder->whereHas('Store', function ($query) use ($Store) {
+                    $query->where('group_id', $Store->Group->id);
+                });
+            }
         });
 
-        static::addGlobalScope(new GroupScope);
+        if (in_array(strtoupper(request()->method()), ['GET', 'HEAD', 'POST']))
+            static::addGlobalScope(function(Builder $builder) use ($storeIdColumn){
+                $builder->orWhere($storeIdColumn, 0);
+            });
 
         static::creating(function($model) {
             $user = Auth::user();
@@ -74,5 +84,9 @@ class baseModel extends Model {
 
     static function getClassName() {
         return (new \ReflectionClass(new static))->getShortName();
+    }
+
+    public function Store() {
+        return $this->belongsTo(Store::class);
     }
 }

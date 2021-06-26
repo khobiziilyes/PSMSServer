@@ -134,7 +134,7 @@ class DatabaseSeeder extends Seeder {
 
         DB::table('items')->insert(array_merge([
             'itemable_type' => 'App\Models\Accessory',
-            'itemable_id' => 2,
+            'itemable_id' => 1,
             'delta' => 0,
             'currentQuantity' => 5,
             'defaultPrice' => 1000,

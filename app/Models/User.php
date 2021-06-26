@@ -46,6 +46,12 @@ class User extends Authenticatable {
     }
 
     public function getPermissionsAttribute() {
-        return $this->getAbilities()->pluck('name');
+        $CRUD_PERMISSIONS = config('app.CRUD_PERMISSIONS');
+        $abilities = $this->getAbilities()->pluck('name')->toArray();
+
+        $theReturn = [];
+        foreach ($CRUD_PERMISSIONS as $permission) $theReturn[$permission] = in_array($permission, $abilities);
+        
+        return $theReturn;
     }
 }

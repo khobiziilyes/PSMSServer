@@ -12,7 +12,6 @@ use App\Models\Phone;
 use App\Models\Accessory;
 
 class ItemsController extends baseController {
-    use ControllersTraits\updateModel;
     use ControllersTraits\destroyModel;
     
     protected $theClass = Item::class;
@@ -36,6 +35,13 @@ class ItemsController extends baseController {
         }
     
         return $basicRules;
+    }
+
+    public function update(Request $request, Item $item) {
+        $this->authorizeAction('Update');
+        if ($request->input('defaultPrice') !== $item->defaultPrice) \Bouncer::authorize('changeSellPrice');
+
+        return $this->storeOrUpdate($request->input(), $item->id);
     }
 
     public function storeItemable($type, $Itemable) {

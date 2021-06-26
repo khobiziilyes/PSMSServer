@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\Gate;
 use Illuminate\Http\Request;
+use App\Models\Item;
 
 class baseController extends Controller {
     public function indexQuery($request) {
@@ -15,8 +15,6 @@ class baseController extends Controller {
         $this->authorizeAction('Read');
         
         $query = $this->indexQuery($request);
-        if (($this->withTrashed ?? false) && $request->query->has('withTrashed')) $query->withTrashed();
-        
         return $this->paginateQuery($query, $request);
     }
 
@@ -60,6 +58,6 @@ class baseController extends Controller {
     }
 
     public function authorizeAction($type, $name = null) {
-        return Gate::authorize('can' . $type, $name ? $name : $this->theClass::getClassName());
+        return \Bouncer::authorize('can' . $type . ($name ? $name : $this->theClass::getClassName()));
     }
 }

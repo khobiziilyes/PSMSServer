@@ -6,7 +6,7 @@ foreach (['Accessory', 'Item', 'Customer', 'Vendor', 'Phone', 'Buy', 'Sell'] as 
     foreach (['Read', 'Write', 'Update'] as $method) $CRUD_PERMISSIONS->push('can' . $method . $model);
 
 return [
-    'FAKE_LOGIN_ID' => 4,
+    'FAKE_LOGIN_ID' => 1,
     'CRUD_PERMISSIONS' => $CRUD_PERMISSIONS,
     'ALL_PERMISSIONS' => $CRUD_PERMISSIONS->concat(['setAdmin', 'changeStore', 'changeSellPrice']),
     'nameField' => 'regex:/^[\w\d ]{1,30}$/',

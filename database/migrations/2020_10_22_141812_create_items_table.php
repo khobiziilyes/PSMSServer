@@ -23,7 +23,7 @@ class CreateItemsTable extends Migration {
             //$table->integer('totalReturns')->default(0);
             
             $table->notes();
-            $table->unique(['itemable_id', 'delta']);
+            $table->unique(['itemable_type', 'itemable_id', 'delta']);
 
             $table->foreignId('store_id');
             $table->usersAndStamps();

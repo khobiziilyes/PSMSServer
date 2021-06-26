@@ -7,6 +7,8 @@ use App\Models\baseModel;
 use App\Models\Item;
 
 class Product extends baseModel {
+    static $storeIdScope = false;
+    
     protected $fillable = ['name', 'brand', 'notes', 'type_id'];
     protected $appends = ['isPhone'];
     protected $_hidden = ['isPhone', 'pivot'];

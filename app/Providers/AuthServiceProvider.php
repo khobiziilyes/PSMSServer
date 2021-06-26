@@ -36,13 +36,5 @@ class AuthServiceProvider extends ServiceProvider {
         Gate::define('canUpdate', function (User $user, $model) {
             return (($user->isAdmin) || ($user->{"canUpdate$model"}));
         });
-
-        Gate::define('isAdmin', function(User $user) {
-            return ($user->isAdmin);
-        });
-
-        Gate::define('update-delete', function (User $user, $model) {
-            return $user->store_id === $model->store_id;
-        });
     }
 }
