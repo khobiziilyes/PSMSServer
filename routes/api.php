@@ -1,7 +1,12 @@
 <?php
     /*
-        - User stats.
+        - Temporarily enable addPhone.
+        - Brand in Accessory shouldn't be required.
+        - Add isUpdatable to data.
+        - Goods Stats.
+        - User Stats.
         - $this->whiteListOrderBy
+        - Maybe Add "forceSearch" for liveSearch.
         
         - Auto add Accessories for new phones.
         - Flexy.
@@ -64,7 +69,7 @@
         ]);
         
         Route::apiResource('phones', PhonesController::class)->only(['index']);
-        Route::post('/phones', 'PhonesController@search');
+        Route::post('/search/{type}', 'SearchController@index')->where('type', '(all|phone|accessory)');
 
         // Route::apiResource('transactions', TransactionsController::class)->only(['show']);
         
@@ -78,7 +83,7 @@
         
         Route::post('items/{type}/{Itemable}',
             'ItemsController@storeItemable')
-        ->where(['type' => '(?:phone|accessory)', 'Itemable' => '[0-9]+']);
+        ->where(['type' => '(phone|accessory)', 'Itemable' => '[0-9]+']);
 
     //});
 

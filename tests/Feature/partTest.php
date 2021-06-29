@@ -6,7 +6,7 @@ use Tests\Feature\Traits;
 class partTest extends featureBase {
     use Traits;
 
-    public function testF() {
+    public function F() {
         //$response = $this->postJson('/api/phones', ['query' => 'Gal']);
         $CRUD_PERMISSIONS = config('app.CRUD_PERMISSIONS');
         
@@ -18,7 +18,7 @@ class partTest extends featureBase {
         $this->Log('idk', $response->json());
     }
 
-    public function A() {
+    public function testA() {
         $B1 = [
             [1, [
                     [35000, 2],
@@ -94,7 +94,7 @@ class partTest extends featureBase {
             'cart' => $cart
         ]);
 
-        // $this->Log('idk', $response->original);
+        $this->Log('idk', $response->original);
 
         return $response['id'];
     }

@@ -21,11 +21,11 @@ class baseModel extends Model {
 
     public static function boot() {
         parent::boot();
-
-        $storeIdColumn = (new static)->getTable() . '.store_id';
-        $Store = auth()->user()->Store;
         
-        static::addGlobalScope('store_group', function (Builder $builder) use ($storeIdColumn, $Store) {
+        static::addGlobalScope('store_group', function (Builder $builder) {
+            $storeIdColumn = (new static)->getTable() . '.store_id';
+            $Store = auth()->user()->Store;
+        
             if (static::$storeIdScope) {
                 $builder->where($storeIdColumn, $Store->id);
             } else {
@@ -33,12 +33,10 @@ class baseModel extends Model {
                     $query->where('group_id', $Store->Group->id);
                 });
             }
-        });
 
-        if (in_array(strtoupper(request()->method()), ['GET', 'HEAD', 'POST']))
-            static::addGlobalScope(function(Builder $builder) use ($storeIdColumn){
+            if (in_array(strtoupper(request()->method()), ['GET', 'HEAD', 'POST']))
                 $builder->orWhere($storeIdColumn, 0);
-            });
+        });
 
         static::creating(function($model) {
             $user = Auth::user();
