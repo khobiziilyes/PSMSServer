@@ -26,6 +26,10 @@ class SearchController extends Controller {
         if (in_array($type, ['all', 'accessory'])) $list = $list->merge($this->getAccessories($query));
         if (in_array($type, ['all', 'phone'])) $list = $list->merge($this->getPhones($query));
         
+        $list->each(function($item) {
+            $item->makeVisible(['isPhone']);
+        });
+
         return $list->toArray();
     }
 

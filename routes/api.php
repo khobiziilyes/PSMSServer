@@ -1,5 +1,7 @@
 <?php
     /*
+        - Notes are required, but can be empty (not null).
+        - Why isPhone hidden in product?
         - Temporarily enable addPhone.
         - Brand in Accessory shouldn't be required.
         - Add isUpdatable to data.

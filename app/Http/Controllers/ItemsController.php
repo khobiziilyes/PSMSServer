@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\ControllersTraits;
 
+use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 
@@ -21,20 +22,16 @@ class ItemsController extends baseController {
         return ['name', 'brand', 'search', 'isPhone', 'currentQuantity', 'delta'];
     }
 
-    function getValidationRules($isUpdate, $itemable_id = null) {
-        $required = $isUpdate ? '' : 'required|';
-
-        $basicRules = [
-            'defaultPrice' => $required . 'integer|min:0',
+    function getValidationRules($isUpdate, $itemable_id = null, $isPhone) {
+        return [
+            'defaultPrice' => 'required|integer|min:0',
+            'delta' => ['required', 'integer', 'between:-3,3', Rule::unique('items')->where(function ($query) use ($itemable_id, $isPhone) {
+                return $query->where('itemable_id', $itemable_id)
+                    ->where('itemable_type', $isPhone ? Phone::class : Accessory::class);
+            })],
+            'currentQuantity' => 'required|integer|min:0',
             'notes' => 'notes'
         ];
-        
-        if (!$isUpdate) {
-            $basicRules['delta'] = 'required|integer|between:-3,3|unique:items,delta,NULL,id,itemable_id,' . $itemable_id;
-            $basicRules['currentQuantity'] = 'required|integer|min:0';
-        }
-    
-        return $basicRules;
     }
 
     public function update(Request $request, Item $item) {
@@ -46,16 +43,20 @@ class ItemsController extends baseController {
 
     public function storeItemable($type, $Itemable) {
         $this->authorizeAction('Write');
-        
         $Itemable = ($type === 'phone' ? Phone::class : Accessory::class)::findOrFail($Itemable);
         
-        $valArr = $this->getValidationRules(false, $Itemable->id);
+        $valArr = $this->getValidationRules(false, $Itemable->id, $Itemable->isPhone);
         $validatedData = Validator::make(request()->input(), $valArr)->validate();
         
         $theInstance = $Itemable->Items()->create($validatedData);
         $theInstance->save();
         
-        return $theInstance;
+        $totalRows = Item::count();
+        
+        return [
+            'data' => $theInstance,
+            'totalRows' => $totalRows
+        ];
     }
 
     function formatData($collection, $request) {

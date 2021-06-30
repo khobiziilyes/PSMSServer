@@ -21,6 +21,12 @@ trait storeOrUpdateModel {
         }
         
         $theInstance->save();
-        return $theInstance;
+        
+        $totalRows = $theClass::count();
+        
+        return [
+            'data' => $theInstance,
+            'totalRows' => $totalRows
+        ];
     }
 }
