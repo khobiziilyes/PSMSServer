@@ -5,12 +5,10 @@ namespace App\Models;
 use App\Models\Cart;
 
 class Item extends baseModel {
-    // static $storeIdScope = true;
-
     protected $fillable = ['delta', 'currentQuantity', 'defaultPrice', 'notes'];
-    protected $with = ['itemable:id,name,brand'];
+    // protected $with = ['itemable:id,name,brand'];
     protected $_hidden = ['itemable_id', 'itemable_type'];
-    protected $appends = ['isPhone'];
+    // protected $appends = ['isPhone'];
     
     static $indexAppends = [
         'totalProfitPrice',
@@ -24,7 +22,9 @@ class Item extends baseModel {
         'currentQuantitySellWorth',
         'expectedCurrentQuantityProfitPrice',
         'expectedTotalProfitPrice',
-        'requiredMinimumPrice'
+        'requiredMinimumPrice',
+
+        'isPhone'
     ];
 
     public function itemable() {

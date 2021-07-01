@@ -22,6 +22,10 @@ class ItemsController extends baseController {
         return ['name', 'brand', 'search', 'isPhone', 'currentQuantity', 'delta'];
     }
 
+    public function indexQuery($request) {
+        return Item::with('itemable:id,name,brand');
+    }
+
     function getValidationRules($isUpdate, $itemable_id = null, $isPhone) {
         return [
             'defaultPrice' => 'required|integer|min:0',

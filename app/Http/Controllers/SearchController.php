@@ -16,31 +16,36 @@ use App\Models\Accessory;
 class SearchController extends Controller {
 	public function index(Request $request, $type) {
 		$validatedData = Validator::make($request->input(), [
-            'query' => 'required|regex:/^[\w\d ]+$/|min:3'
+            'query' => 'required|regex:/^[\w\d ]+$/|min:3',
+            'items' => 'required|boolean'
         ])->validate();
 
         $query = $validatedData['query'];
+        
+        return $this->getProducts($query, $type, $validatedData['items']);
+    }
 
+    public function getProducts($query, $type, $withItems) {
         $list = collect([]);
 
-        if (in_array($type, ['all', 'accessory'])) $list = $list->merge($this->getAccessories($query));
-        if (in_array($type, ['all', 'phone'])) $list = $list->merge($this->getPhones($query));
+        if (in_array($type, ['all', 'accessory'])) $list = $list->merge($this->getAccessories($query, $withItems));
+        if (in_array($type, ['all', 'phone'])) $list = $list->merge($this->getPhones($query, $withItems));
         
         $list->each(function($item) {
             $item->makeVisible(['isPhone']);
         });
 
-        return $list->toArray();
+        return $list;
     }
 
-    public function getAccessories($searchQuery) {
-    	return $this->baseQuery(Accessory::query(), $searchQuery)->get();
+    public function getAccessories($searchQuery, $withItems) {
+    	return $this->baseQuery(Accessory::query(), $searchQuery, $withItems)->get();
     }
 
-    public function getPhones($searchQuery) {
-    	$list = $this->baseQuery(Phone::query(), $searchQuery);
+    public function getPhones($searchQuery, $withItems) {
+    	$list = $this->baseQuery(Phone::query(), $searchQuery, $withItems);
         
-        if ($list->doesntExist()) {
+        if (!$withItems && $list->doesntExist()) {
             $devices = $this->fetchDevices($searchQuery);
             if (count($devices) === 0) return [];
             
@@ -50,8 +55,11 @@ class SearchController extends Controller {
         return $list->get();
     }
 
-    public function baseQuery($query, $searchQuery) {
-    	return $query->whereLike('name', $searchQuery)->select('id', 'name');
+    public function baseQuery($query, $searchQuery, $withItems) {
+    	$builder = $query->whereLike('name', $searchQuery)->select('id', 'name', 'brand');
+        if ($withItems) $builder->with('items:id,itemable_id,itemable_type,delta');
+
+        return $builder;
     }
 
     public function fetchDevices($term) {

@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use Illuminate\Support\Arr;
 use Illuminate\Http\Request;
-use App\Models\Item;
 
 class baseController extends Controller {
     public function indexQuery($request) {

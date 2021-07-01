@@ -46,7 +46,7 @@ class TransactionsController extends baseController {
         return $this->theClass::with(['Carts'])->where('isBuy', $this->isBuy($request));
     }
     
-    function getValidationRules($isUpdate, $isBuy) {
+    function getValidationRules($isBuy) {
         $validationRules = [
             'person_id' => 'required|exists:people,id,isVendor,' . ($isBuy ? '1' : '0'),
             'cart' => 'required|array|min:1',
@@ -64,7 +64,7 @@ class TransactionsController extends baseController {
         
         $this->authorizeAction('Write', $isBuy ? 'Buy' : 'Sell');
 
-        $valArr = $this->getValidationRules(false, $isBuy);
+        $valArr = $this->getValidationRules($isBuy);
         $validatedData = Validator::make(request()->input(), $valArr)->validate();
 
         $theInstance = new $this->theClass(Arr::except($validatedData, ['cart']));
@@ -81,7 +81,7 @@ class TransactionsController extends baseController {
                     return $Arr[1];
                 }, $carts_item));
                 
-                if (!$isBuy && ($Item->currentQuantity < $totalQuantity)) 
+                if (!$isBuy && ($Item->currentQuantity < $totalQuantity)) // Fix to fit both sell & buy
                     throw ValidationException::withMessages(["Quantity" => 'This quantity is not available.']);
 
                 foreach ($carts_item as $cart_item) {
