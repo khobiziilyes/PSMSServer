@@ -50,9 +50,9 @@ class TransactionsController extends baseController {
         $validationRules = [
             'person_id' => 'required|exists:people,id,isVendor,' . ($isBuy ? '1' : '0'),
             'cart' => 'required|array|min:1',
-            'cart.*.0' => 'required|exists:items,id|distinct:strict',
-            'cart.*.1.*.0' => 'required|integer|min:0',
-            'cart.*.1.*.1' => 'required|integer|min:1',
+            'cart.*.item_id' => 'required|exists:items,id|distinct:strict',
+            'cart.*.list.*.costPerItem' => 'required|integer|min:0',
+            'cart.*.list.*.Quantity' => 'required|integer|min:1',
             'notes' => 'notes'
         ];
 
@@ -74,32 +74,38 @@ class TransactionsController extends baseController {
             $theInstance->save();
 
             foreach ($validatedData['cart'] as $cart_item_group) {
-                $Item = Item::findOrFail($cart_item_group[0]);
-                $carts_item = $cart_item_group[1];
+                $Item = Item::findOrFail($cart_item_group['item_id']);
+                $carts_item = $cart_item_group['list'];
                 
                 $totalQuantity = array_sum(array_map(function($Arr) {
-                    return $Arr[1];
+                    return $Arr['Quantity'];
                 }, $carts_item));
                 
                 if (!$isBuy && ($Item->currentQuantity < $totalQuantity)) // Fix to fit both sell & buy
                     throw ValidationException::withMessages(["Quantity" => 'This quantity is not available.']);
 
                 foreach ($carts_item as $cart_item) {
-                    $priceChanged = $isBuy ? null : ($cart_item[0] !== $Item->defaultPrice);
+                    $cart_item_Quantity = $cart_item['Quantity'];
+                    $cart_item_costPerItem = $cart_item['costPerItem'];
+
+                    $priceChanged = $isBuy ? null : ($cart_item_costPerItem !== $Item->defaultPrice);
                     
-                    $Item->transactionPerformed($cart_item[1], $cart_item[0], $isBuy);
+                    $Item->transactionPerformed($cart_item_Quantity, $cart_item_costPerItem, $isBuy);
 
                     $theInstance->Carts()->create([
                         'item_id' => $Item->id,
-                        'Quantity' => $cart_item[1],
-                        'costPerItem' => $cart_item[0],
+                        'Quantity' => $cart_item_Quantity,
+                        'costPerItem' => $cart_item_costPerItem,
                         'priceChanged' => $priceChanged
                     ]);
                 }
             }
         });
 
-        return $theInstance;
+        return [
+            'data' => $theInstance,
+            'totalRows' => Transaction::where('isBuy', $isBuy)->count()
+        ];
     }
 
     public function destroy($id) {

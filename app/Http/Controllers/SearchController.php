@@ -4,46 +4,82 @@ namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
-use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\Controller;
+
+use App\Http\Controllers\ControllersTraits\PhonesAPI;
 
 use App\Models\Phone;
 use App\Models\Accessory;
 
-class SearchController extends Controller {
-	public function index(Request $request, $type) {
-		$validatedData = Validator::make($request->input(), [
-            'query' => 'required|regex:/^[\w\d ]+$/|min:3',
-            'items' => 'required|boolean'
-        ])->validate();
+use App\Models\Vendor;
+use App\Models\Customer;
 
-        $query = $validatedData['query'];
-        
-        return $this->getProducts($query, $type, $validatedData['items']);
+class SearchController extends Controller {
+    use PhonesAPI;
+
+    public function searchForVendor(Request $request) {
+        $searchQuery = $this->getSearchQuery($request, 2);
+        return $this->peopleBaseQuery(Vendor::query(), $searchQuery)->get();
     }
 
-    public function getProducts($query, $type, $withItems) {
+    public function searchForCustomer(Request $request) {
+        $searchQuery = $this->getSearchQuery($request, 2);
+        return $this->peopleBaseQuery(Customer::query(), $searchQuery)->get();
+    }
+
+    public function searchForProducts(Request $request) {
+        $searchQuery = $this->getSearchQuery($request);
+        return $this->getProducts($searchQuery, false);
+    }
+
+    public function searchForPhone(Request $request) {
+        $searchQuery = $this->getSearchQuery($request);
+        return $this->getPhones($searchQuery, false);
+    }
+
+    public function searchForAccessory(Request $request) {
+        $searchQuery = $this->getSearchQuery($request);
+        return $this->getAccessories($searchQuery, false);
+    }
+
+    public function searchForItems(Request $request) {
+        $searchQuery = $this->getSearchQuery($request);
+        return $this->getProducts($searchQuery, true);
+    }
+
+	public function getSearchQuery(Request $request, $min = 3) {
+		$validatedData = Validator::make($request->input(), [
+            'query' => 'required|regex:/^[\w\d ]+$/|min:' . $min
+        ])->validate();
+
+        return $validatedData['query'];
+    }
+
+    public function peopleBaseQuery($builder, $searchQuery) {
+        $builder = $builder->whereLike('name', $searchQuery)->select('id', 'name');
+        return $builder;
+    }
+
+    public function productsBaseQuery($builder, $searchQuery, $withItems) {
+        $builder = $builder->whereLike('name', $searchQuery)->select('id', 'name', 'brand');
+        if ($withItems) 
+            $builder = $builder->whereHas('items')->with('items:id,itemable_id,itemable_type,delta,currentQuantity,defaultPrice');
+
+        return $builder;
+    }
+
+    public function getProducts($searchQuery, $withItems) {
         $list = collect([]);
 
-        if (in_array($type, ['all', 'accessory'])) $list = $list->merge($this->getAccessories($query, $withItems));
-        if (in_array($type, ['all', 'phone'])) $list = $list->merge($this->getPhones($query, $withItems));
-        
-        $list->each(function($item) {
-            $item->makeVisible(['isPhone']);
-        });
+        $list = $list->merge($this->getPhones($searchQuery, $withItems));
+        $list = $list->merge($this->getAccessories($searchQuery, $withItems));
 
         return $list;
     }
 
-    public function getAccessories($searchQuery, $withItems) {
-    	return $this->baseQuery(Accessory::query(), $searchQuery, $withItems)->get();
-    }
-
     public function getPhones($searchQuery, $withItems) {
-    	$list = $this->baseQuery(Phone::query(), $searchQuery, $withItems);
+    	$list = $this->productsBaseQuery(Phone::query(), $searchQuery, $withItems);
         
         if (!$withItems && $list->doesntExist()) {
             $devices = $this->fetchDevices($searchQuery);
@@ -52,98 +88,19 @@ class SearchController extends Controller {
             Phone::insert($devices);
         }
         
-        return $list->get();
+        return $this->appendIsPhone($list->get());
     }
 
-    public function baseQuery($query, $searchQuery, $withItems) {
-    	$builder = $query->whereLike('name', $searchQuery)->select('id', 'name', 'brand');
-        if ($withItems) $builder->with('items:id,itemable_id,itemable_type,delta');
-
-        return $builder;
+    public function getAccessories($searchQuery, $withItems) {
+        $list = $this->productsBaseQuery(Accessory::query(), $searchQuery, $withItems)->get();
+        return $this->appendIsPhone($list);
     }
 
-    public function fetchDevices($term) {
-        try {
-            $response = Http::timeout(5)->get('https://www.droidafrica.net/wp-admin/admin-ajax.php?action=aps-search&num=999&search=' . urlencode($term));
-            
-            if ($response->successful()) {
-                $response = $response->json();
-                
-                if (!is_array($response) || isset($response['not'])) return [];
+    public function appendIsPhone($list) {
+        $list->each(function($item) {
+            $item->makeVisible(['isPhone']);
+        });
 
-                $devices = array_map(function($HTML) {
-                    return $this->formatDevice($HTML);
-                }, $response);
-
-                $devices = Arr::except($devices, ['more']);
-
-                return $devices;
-            }
-        } catch (\Exception $ex) {}
-
-        return [];
-    }
-
-    public function formatDevice($HTML) {
-        preg_match_all('/<a .+?>.+?<\/a>/', $HTML, $links);
-        $links = $links[0] ?? [];
-        
-        if (count($links) < 4) return null;
-
-        preg_match('/>(.+?)</', $links[1], $PhoneName);
-        preg_match('/strong>(.+?)</', $links[2], $BrandName);
-        
-        //preg_match('/<img src="(.+?wp-content\/uploads\/.+?)"/', $links[0], $image);
-        //preg_match('/gadget\/(.+?)\//', $links[1], $PhoneLink);       
-        //preg_match('/brand\/(.+?)\//', $links[2], $BrandLink);
-
-        $time = now();
-
-        return [
-            'name' => $PhoneName[1],
-            'brand' => $BrandName[1],
-            'store_id' => 0,
-            'created_by_id' => 0,
-            'updated_by_id' => 0,
-            'created_at' => $time,
-            'updated_at' => $time
-            
-            //'link' => $PhoneLink[1],
-            //'brandLink' => $BrandLink[1],
-            //'image' => $image[1]
-        ];
-    }
-
-    public function getDeviceSpecs($endPoint) {
-        $response = Http::get('https://www.droidafrica.net/gadget/' . $endPoint);
-        $response = $response->body();
-        $response = str_replace("\n", '', $response);
-        $response = str_replace("\r", '', $response);
-
-        
-        preg_match_all('/aps-group-title">(.+?)<(.+?)<\/table/', $response, $allTables);
-        
-        $Specs = [];
-
-        for ($i = 0; $i < count($allTables[1]); $i++)
-            $Specs[trim($allTables[1][$i])] = $allTables[2][$i];
-        
-        $Specs = array_map(function($HTML) {
-            preg_match_all('/<strong class=".*?>(.+?)</', $HTML, $titles);
-            $titles = $titles[1];
-            
-            preg_match_all('/"aps-1co">(.+?)<\/span/', $HTML, $values);
-            $values = $values[1];
-
-            $Whatever = [];
-            for ($i = 0; $i < count($titles); $i++){
-                $value = $values[$i];
-                if (!Str::contains($value, ['<', '>'])) $Whatever[trim($titles[$i])] = str_replace('<br />', "\n", $value);
-            }
-
-            return $Whatever;
-        }, $Specs);
-
-        return $Specs;
+        return $list;
     }
 }

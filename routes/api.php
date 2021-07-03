@@ -71,7 +71,6 @@
         ]);
         
         Route::apiResource('phones', PhonesController::class)->only(['index']);
-        Route::post('/search/{type}', 'SearchController@index')->where('type', '(all|phone|accessory)');
 
         // Route::apiResource('transactions', TransactionsController::class)->only(['show']);
         
@@ -86,6 +85,22 @@
         Route::post('items/{type}/{Itemable}',
             'ItemsController@storeItemable')
         ->where(['type' => '(phone|accessory)', 'Itemable' => '[0-9]+']);
+        
+        Route::prefix('/search')->group(function() {
+            Route::prefix('/people')->group(function() {
+                Route::post('/vendor', 'SearchController@searchForVendor');
+                Route::post('/customer', 'SearchController@searchForCustomer');
+            });
+
+            Route::prefix('/products')->group(function() {
+                Route::post('/all', 'SearchController@searchForProducts');    
+
+                Route::post('/phone', 'SearchController@searchForPhone');
+                Route::post('/accessory', 'SearchController@searchForAccessory');
+            });
+            
+            Route::post('/items', 'SearchController@searchForItems');
+        });
 
     //});
 
