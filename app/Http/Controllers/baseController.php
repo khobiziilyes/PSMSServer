@@ -18,8 +18,11 @@ class baseController extends Controller {
     }
 
     public function paginateQuery($query, $request) {
-        $query = $query->with(['created_by_obj:id,name', 'updated_by_obj:id,name']);
+        $query->with(['created_by_obj:id,name', 'updated_by_obj:id,name']);
+        
         $filterFields = array_merge(method_exists($this, 'allowedFilters') ? $this->allowedFilters() : [], [
+            'search',
+            
             'createdBy',
             'createdBefore',
             'createdAfter',
@@ -29,17 +32,18 @@ class baseController extends Controller {
             'updatedAfter'
         ]);
         
-        $query = $query->filter(Arr::only($request->query(), $filterFields));
-
         $orderBy = $request->query('orderBy', null);
         
-        if (filled($orderBy) && is_string($orderBy) && in_array($orderBy, array_merge($this->whiteListOrderBy ?? [], ['id', 'created_at']))) {
+        if (filled($orderBy) && is_string($orderBy) && in_array($orderBy, array_merge($this->whiteListOrderBy ?? [], ['id', 'created_at', 'created_by']))) {
             $direction = $request->query('dir', 'asc');
             if (!(filled($direction) && is_string($direction) && $direction === 'desc')) $direction = 'asc';
             
-            $query = $query->orderBy($orderBy, $direction);
+            $query->orderBy($orderBy, $direction);
         }
-
+        
+        $filterableFields = Arr::only($request->query(), $filterFields);
+        $query->filter($filterableFields);
+        
         $paginator = $query->paginateAuto();
 
         $paginator->getCollection()->map(function($a) use ($request) {
@@ -58,5 +62,12 @@ class baseController extends Controller {
 
     public function authorizeAction($type, $name = null) {
         return \Bouncer::authorize('can' . $type . ($name ? $name : $this->theClass::getClassName()));
+    }
+
+    public function instanceResponse($request, $theInstance) {
+        return [
+            'data' => $theInstance,
+            'totalRows' => $this->indexQuery($request)->count()
+        ];
     }
 }

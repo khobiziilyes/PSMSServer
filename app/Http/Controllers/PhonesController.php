@@ -14,4 +14,8 @@ class PhonesController extends baseController {
     public function indexQuery($request) {
         return Phone::with('Accessories:accessory_id,name,brand,type_id');
     }
+
+    public function allowedFilters() {
+        return ['name', 'brand'];
+    }
 }

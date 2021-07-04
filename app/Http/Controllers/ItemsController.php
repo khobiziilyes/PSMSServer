@@ -19,7 +19,7 @@ class ItemsController extends baseController {
     protected $beforeDestroy = 'Carts';
     
     public function allowedFilters() {
-        return ['name', 'brand', 'search', 'isPhone', 'currentQuantity', 'delta'];
+        return ['name', 'brand', 'isPhone', 'currentQuantity', 'delta'];
     }
 
     public function indexQuery($request) {
@@ -47,20 +47,20 @@ class ItemsController extends baseController {
 
     public function storeItemable($type, $Itemable) {
         $this->authorizeAction('Write');
+
+        $request = request();
+
         $Itemable = ($type === 'phone' ? Phone::class : Accessory::class)::findOrFail($Itemable);
         
         $valArr = $this->getValidationRules(false, $Itemable->id, $Itemable->isPhone);
-        $validatedData = Validator::make(request()->input(), $valArr)->validate();
+        $validatedData = Validator::make($request->input(), $valArr)->validate();
         
         $theInstance = $Itemable->Items()->create($validatedData);
         $theInstance->save();
         
         $totalRows = Item::count();
         
-        return [
-            'data' => $theInstance,
-            'totalRows' => $totalRows
-        ];
+        return $this->instanceResponse($request, $theInstance);
     }
 
     function formatData($collection, $request) {

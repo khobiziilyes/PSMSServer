@@ -16,7 +16,7 @@ class AccessoriesController extends baseController {
     protected $theClass = Accessory::class;
     
     public function allowedFilters() {
-        return ['name', 'brand', 'search', 'type'];
+        return ['name', 'brand', 'type'];
     }
     
     function getValidationRules($isUpdate) {

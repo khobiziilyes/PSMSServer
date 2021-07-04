@@ -1,5 +1,8 @@
 <?php
     /*
+        - Trusted owners.
+        - Add seeding for PSMS and UNKNOWN people.
+        - Add where for DELETED using, whereDoesntHave
         - Notes are required, but can be empty (not null).
         - Why isPhone hidden in product?
         - Temporarily enable addPhone.
@@ -85,7 +88,7 @@
         Route::post('items/{type}/{Itemable}',
             'ItemsController@storeItemable')
         ->where(['type' => '(phone|accessory)', 'Itemable' => '[0-9]+']);
-        
+            
         Route::prefix('/search')->group(function() {
             Route::prefix('/people')->group(function() {
                 Route::post('/vendor', 'SearchController@searchForVendor');
@@ -101,7 +104,6 @@
             
             Route::post('/items', 'SearchController@searchForItems');
         });
-
     //});
 
 

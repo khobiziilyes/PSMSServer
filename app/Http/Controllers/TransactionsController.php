@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\Response;
+
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
@@ -25,8 +27,13 @@ class TransactionsController extends baseController {
     protected $theClass = Transaction::class;
     protected $withTrashed = true;
 
-    public function isBuy($request) {
-        return $request->route()->getAction()['isBuy'];
+    public function isBuy($request) {  
+        $actions = $request->route()->getAction();
+        $isBuy = $actions['isBuy'] ?? null;
+
+        if (is_null($isBuy)) abort(404);
+
+        return $isBuy;
     }
 
     public function index(Request $request) {
@@ -102,10 +109,7 @@ class TransactionsController extends baseController {
             }
         });
 
-        return [
-            'data' => $theInstance,
-            'totalRows' => Transaction::where('isBuy', $isBuy)->count()
-        ];
+        return $this->instanceResponse($request, $theInstance);
     }
 
     public function destroy($id) {

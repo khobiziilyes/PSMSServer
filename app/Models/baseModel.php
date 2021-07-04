@@ -73,11 +73,11 @@ class baseModel extends Model {
     }
 
     public function getCreatedByAttribute () {
-        return $this->created_by_obj->name;
+        return $this->created_by_obj->name . " #" . $this->created_by_id;
     }
 
     public function getUpdatedByAttribute () {
-        return $this->updated_by_obj->name;
+        return $this->updated_by_obj->name . " #" . $this->updated_by_id;
     }
 
     static function getClassName() {
@@ -86,5 +86,13 @@ class baseModel extends Model {
 
     public function Store() {
         return $this->belongsTo(Store::class);
+    }
+
+    public function getCreatedAtAttribute($value) {
+        return strtotime($value);
+    }
+
+    public function getUpdatedAtAttribute($value) {
+        return strtotime($value);
     }
 }

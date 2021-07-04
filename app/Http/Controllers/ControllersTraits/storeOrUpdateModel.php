@@ -24,9 +24,6 @@ trait storeOrUpdateModel {
         
         $totalRows = $theClass::count();
         
-        return [
-            'data' => $theInstance,
-            'totalRows' => $totalRows
-        ];
+        return $this->instanceResponse(request(), $theInstance);
     }
 }

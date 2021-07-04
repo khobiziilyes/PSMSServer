@@ -83,7 +83,7 @@ trait PhonesAPI {
             $Whatever = [];
             for ($i = 0; $i < count($titles); $i++){
                 $value = $values[$i];
-                if (!Str::contains($value, ['<', '>'])) $Whatever[trim($titles[$i])] = str_replace('<br />', "\n", $value);
+                if (!Str::contains($value, ['<', '>'])) $Whatever[trim($titles[$i])] = str_replace('<br />', "\r\n", $value);
             }
 
             return $Whatever;

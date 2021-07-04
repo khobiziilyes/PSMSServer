@@ -38,15 +38,11 @@ class baseFilter extends ModelFilter {
         $this->where($field, ($before ? '<' : '>') . '=', $date);
     }
 
-    public function createdBy($name) {
-        return $this->whereHas('created_by_obj', function($query) use($name) {
-            return $query->where('name', $name);
-        });
+    public function createdBy($id) {
+        return $this->where('created_by_id', $id);
     }
 
-    public function updatedBy($name) {
-        return $this->whereHas('updated_by_obj', function($query) use($name) {
-            return $query->where('name', $name);
-        });
+    public function updatedBy($id) {
+        return $this->where('updated_by_id', $id);
     }
 }

@@ -31,7 +31,7 @@ class PeopleController extends baseController {
     }
 
     function allowedFilters() {
-        return ['name', 'search'];
+        return ['name'];
     }
 }
 
