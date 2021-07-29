@@ -2,20 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Http\Controllers\baseController;
-
+use App\Http\Controllers\ProductsController;
 use App\Models\Phone;
 
-class PhonesController extends baseController {
+class PhonesController extends ProductsController {
     protected $theClass = Phone::class;
-    protected $whiteListOrderBy = ['name', 'brand'];
     
-    public function indexQuery($request) {
-        return Phone::with('Accessories:accessory_id,name,brand,type_id');
+    public function allowedFilters() {
+        return $this->_allowedFilters();
     }
 
-    public function allowedFilters() {
-        return ['name', 'brand'];
+    public function getValidationRules($resource_id) {
+    	return $this->_getValidationRules($resource_id, [
+    		'brand' => 'required|name',
+    	]);
     }
 }

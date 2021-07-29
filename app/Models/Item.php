@@ -5,10 +5,10 @@ namespace App\Models;
 use App\Models\Cart;
 
 class Item extends baseModel {
+    static $storeIdScope = false;
+
     protected $fillable = ['delta', 'currentQuantity', 'defaultPrice', 'notes'];
-    // protected $with = ['itemable:id,name,brand'];
-    protected $_hidden = ['itemable_id', 'itemable_type'];
-    // protected $appends = ['isPhone'];
+    protected $hidden = ['itemable_id', 'itemable_type'];
     
     static $indexAppends = [
         'totalProfitPrice',
@@ -91,8 +91,6 @@ class Item extends baseModel {
 
         return $val;
     }
-    
-    // Those are transactions statistics functions
 
     public function transactionDestroyed($Quantity, $costPerItem, $isBuy) {
         return $this->transactionPerformed($Quantity, $costPerItem, $isBuy, true);

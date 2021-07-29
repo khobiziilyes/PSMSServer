@@ -20,8 +20,6 @@ class CreateItemsTable extends Migration {
             $table->integer('totalBuys')->default(0);
             $table->integer('totalSells')->default(0);
 
-            //$table->integer('totalReturns')->default(0);
-            
             $table->notes();
             $table->unique(['itemable_type', 'itemable_id', 'delta']);
 

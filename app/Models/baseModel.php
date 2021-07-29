@@ -12,7 +12,9 @@ class baseModel extends Model {
     use Filterable;
     
     static $storeIdScope = true;
-    protected $hidden = ['store_id', 'created_by_id', 'updated_by_id', 'created_by_obj', 'updated_by_obj'];
+    static $isPublicProperty = false;
+
+    protected $_hidden = ['store_id', 'created_by_id', 'updated_by_id', 'created_by_obj', 'updated_by_obj'];
 
     public function __construct(array $attributes = []) {
         parent::__construct($attributes);
@@ -34,8 +36,10 @@ class baseModel extends Model {
                 });
             }
 
-            if (in_array(strtoupper(request()->method()), ['GET', 'HEAD', 'POST']))
+            if (in_array(strtoupper(request()->method()), ['GET', 'POST'])) {
                 $builder->orWhere($storeIdColumn, 0);
+                if (static::$isPublicProperty) $builder->orWhere('is_public', true);
+            }
         });
 
         static::creating(function($model) {
@@ -60,6 +64,10 @@ class baseModel extends Model {
         });
     }
 
+    public function Store() {
+        return $this->belongsTo(Store::class);
+    }
+    
     public function created_by_obj() {
         return $this->creatorUpdator('created_by_id');
     }
@@ -69,23 +77,15 @@ class baseModel extends Model {
     }
 
     public function creatorUpdator($field) {
-        return $this->hasOne(\App\Models\User::class, 'id', $field)->withDefault(['id' => -1, 'name' => 'DELETED']);
+        return $this->hasOne(\App\Models\User::class, 'id', $field)->withTrashed()->withDefault(['id' => -1, 'name' => 'DELETED']);
     }
 
     public function getCreatedByAttribute () {
-        return $this->created_by_obj->name . " #" . $this->created_by_id;
+        return $this->created_by_obj->name . ' #' . $this->created_by_id;
     }
 
     public function getUpdatedByAttribute () {
-        return $this->updated_by_obj->name . " #" . $this->updated_by_id;
-    }
-
-    static function getClassName() {
-        return (new \ReflectionClass(new static))->getShortName();
-    }
-
-    public function Store() {
-        return $this->belongsTo(Store::class);
+        return $this->updated_by_obj->name . ' #' . $this->updated_by_id;
     }
 
     public function getCreatedAtAttribute($value) {
@@ -94,5 +94,18 @@ class baseModel extends Model {
 
     public function getUpdatedAtAttribute($value) {
         return strtotime($value);
+    }
+
+    public function getIsWritableAttributeInit() {
+        $stores_ids = auth()->user()->StoresForWorker()->pluck('id')->toArray();
+        return in_array($this->store_id, $stores_ids);
+    }
+
+    public function getIsWritableAttribute() {
+        return $this->getIsWritableAttributeInit();
+    }
+
+    static function getClassName() {
+        return (new \ReflectionClass(new static))->getShortName();
     }
 }

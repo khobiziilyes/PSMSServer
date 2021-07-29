@@ -10,12 +10,28 @@ class DatabaseSeeder extends Seeder {
     public function run() {        
         $time = new \DateTime(now());
 
+        DB::statement('SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";');
+
         $atby = [
             'created_at' => $time,
             'updated_at' => $time,
-            'created_by_id' => 1,
-            'updated_by_id' => 1
+            'created_by_id' => 0,
+            'updated_by_id' => 0
         ];
+
+        $this->createGroup([
+            'id' => 0,
+            'phone_number' => '',
+            'name' => 'PSMS'
+        ], [
+            'id' => 0,
+            'name' => 'PSMS',
+            'location' => '',
+            'pay_date' => date_create('2021-01-01')
+        ], [
+            'id' => 0,
+            'maxUsers' => 0
+        ])[0];
 
         $store1 = $this->createGroup([
             'phone_number' => '0667809272',
@@ -72,7 +88,7 @@ class DatabaseSeeder extends Seeder {
 
         DB::table('users')->insert([
             [
-                'phone_number' => '0559510225',
+                'phone_number' => '0559510226',
                 'name' => 'Moha',
                 'store_id' => $store3,
                 'password' => Hash::make('0')
@@ -82,24 +98,6 @@ class DatabaseSeeder extends Seeder {
         $this->seedProducts($atby);
         $this->seedItems($atby);
         $this->seedPeople($atby);
-    }
-
-    public function createGroup($owner, $store) {
-        $owner_id = DB::table('users')->insertGetId(array_merge($owner, [
-            'password' => Hash::make('0')
-        ]));
-
-        $group_id = DB::table('groups')->insertGetId([
-            'owner_id' => $owner_id
-        ]);
-
-        $default_store_id = DB::table('stores')->insertGetId(array_merge($store, [
-            'group_id' => $group_id
-        ]));
-
-        DB::table('users')->where('id', $owner_id)->update(['store_id' => $default_store_id]);
-
-        return [$default_store_id, $group_id];
     }
 
     public function seedProducts($atby) {
@@ -147,24 +145,39 @@ class DatabaseSeeder extends Seeder {
     }
 
     public function seedPeople($atby) {
-        DB::table('people')->insert(array_merge([
-            'name' => 'First Vendor',
-            'isVendor' => true,
-            'address' => 'Sour El Ghozlane',
-            'phone1' => '0799244496',
-            'phone2' => null,
-            'fax' => null,
-            'store_id' => 0
-        ], $atby));
+        $this->seedPerson(1, false, $atby);
+        $this->seedPerson(2, true, $atby);
+    }
 
+    public function seedPerson($id, $isVendor, $atby) {
         DB::table('people')->insert(array_merge([
-            'name' => 'First Customer',
-            'isVendor' => false,
-            'address' => 'Sour El Ghozlane',
-            'phone1' => '0799244496',
+            'id' => $id,
+            'isVendor' => $isVendor,
+            'name' => 'UNKNOWN',
+            'address' => null,
+            'phone1' => '',
             'phone2' => null,
             'fax' => null,
             'store_id' => 0
         ], $atby));
+    }
+
+    public function createGroup($owner, $store, $group = []) {
+        $owner_id = DB::table('users')->insertGetId(array_merge($owner, [
+            'password' => Hash::make('0')
+        ]));
+
+        $group_id = DB::table('groups')->insertGetId(array_merge([
+            'owner_id' => $owner_id,
+            'maxUsers' => 1
+        ], $group));
+
+        $default_store_id = DB::table('stores')->insertGetId(array_merge($store, [
+            'group_id' => $group_id
+        ]));
+
+        DB::table('users')->where('id', $owner_id)->update(['store_id' => $default_store_id]);
+
+        return [$default_store_id, $group_id];
     }
 }

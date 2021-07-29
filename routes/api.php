@@ -1,34 +1,32 @@
 <?php
     /*
-        - Trusted owners.
-        - Add seeding for PSMS and UNKNOWN people.
-        - Add where for DELETED using, whereDoesntHave
-        - Notes are required, but can be empty (not null).
-        - Why isPhone hidden in product?
-        - Temporarily enable addPhone.
-        - Brand in Accessory shouldn't be required.
-        - Add isUpdatable to data.
-        - Goods Stats.
-        - User Stats.
+        - Auto adjust case for phone brand and name.
+        - Stats (User - Good).
         - $this->whiteListOrderBy
-        - Maybe Add "forceSearch" for liveSearch.
-        
-        - Auto add Accessories for new phones.
-        - Flexy.
-        
+         
+        - In buy, automatically add Item to DB, in sell, Fetch for available.
         - Generate PDFs for tables.
-        - Devices Specs.
-        - Do i need show resource?
+        - Do i need show resource ?
+        
+        - Receipt.
+        - Barcode.
 
+        - Debts.
+        - Loyalty System.
+        - Easy pay.
+        
+        - Flexy.
+        - Reparation.
+        
         - Social Media Share.
-        - Store Website.
-
-        - Enable onlyJsonMiddleware.
-        - Bouncer cache.
+        - Online store view.
 
         - My Control Panel.
+        - onlyJsonMiddleware.
+        - Bouncer cache.
         - https://laravel.com/docs/8.x/deployment
         - https://laravel.com/docs/8.x/passport#deploying-passport
+        - php artisan migrate:fresh --seed && php artisan passport:install && php artisan db:seed --class=BouncerSeeder
     */
 
     use Illuminate\Http\Request;
@@ -44,7 +42,6 @@
 
     Route::prefix('auth')->group(function () {
         Route::post('login', 'AuthController@login');
-        //Route::post('register', 'AuthController@register');
         
         Route::middleware('auth:api')->group(function() {
             Route::get('user', 'AuthController@user');
@@ -53,29 +50,18 @@
     });
     
     //Route::middleware('auth:api')->group(function() {
-        Route::prefix('owner')->middleware(isOwnerMiddleware::class)->group(function () {
-            Route::get('/stores', function(Request $request) {
-                return $request->user()->Stores;
-            });
-
-            Route::post('/store', function(Request $request) {
-                return $request->user()->setWorkingStore($request->input('store_id'));
-            });
-
-            Route::get('/users', 'UsersController@index');
-            Route::patch('/users/{user}/permissions', 'UsersController@updatePermissions');
-            Route::patch('/users/{user}', 'UsersController@update');
-        });
+        Route::apiResource('users', UsersController::class)->middleware(isOwnerMiddleware::class)->except(['show', 'index']);
+        
+        Route::get('/users', 'UsersController@index');
+        Route::patch('/users/{user}/permissions', 'UsersController@updatePermissions');
+        Route::post('/store', 'UsersController@switchStore');
 
         Route::apiResources([
             'vendors' => VendorsController::class,
             'customers' => CustomersController::class,
-            'accessories' => AccessoriesController::class
+            'accessories' => AccessoriesController::class,
+            'phones' => PhonesController::class
         ]);
-        
-        Route::apiResource('phones', PhonesController::class)->only(['index']);
-
-        // Route::apiResource('transactions', TransactionsController::class)->only(['show']);
         
         Route::get('/buy', ['uses' => 'TransactionsController@index', 'isBuy' => true]);
         Route::get('/sell', ['uses' => 'TransactionsController@index', 'isBuy' => false]);
@@ -88,7 +74,7 @@
         Route::post('items/{type}/{Itemable}',
             'ItemsController@storeItemable')
         ->where(['type' => '(phone|accessory)', 'Itemable' => '[0-9]+']);
-            
+        
         Route::prefix('/search')->group(function() {
             Route::prefix('/people')->group(function() {
                 Route::post('/vendor', 'SearchController@searchForVendor');
@@ -102,7 +88,12 @@
                 Route::post('/accessory', 'SearchController@searchForAccessory');
             });
             
-            Route::post('/items', 'SearchController@searchForItems');
+            Route::prefix('/items')->group(function() {
+                Route::post('/all', 'SearchController@searchForItems');    
+
+                Route::post('/phone', 'SearchController@searchForPhoneWithItems');
+                Route::post('/accessory', 'SearchController@searchForAccessoryWithItems');
+            });
         });
     //});
 

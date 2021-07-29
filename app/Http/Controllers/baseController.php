@@ -47,10 +47,10 @@ class baseController extends Controller {
         $paginator = $query->paginateAuto();
 
         $paginator->getCollection()->map(function($a) use ($request) {
-            $a->append(['created_by', 'updated_by']);
+            $a->append(['created_by', 'updated_by', 'isWritable']);
         });
 
-        if (method_exists($this, 'formatData')) $this->formatData($paginator->getCollection(), $request);
+        if (method_exists($this, 'formatOutput')) $this->formatOutput($paginator->getCollection(), $request);
 
         return $this->paginatorResponse($paginator);
     }
@@ -62,12 +62,5 @@ class baseController extends Controller {
 
     public function authorizeAction($type, $name = null) {
         return \Bouncer::authorize('can' . $type . ($name ? $name : $this->theClass::getClassName()));
-    }
-
-    public function instanceResponse($request, $theInstance) {
-        return [
-            'data' => $theInstance,
-            'totalRows' => $this->indexQuery($request)->count()
-        ];
     }
 }

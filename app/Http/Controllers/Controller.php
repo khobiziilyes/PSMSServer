@@ -22,4 +22,11 @@ class Controller extends BaseController {
     		'total'
     	]);
     }
+
+    public function instanceResponse($request, $theInstance) {
+        return [
+            'data' => $theInstance,
+            'totalRows' => $this->indexQuery($request)->count()
+        ];
+    }
 }

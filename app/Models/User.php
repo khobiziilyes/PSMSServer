@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Scopes\GroupScope;
 
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
 use Silber\Bouncer\Database\HasRolesAndAbilities;
@@ -16,7 +17,8 @@ use App\Models\Group;
 class User extends Authenticatable {
     use HasApiTokens;
     use HasRolesAndAbilities;
-
+    use SoftDeletes;
+    
     protected $fillable = [
         'name',
         'phone_number',
@@ -33,25 +35,32 @@ class User extends Authenticatable {
         static::addGlobalScope(new GroupScope);
     }
 
+    public function Group() {
+        return $this->hasOne(Group::class, 'owner_id');
+    }
+    
     public function getIsOwnerAttribute() {
-        return $this->hasOne(Group::class, 'owner_id')->exists();
+        return (bool) $this->Group;
     }
 
-    function Store() {
+    public function Store() {
         return $this->belongsTo(Store::Class);
     }
 
-    function Stores() {
+    public function Stores() {
         return $this->hasManyThrough(Store::class, Group::class, 'owner_id');
     }
 
+    public function StoresForWorker() {
+        return $this->Store->Group->Owner->Stores;
+    }
+    
     public function getPermissionsAttribute() {
-        $CRUD_PERMISSIONS = config('app.CRUD_PERMISSIONS');
         $abilities = $this->getAbilities()->pluck('name')->toArray();
-
-        $theReturn = [];
-        foreach ($CRUD_PERMISSIONS as $permission) $theReturn[$permission] = in_array($permission, $abilities);
+        $ULTRA_PERMISSIONS = config('app.ULTRA_PERMISSIONS');
         
-        return $theReturn;
+        return $ULTRA_PERMISSIONS->flatMap(function($permission) use($abilities) {
+            return [$permission => in_array($permission, $abilities)];
+        })->toArray();
     }
 }

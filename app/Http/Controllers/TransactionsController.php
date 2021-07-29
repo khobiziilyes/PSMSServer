@@ -60,7 +60,7 @@ class TransactionsController extends baseController {
             'cart.*.item_id' => 'required|exists:items,id|distinct:strict',
             'cart.*.list.*.costPerItem' => 'required|integer|min:0',
             'cart.*.list.*.Quantity' => 'required|integer|min:1',
-            'notes' => 'notes'
+            'notes' => 'present|notes'
         ];
 
         return $validationRules;
@@ -135,7 +135,7 @@ class TransactionsController extends baseController {
         return ['deleted' => true];
     }
 
-    public function formatData($collection, $request) {
+    public function formatOutput($collection, $request) {
         if (!$this->isBuy($request)) $collection->map(function ($transaction) {
             $transaction->Carts->append(['profitPerItem', 'totalProfit']);
             $transaction->append('Profit');

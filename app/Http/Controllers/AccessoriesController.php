@@ -2,42 +2,25 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\ControllersTraits;
-
-use App\Http\Controllers\baseController;
+use App\Http\Controllers\ProductsController;
 use App\Models\Accessory;
 
-class AccessoriesController extends baseController {
-    use ControllersTraits\storeModel;
-    use ControllersTraits\updateModel;
-    use ControllersTraits\destroyModel;
-
-    protected $beforeDestroy = 'items';
+class AccessoriesController extends ProductsController {
     protected $theClass = Accessory::class;
     
     public function allowedFilters() {
-        return ['name', 'brand', 'type'];
+        return $this->_allowedFilters(['type']);
     }
     
-    function getValidationRules($isUpdate) {
-    	$requiredName = ($isUpdate ? '' : 'required|') . 'name';
-
-        $baseRules = [
-            'name' => $requiredName,
-            'brand' => $requiredName,
-            'notes' => 'notes'
-        ];
-
-        if (!$isUpdate) $baseRules['type_id'] = 'required|numeric|between:1,18';
-
-        return $baseRules;
-    }
-
-    public function indexQuery($request) {
-        return Accessory::with('Phones:phone_id,name,brand');
+    public function getValidationRules($resource_id) {
+    	return $this->_getValidationRules($resource_id, [
+            'brand' => 'present|name',
+            'type_id' => 'required|numeric|between:1,18'
+        ]);
     }
 
     /*
+        0, 'Others'
         1, 'Shock Proof'
         2, 'Glass'
         3, 'Pouch'
@@ -56,6 +39,5 @@ class AccessoriesController extends baseController {
         15, 'Adapter'
         16, 'Casque'
         17, 'Baff'
-        18, 'Others'
     */
 }

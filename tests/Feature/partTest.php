@@ -6,19 +6,26 @@ use Tests\Feature\Traits;
 class partTest extends featureBase {
     use Traits;
 
-    public function F() {
-        //$response = $this->postJson('/api/phones', ['query' => 'Gal']);
-        $CRUD_PERMISSIONS = config('app.CRUD_PERMISSIONS');
-        
-        $PD = $CRUD_PERMISSIONS->flatMap(function($permission) {
-            return [$permission => true];
-        })->toArray();
+    public function testAcces() {
+        $response = $this->postJson('/api/relations/accessory/1', [
+            'secondary_ids' => [1, 2]
+        ]);
 
-        $response = $this->patchJson('/api/owner/users/5', $PD);
         $this->Log('idk', $response->json());
     }
 
-    public function testA() {
+    public function permissions() {
+        $BASIC_PERMISSIONS = config('app.BASIC_PERMISSIONS');
+        
+        $PD = $BASIC_PERMISSIONS->flatMap(function($permission) {
+            return [$permission => true];
+        })->toArray();
+
+        $response = $this->patchJson('/api/users/5/permissions', $PD);
+        $this->Log('idk', $response->json());
+    }
+
+    public function A() {
         $B1 = [
             [1, [
                     [35000, 2],

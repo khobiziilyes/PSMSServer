@@ -38,9 +38,14 @@ class SearchController extends Controller {
         return $this->getPhones($searchQuery, false);
     }
 
-    public function searchForAccessory(Request $request) {
+    public function searchForPhoneWithItems(Request $request) {
         $searchQuery = $this->getSearchQuery($request);
-        return $this->getAccessories($searchQuery, false);
+        return $this->getPhones($searchQuery, true);
+    }
+
+    public function searchForAccessoryWithItems(Request $request) {
+        $searchQuery = $this->getSearchQuery($request);
+        return $this->getAccessories($searchQuery, true);
     }
 
     public function searchForItems(Request $request) {
@@ -58,14 +63,6 @@ class SearchController extends Controller {
 
     public function peopleBaseQuery($builder, $searchQuery) {
         $builder = $builder->whereLike('name', $searchQuery)->select('id', 'name');
-        return $builder;
-    }
-
-    public function productsBaseQuery($builder, $searchQuery, $withItems) {
-        $builder = $builder->whereLike('name', $searchQuery)->select('id', 'name', 'brand');
-        if ($withItems) 
-            $builder = $builder->whereHas('items')->with('items:id,itemable_id,itemable_type,delta,currentQuantity,defaultPrice');
-
         return $builder;
     }
 
@@ -96,11 +93,19 @@ class SearchController extends Controller {
         return $this->appendIsPhone($list);
     }
 
+    public function productsBaseQuery($builder, $searchQuery, $withItems) {
+        $builder = $builder->whereLike('name', $searchQuery)->select('id', 'name', 'brand');
+        if ($withItems) 
+            $builder = $builder->whereHas('items')->with('items:id,itemable_id,itemable_type,delta,currentQuantity,defaultPrice');
+
+        return $builder;
+    }
+
     public function appendIsPhone($list) {
         $list->each(function($item) {
-            $item->makeVisible(['isPhone']);
+            $item->append(['isPhone']);
         });
-
+        
         return $list;
     }
 }

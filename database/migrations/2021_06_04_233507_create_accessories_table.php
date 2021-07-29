@@ -17,7 +17,8 @@ class CreateAccessoriesTable extends Migration
             $table->id();
             
             $table->string('name');
-            $table->string('brand');
+            $table->string('brand')->nullable();
+            $table->boolean('is_public')->default(false);
             $table->notes();
             
             $table->integer('type_id');

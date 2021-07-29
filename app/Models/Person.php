@@ -9,7 +9,7 @@ use App\Models\Transaction;
 class Person extends baseModel {    
     protected $fillable = ['name', 'address', 'phone1', 'phone2', 'fax', 'notes'];
     protected $table = 'people';
-    protected $_hidden = ['isVendor'];
+    protected $hidden = ['isVendor'];
     
     public function modelFilter() {
         return $this->provideFilter(\App\ModelFilters\PersonFilter::class);

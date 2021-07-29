@@ -7,12 +7,12 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Scope;
 
 class GroupScope implements Scope {
-    public function apply(Builder $builder, Model $model) {
+	public function apply(Builder $builder, Model $model) {
         $user = auth()->user();
-
+        
         if ($user) return $builder->whereHas('Store', function($query) use($user) {
             $query->where('group_id', $user->Store->Group->id);
-        });
+        })->orWhere('id', 0);
 
         return $builder;
     }

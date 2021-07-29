@@ -34,11 +34,11 @@ class AppServiceProvider extends ServiceProvider {
         });
 
         Validator::extend('name', function ($attribute, $value, $parameters, $validator) {
-            return preg_match('/^[\w\d\- ]{1,30}$/', $value);
+            return (is_null($value) || preg_match('/^[\w\d\-_ ]{1,30}$/', $value));
         }, 'The field characters are invalid, Or too long.');
         
         Validator::extend('notes', function ($attribute, $value, $parameters, $validator) {
-            return ($value === null || preg_match('/^[\w\d\s,.\-\n]{1,250}$/', $value));
+            return (is_null($value) || preg_match('/^[\w\d\s,._\-\n]{1,250}$/', $value));
         }, 'The field characters are invalid, Or too long.');
 
         Builder::macro('filterByMorph', function ($relationName, $morphRelations, $name, $value) {

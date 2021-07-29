@@ -9,9 +9,8 @@ use App\Models\Item;
 class Product extends baseModel {
     static $storeIdScope = false;
     
-    protected $fillable = ['name', 'brand', 'notes', 'type_id'];
-    protected $appends = ['isPhone'];
-    protected $_hidden = ['isPhone', 'pivot'];
+    protected $fillable = ['name', 'brand', 'notes', 'type_id', 'is_public'];
+    protected $hidden = ['pivot'];
 
     public function getIsPhoneAttribute() {
         return static::$isPhone;
@@ -24,20 +23,11 @@ class Product extends baseModel {
     public function modelFilter() {
         return $this->provideFilter(\App\ModelFilters\ProductFilter::class);
     }
-}
 
-class Phone extends Product {
-    static $isPhone = true;
-    
-    public function Accessories() {
-        return $this->belongsToMany(Accessory::class);
+    public function getIsWritableAttribute() {
+        return $this->getIsWritableAttributeInit() && !$this->is_public;
     }
 }
 
-class Accessory extends Product {
-    static $isPhone = false;
-    
-    public function Phones() {
-        return $this->belongsToMany(Phone::class);
-    }
-}
+class Phone extends Product { static $isPhone = true; }
+class Accessory extends Product { static $isPhone = false; }

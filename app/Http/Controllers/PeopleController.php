@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\ControllersTraits;
 
+use App\Rules\PhoneNumber;
 use App\Http\Controllers\baseController;
 use App\Models\Vendor;
 use App\Models\Customer;
@@ -15,18 +16,16 @@ class PeopleController extends baseController {
     
     protected $beforeDestroy = 'transactions';
 
-    function getValidationRules($isUpdate) {
-        $phoneRegex = '/^0[567]\d{8}$/';        
-        $required = $isUpdate ? '' : 'required|';
-
+    function getValidationRules($resource_id) {
         return [
-            'name' => $required . 'name',
-            'phone1' => $required . "regex:$phoneRegex",  
+            'name' => 'required|name',
+            
+            'phone1' => ['required', new PhoneNumber],
+            'phone2' => ['present' , 'nullable', new PhoneNumber],
 
-            'address' => 'nullable|notes',
-            'phone2' => "nullable|regex:$phoneRegex",
-            'fax' => 'nullable|regex:/^0\d{8}$/',
-            'notes' => 'notes'
+            'address' => 'present|notes',
+            'fax' => 'present|nullable|regex:/^0\d{8}$/',
+            'notes' => 'present|notes'
         ];
     }
 

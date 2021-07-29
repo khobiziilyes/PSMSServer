@@ -6,14 +6,17 @@ use Illuminate\Support\Facades\Validator;
 
 trait storeOrUpdateModel {
 	public function storeOrUpdate($theDatas, $id = null) {
-        $valArr = $this->getValidationRules(!is_null($id));
+        $isCreate = is_null($id);
+        $valArr = $this->getValidationRules($id);
         
         $validatedData = Validator::make($theDatas, $valArr)->validate();
         
+        if (method_exists($this, 'formatInput')) $validatedData = $this->formatInput($validatedData, $isCreate);
+
         $theInstance = null;
         $theClass = $this->theClass;
         
-        if (is_null($id)) {
+        if ($isCreate) {
             $theInstance = new $theClass($validatedData);
         } else {
             $theInstance = $theClass::findOrFail($id);

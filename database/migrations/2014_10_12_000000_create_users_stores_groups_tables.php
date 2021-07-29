@@ -34,7 +34,9 @@ class CreateUsersStoresGroupsTables extends Migration {
 
         Schema::create('groups', function (Blueprint $table) {
             $table->id();
+            
             $table->foreignId('owner_id');
+            $table->integer('maxUsers')->default(1);
 
             $table->timestamps();
         });

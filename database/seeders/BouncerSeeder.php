@@ -8,9 +8,13 @@ use Illuminate\Database\Seeder;
 
 class BouncerSeeder extends Seeder {
     public function run() {
- 		$ALL_PERMISSIONS = config('app.ALL_PERMISSIONS');
-        foreach ($ALL_PERMISSIONS as $permission) Bouncer::allow('owner')->to($permission);
-        
-        foreach (Group::pluck('owner_id')->toArray() as $owner_id) Bouncer::assign('owner')->to($owner_id);
+ 		$BASIC_PERMISSIONS = config('app.BASIC_PERMISSIONS');
+ 		$ULTRA_PERMISSIONS = config('app.ULTRA_PERMISSIONS');
+ 		
+ 		Bouncer::allow('owner')->to($BASIC_PERMISSIONS);
+ 		Bouncer::allow('trusted')->to($ULTRA_PERMISSIONS);
+
+ 		$owners_ids = Group::pluck('owner_id')->toArray();
+ 		Bouncer::assign('owner')->to($owners_ids);
     }
 }
