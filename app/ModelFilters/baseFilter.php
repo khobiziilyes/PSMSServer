@@ -9,6 +9,10 @@ class baseFilter extends ModelFilter {
     protected $drop_id = false;
     public $relations = [];
 
+    public function id($value) {
+        return $this->where('id', $value);
+    }
+
     public function createdBefore($timestamp) {
     	return $this->timeFilter('created_at', $timestamp);
     }

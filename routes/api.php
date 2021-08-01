@@ -1,12 +1,9 @@
 <?php
     /*
-        - Auto adjust case for phone brand and name.
-        - Stats (User - Good).
-        - $this->whiteListOrderBy
-         
-        - In buy, automatically add Item to DB, in sell, Fetch for available.
         - Generate PDFs for tables.
-        - Do i need show resource ?
+        - Should log updates ?.
+        
+        - Stats (Item - User - Product - Time).
         
         - Receipt.
         - Barcode.
@@ -24,9 +21,11 @@
         - My Control Panel.
         - onlyJsonMiddleware.
         - Bouncer cache.
-        - https://laravel.com/docs/8.x/deployment
-        - https://laravel.com/docs/8.x/passport#deploying-passport
-        - php artisan migrate:fresh --seed && php artisan passport:install && php artisan db:seed --class=BouncerSeeder
+        
+        https://laravel.com/docs/8.x/deployment
+        https://laravel.com/docs/8.x/passport#deploying-passport
+        php artisan migrate:fresh --seed && php artisan passport:install && php artisan db:seed --class=BouncerSeeder
+        COMPOSER_MEMORY_LIMIT = -1
     */
 
     use Illuminate\Http\Request;
@@ -38,7 +37,7 @@
     use App\Models\Phone;
     use App\Models\User;
 
-    Illuminate\Support\Facades\Auth::loginUsingId(config('app.FAKE_LOGIN_ID'));
+    // Illuminate\Support\Facades\Auth::loginUsingId(config('app.FAKE_LOGIN_ID'));
 
     Route::prefix('auth')->group(function () {
         Route::post('login', 'AuthController@login');
@@ -53,7 +52,7 @@
         Route::apiResource('users', UsersController::class)->middleware(isOwnerMiddleware::class)->except(['show', 'index']);
         
         Route::get('/users', 'UsersController@index');
-        Route::patch('/users/{user}/permissions', 'UsersController@updatePermissions');
+        Route::put('/users/permissions/{user}', 'UsersController@updatePermissions');
         Route::post('/store', 'UsersController@switchStore');
 
         Route::apiResources([
@@ -61,7 +60,7 @@
             'customers' => CustomersController::class,
             'accessories' => AccessoriesController::class,
             'phones' => PhonesController::class
-        ]);
+        ], ['except' => ['show']]);
         
         Route::get('/buy', ['uses' => 'TransactionsController@index', 'isBuy' => true]);
         Route::get('/sell', ['uses' => 'TransactionsController@index', 'isBuy' => false]);
@@ -69,7 +68,7 @@
         Route::post('/buy', ['uses' => 'TransactionsController@store', 'isBuy' => true]);
         Route::post('/sell', ['uses' => 'TransactionsController@store', 'isBuy' => false]);
 
-        Route::apiResource('items', ItemsController::class)->except(['store']);
+        Route::apiResource('items', ItemsController::class)->except(['store', 'show']);
         
         Route::post('items/{type}/{Itemable}',
             'ItemsController@storeItemable')

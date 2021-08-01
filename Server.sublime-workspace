@@ -4,6 +4,26 @@
 		"selected_items":
 		[
 			[
+				"curre",
+				"currentQuantity"
+			],
+			[
+				"attri",
+				"attributeName"
+			],
+			[
+				"new",
+				"newCollection"
+			],
+			[
+				"index",
+				"indexAppends"
+			],
+			[
+				"inde",
+				"indexAppends"
+			],
+			[
 				"le",
 				"length\tproperty"
 			],
@@ -78,10 +98,6 @@
 			[
 				"cout",
 				"counter\tlet"
-			],
-			[
-				"new",
-				"newArrs\tconst"
 			],
 			[
 				"ala",
@@ -424,10 +440,6 @@
 				"is_null"
 			],
 			[
-				"index",
-				"indexQuery"
-			],
-			[
 				"gro",
 				"groupedItems"
 			],
@@ -458,10 +470,6 @@
 			[
 				"set",
 				"setCurrentTab"
-			],
-			[
-				"curre",
-				"currentTab"
 			],
 			[
 				"Check",
@@ -506,24 +514,25 @@
 			[
 				"is",
 				"isBuy"
-			],
-			[
-				"The",
-				"TheForm"
-			],
-			[
-				"_on",
-				"_onChange"
 			]
 		]
 	},
 	"buffers":
 	[
 		{
+			"contents": "totalProfitPrice\naverageBuyPricePerItem\naverageSellPricePerItem\naverageProfitPricePerItem\naverageTotalProfitPrice\ncurrentQuantityBuyWorth\ncurrentQuantitySellWorth\nexpectedCurrentQuantityProfitPrice\nexpectedTotalProfitPrice\nrequiredMinimumPrice\ntotalBuyCost\ntotalSellCost\ntotalBuys\ntotalSells",
+			"settings":
+			{
+				"buffer_size": 291,
+				"line_ending": "Unix",
+				"name": "totalProfitPrice"
+			}
+		},
+		{
 			"file": "routes/api.php",
 			"settings":
 			{
-				"buffer_size": 4042,
+				"buffer_size": 3960,
 				"encoding": "UTF-8",
 				"line_ending": "Unix"
 			}
@@ -617,18 +626,44 @@
 	},
 	"expanded_folders":
 	[
-		"/home/th3m1n1c0d34/Documents/Projects/PSMS/Server"
+		"/home/th3m1n1c0d34/Documents/Projects/PSMS/Server",
+		"/home/th3m1n1c0d34/Documents/Projects/PSMS/Server/app",
+		"/home/th3m1n1c0d34/Documents/Projects/PSMS/Server/app/Http",
+		"/home/th3m1n1c0d34/Documents/Projects/PSMS/Server/app/Http/Controllers",
+		"/home/th3m1n1c0d34/Documents/Projects/PSMS/Server/app/Models",
+		"/home/th3m1n1c0d34/Documents/Projects/PSMS/Server/routes"
 	],
 	"file_history":
 	[
-		"/home/th3m1n1c0d34/Documents/Projects/PSMS/Server/app/Http/Controllers/ProductsController.php",
-		"/home/th3m1n1c0d34/Documents/Projects/PSMS/Server/app/Models/Product.php",
-		"/home/th3m1n1c0d34/Documents/Projects/PSMS/Server/app/Models/baseModel.php",
-		"/home/th3m1n1c0d34/Documents/Projects/PSMS/Server/app/Http/Controllers/PhonesController.php",
 		"/home/th3m1n1c0d34/Documents/Projects/PSMS/Server/app/Http/Controllers/baseController.php",
-		"/home/th3m1n1c0d34/Documents/Projects/PSMS/Server/routes/api.php",
-		"/home/th3m1n1c0d34/Documents/Projects/PSMS/Server/app/Http/Controllers/TransactionsController.php",
+		"/home/th3m1n1c0d34/Documents/Projects/PSMS/Server/app/Models/Product.php",
 		"/home/th3m1n1c0d34/Documents/Projects/PSMS/Server/app/Models/Transaction.php",
+		"/home/th3m1n1c0d34/Documents/Projects/PSMS/Server/app/Http/Controllers/ProductsController.php",
+		"/home/th3m1n1c0d34/Documents/Projects/PSMS/Server/app/Http/Controllers/TransactionsController.php",
+		"/home/th3m1n1c0d34/Documents/Projects/PSMS/Server/routes/api.php",
+		"/home/th3m1n1c0d34/Documents/Projects/PSMS/Server/config/app.php",
+		"/home/th3m1n1c0d34/Documents/Projects/PSMS/Server/bootstrap/app.php",
+		"/home/th3m1n1c0d34/Documents/Projects/PSMS/Server/app/Http/Controllers/ItemsController.php",
+		"/home/th3m1n1c0d34/Documents/Projects/PSMS/DBSchema.txt",
+		"/home/th3m1n1c0d34/Product.php",
+		"/home/th3m1n1c0d34/Documents/Projects/PSMS/Server/CALCS.txt",
+		"/home/th3m1n1c0d34/Documents/PSMS-OLD/others/ohno.txt",
+		"/home/th3m1n1c0d34/Documents/PSMS-OLD/others/new   1.txt",
+		"/home/th3m1n1c0d34/Documents/PSMS-OLD/others/new 1.txt",
+		"/home/th3m1n1c0d34/Documents/PSMS-OLD/others/idk.txt",
+		"/home/th3m1n1c0d34/Documents/PSMS-OLD/clear.txt",
+		"/home/th3m1n1c0d34/Documents/PSMS-OLD/OPS.txt",
+		"/home/th3m1n1c0d34/Documents/PSMS-OLD/TODO.txt",
+		"/home/th3m1n1c0d34/Documents/PSMS-OLD/OPTIONS.txt",
+		"/home/th3m1n1c0d34/Documents/Projects/PSMS/Server/tests/Feature/partTest.php",
+		"/home/th3m1n1c0d34/Documents/Projects/PSMS/Server/app/Models/baseModel.php",
+		"/home/th3m1n1c0d34/Documents/Projects/PSMS/Server/app/Models/Person.php",
+		"/home/th3m1n1c0d34/Documents/Projects/PSMS/Server/app/Models/Item.php",
+		"/home/th3m1n1c0d34/Documents/Projects/PSMS/Server/app/Http/Controllers/Controller.php",
+		"/home/th3m1n1c0d34/Documents/Projects/PSMS/Server/app/Models/ItemTraits.php",
+		"/home/th3m1n1c0d34/Documents/Projects/PSMS/Server/tests/Feature/Traits.php",
+		"/home/th3m1n1c0d34/Documents/Projects/PSMS/Server/app/ModelFilters/baseFilter.php",
+		"/home/th3m1n1c0d34/Documents/Projects/PSMS/Server/app/Http/Controllers/PhonesController.php",
 		"/home/th3m1n1c0d34/Documents/Projects/PSMS/Server/app/Models/Cart.php",
 		"/home/th3m1n1c0d34/Documents/Projects/PSMS/Server/Server.sublime-project",
 		"/home/th3m1n1c0d34/Documents/Projects/OBF/package.json",
@@ -727,28 +762,7 @@
 		"/home/th3m1n1c0d34/Documents/PSMS/Client/src/Components/MuiTable/Consts.js",
 		"/home/th3m1n1c0d34/Documents/PSMS/Client/src/Pages/Person/List.js",
 		"/home/th3m1n1c0d34/Documents/PSMS/Client/src/Pages/Person/Create.js",
-		"/home/th3m1n1c0d34/Documents/Projects/MG/index.html",
-		"/home/th3m1n1c0d34/Documents/Projects/MG/config.php",
-		"/home/th3m1n1c0d34/Documents/Projects/MG/OLD/M1-ELM.json",
-		"/home/th3m1n1c0d34/Documents/Projects/MG/OLD/L3-HSI.json",
-		"/home/th3m1n1c0d34/Documents/Projects/MG/OLD/L3-GI.json",
-		"/home/th3m1n1c0d34/Documents/Projects/MG/Conv.php",
-		"/home/th3m1n1c0d34/Documents/Projects/MG/NEW/161638065772.json",
-		"/home/th3m1n1c0d34/Documents/Projects/MG/NEW/181837034986.json",
-		"/home/th3m1n1c0d34/Documents/Projects/MG/OLD/M1-MFQ.json",
-		"/home/th3m1n1c0d34/Documents/Projects/MG/OLD/M1-PI.json",
-		"/home/th3m1n1c0d34/Documents/Projects/MG/OLD/M1-SIE.json",
-		"/home/th3m1n1c0d34/Documents/Projects/MG/OLD/L3-ELM.json",
-		"/home/th3m1n1c0d34/Documents/Projects/MG/OLD/M1-GI.json",
-		"/home/th3m1n1c0d34/Documents/Projects/MG/OLD/L2-HSI.json",
-		"/home/th3m1n1c0d34/Documents/Projects/MG/OLD/L2-GI.json",
-		"/home/th3m1n1c0d34/Documents/Projects/MG/OLD/L2-ELM.json",
-		"/home/th3m1n1c0d34/Documents/Projects/MG/OLD/L1-GI.json",
-		"/home/th3m1n1c0d34/Documents/Projects/MG/OLD/L1-HSI.json",
-		"/home/th3m1n1c0d34/Documents/Projects/MG/.gitignore",
-		"/home/th3m1n1c0d34/Documents/Projects/MG/OLD/M1-IMI.json",
-		"/home/th3m1n1c0d34/Documents/Projects/MG/IDK.php",
-		"/home/th3m1n1c0d34/Documents/Projects/IDK.php"
+		"/home/th3m1n1c0d34/Documents/Projects/MG/index.html"
 	],
 	"find":
 	{
@@ -759,6 +773,7 @@
 		"height": 129.0,
 		"where_history":
 		[
+			""
 		]
 	},
 	"find_state":
@@ -766,6 +781,17 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"whitelist",
+			"theClass",
+			"whiteListOrderBy",
+			"patch",
+			"canUpdateD",
+			"ProductRelation",
+			"Good",
+			"formatOutput",
+			"indexAppends",
+			"paginatorResponse",
+			"createdBefore"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -783,24 +809,128 @@
 	"groups":
 	[
 		{
-			"selected": 0,
+			"selected": 1,
 			"sheets":
 			[
 				{
 					"buffer": 0,
-					"file": "routes/api.php",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 4042,
+						"buffer_size": 291,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								568,
-								568
+								291,
+								291
+							]
+						],
+						"settings":
+						{
+							"auto_name": "totalProfitPrice",
+							"bracket_highlighter.busy": false,
+							"bracket_highlighter.locations":
+							{
+								"close":
+								{
+								},
+								"icon":
+								{
+								},
+								"open":
+								{
+								},
+								"unmatched":
+								{
+								}
+							},
+							"bracket_highlighter.regions":
+							[
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_double_quote_content",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_tag_content",
+								"bh_c_define",
+								"bh_c_define_center",
+								"bh_c_define_open",
+								"bh_c_define_close",
+								"bh_c_define_content",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_angle_content",
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_default_content",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_square_content",
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_regex_content",
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_curly_content",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_round_content",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close",
+								"bh_single_quote_content",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_unmatched_content"
+							],
+							"syntax": "Packages/Text/Plain text.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "routes/api.php",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 3960,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								962,
+								962
 							]
 						],
 						"settings":
@@ -823,16 +953,31 @@
 							},
 							"bracket_highlighter.regions":
 							[
-								"bh_single_quote",
-								"bh_single_quote_center",
-								"bh_single_quote_open",
-								"bh_single_quote_close",
-								"bh_single_quote_content",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_double_quote_content",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_tag_content",
+								"bh_c_define",
+								"bh_c_define_center",
+								"bh_c_define_open",
+								"bh_c_define_close",
+								"bh_c_define_content",
 								"bh_angle",
 								"bh_angle_center",
 								"bh_angle_open",
 								"bh_angle_close",
 								"bh_angle_content",
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_default_content",
 								"bh_square",
 								"bh_square_center",
 								"bh_square_open",
@@ -848,31 +993,16 @@
 								"bh_curly_open",
 								"bh_curly_close",
 								"bh_curly_content",
-								"bh_default",
-								"bh_default_center",
-								"bh_default_open",
-								"bh_default_close",
-								"bh_default_content",
-								"bh_c_define",
-								"bh_c_define_center",
-								"bh_c_define_open",
-								"bh_c_define_close",
-								"bh_c_define_content",
-								"bh_double_quote",
-								"bh_double_quote_center",
-								"bh_double_quote_open",
-								"bh_double_quote_close",
-								"bh_double_quote_content",
 								"bh_round",
 								"bh_round_center",
 								"bh_round_open",
 								"bh_round_close",
 								"bh_round_content",
-								"bh_tag",
-								"bh_tag_center",
-								"bh_tag_open",
-								"bh_tag_close",
-								"bh_tag_content",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close",
+								"bh_single_quote_content",
 								"bh_unmatched",
 								"bh_unmatched_center",
 								"bh_unmatched_open",
@@ -946,20 +1076,84 @@
 				"routes/api.php"
 			],
 			[
-				"",
-				"app/Models/Product.php"
+				"basecontr",
+				"app/Http/Controllers/baseController.php"
 			],
 			[
-				"produc",
-				"app/Http/Controllers/ProductsController.php"
+				"app",
+				"bootstrap/app.php"
+			],
+			[
+				"itemscontro",
+				"app/Http/Controllers/ItemsController.php"
+			],
+			[
+				"test",
+				"tests/Feature/partTest.php"
+			],
+			[
+				"person",
+				"app/Models/Person.php"
+			],
+			[
+				"basemo",
+				"app/Models/baseModel.php"
+			],
+			[
+				"basecontrol",
+				"app/Http/Controllers/baseController.php"
+			],
+			[
+				"contro",
+				"app/Http/Controllers/Controller.php"
+			],
+			[
+				"basecont",
+				"app/Http/Controllers/baseController.php"
+			],
+			[
+				"control",
+				"app/Http/Controllers/Controller.php"
+			],
+			[
+				"basecon",
+				"app/Http/Controllers/baseController.php"
+			],
+			[
+				"itemC",
+				"app/Http/Controllers/ItemsController.php"
+			],
+			[
+				"trai",
+				"tests/Feature/Traits.php"
 			],
 			[
 				"produ",
 				"app/Models/Product.php"
 			],
 			[
+				"item",
+				"app/Models/Item.php"
+			],
+			[
+				"tran",
+				"app/Models/Transaction.php"
+			],
+			[
 				"base",
 				"app/Models/baseModel.php"
+			],
+			[
+				"basem",
+				"app/Models/baseModel.php"
+			],
+			[
+				"",
+				"app/Models/Product.php"
+			],
+			[
+				"produc",
+				"app/Http/Controllers/ProductsController.php"
 			],
 			[
 				"phon",
@@ -988,10 +1182,6 @@
 			[
 				"Cart",
 				"app/Models/Cart.php"
-			],
-			[
-				"tran",
-				"app/Models/Transaction.php"
 			],
 			[
 				"trans",
@@ -1318,10 +1508,6 @@
 				"src/Pages/Items/Accessory/Create.js"
 			],
 			[
-				"app",
-				"src/Components/AppBar/index.js"
-			],
-			[
 				"mui",
 				"src/Components/MuiTable/index.js"
 			],
@@ -1386,10 +1572,6 @@
 				"src/Components/MuiTable/Columns.js"
 			],
 			[
-				"person",
-				"src/Pages/Person/Create.js"
-			],
-			[
 				"conf",
 				"config.php"
 			],
@@ -1400,58 +1582,6 @@
 			[
 				"conv",
 				"Conv.php"
-			],
-			[
-				"item",
-				"app/Models/Item.php"
-			],
-			[
-				"mig",
-				"database/migrations/2014_10_12_100000_create_password_resets_table.php"
-			],
-			[
-				"product",
-				"app/Http/Controllers/ProductsController.php"
-			],
-			[
-				"group",
-				"app/Scopes/GroupScope.php"
-			],
-			[
-				"per",
-				"app/Models/Person.php"
-			],
-			[
-				"datab",
-				"database/seeders/DatabaseSeeder.php"
-			],
-			[
-				"searc",
-				"app/Http/Controllers/SearchController.php"
-			],
-			[
-				"part",
-				"tests/Feature/partTest.php"
-			],
-			[
-				"itemsC",
-				"app/Http/Controllers/ItemsController.php"
-			],
-			[
-				"transac",
-				"app/Http/Controllers/TransactionsController.php"
-			],
-			[
-				"producC",
-				"app/Http/Controllers/ProductsController.php"
-			],
-			[
-				"appser",
-				"app/Providers/AppServiceProvider.php"
-			],
-			[
-				"peop",
-				"app/Http/Controllers/PeopleController.php"
 			]
 		],
 		"width": 0.0

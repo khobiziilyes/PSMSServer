@@ -12,7 +12,7 @@ class Controller extends BaseController {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
     public function paginatorResponse($paginator) {
-    	return Arr::only($paginator->toArray(), [
+        return Arr::only(is_array($paginator) ? $paginator : $paginator->toArray(), [
     		'data',
     		'current_page',
     		'from',

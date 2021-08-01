@@ -21,8 +21,9 @@ class baseController extends Controller {
         $query->with(['created_by_obj:id,name', 'updated_by_obj:id,name']);
         
         $filterFields = array_merge(method_exists($this, 'allowedFilters') ? $this->allowedFilters() : [], [
+            'id',
             'search',
-            
+
             'createdBy',
             'createdBefore',
             'createdAfter',
@@ -34,7 +35,7 @@ class baseController extends Controller {
         
         $orderBy = $request->query('orderBy', null);
         
-        if (filled($orderBy) && is_string($orderBy) && in_array($orderBy, array_merge($this->whiteListOrderBy ?? [], ['id', 'created_at', 'created_by']))) {
+        if (filled($orderBy) && is_string($orderBy) && in_array($orderBy, ['id', 'created_at', 'created_by'])) {
             $direction = $request->query('dir', 'asc');
             if (!(filled($direction) && is_string($direction) && $direction === 'desc')) $direction = 'asc';
             
@@ -51,6 +52,7 @@ class baseController extends Controller {
         });
 
         if (method_exists($this, 'formatOutput')) $this->formatOutput($paginator->getCollection(), $request);
+        if (method_exists($this, 'finalOutput')) $paginator = $this->finalOutput($paginator->toArray(), $request);
 
         return $this->paginatorResponse($paginator);
     }

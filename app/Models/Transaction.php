@@ -20,6 +20,7 @@ class Transaction extends baseModel {
     protected $casts = ['isBuy' => 'boolean'];
     protected $with = ['Person:id,name', 'Carts'];
     protected $hidden = ['updated_at', 'person_id'];
+    protected $append = ['profit'];
     
     public static function boot() {
         parent::boot();

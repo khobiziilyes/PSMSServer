@@ -31,12 +31,11 @@ class ItemsController extends baseController {
     function getValidationRules($resource_id, $itemable_id = null, $isPhone = null) {
         $rules = [
             'defaultPrice' => 'required|integer|min:0',
+            'currentQuantity' => 'required|integer|min:0',
             'notes' => 'present|notes'
         ];
 
         if (is_null($resource_id)){
-            $rules['currentQuantity'] = 'required|integer|min:0';
-            
             $rules['delta'] = [
                 'required',
                 'integer',
@@ -53,7 +52,9 @@ class ItemsController extends baseController {
 
     public function update(Request $request, Item $item) {
         $this->authorizeAction('Update');
+        
         if ($request->input('defaultPrice') !== $item->defaultPrice) Bouncer::authorize('canUpdateDefaultPrice');
+        if ($request->input('currentQuantity') !== $item->currentQuantity) Bouncer::authorize('canUpdateCurrentQuantity');
 
         return $this->storeOrUpdate($request->input(), $item->id);
     }
@@ -80,5 +81,32 @@ class ItemsController extends baseController {
         $collection->map(function($item) {
             $item->append(Item::$indexAppends);
         });
+    }
+
+    function finalOutput($paginator) {
+        $collection = $paginator['data'];
+        
+        $Stats = array_merge(array_slice(Item::$indexAppends, 0, -1), [
+            'totalBuyCost',
+            'totalSellCost',
+            'totalBuys',
+            'totalSells'
+        ]);
+
+        $newCollection = array_map(function($item) use($Stats) {
+            $newItem = ['Stats' => []];
+            
+            foreach ($item as $key => $value) {
+                if (in_array($key, $Stats)) {
+                    $newItem['Stats'][$key] = $value;
+                } else {
+                    $newItem[$key] = $value;
+                }
+            }
+
+            return $newItem;
+        }, $collection);
+
+        return array_merge($paginator, ['data' => $newCollection]);
     }
 }

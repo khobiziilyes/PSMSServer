@@ -10,8 +10,10 @@ class Product extends baseModel {
     static $storeIdScope = false;
     
     protected $fillable = ['name', 'brand', 'notes', 'type_id', 'is_public'];
-    protected $hidden = ['pivot'];
-
+    protected $hidden = ['pivot', 'is_public'];
+    
+    static $case = ['name', 'brand'];
+    
     public function getIsPhoneAttribute() {
         return static::$isPhone;
     }

@@ -11,6 +11,8 @@ class Person extends baseModel {
     protected $table = 'people';
     protected $hidden = ['isVendor'];
     
+    static $case = ['name'];
+
     public function modelFilter() {
         return $this->provideFilter(\App\ModelFilters\PersonFilter::class);
     }

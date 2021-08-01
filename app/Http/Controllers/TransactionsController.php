@@ -26,7 +26,7 @@ use App\Models\Accessory;
 class TransactionsController extends baseController {
     protected $theClass = Transaction::class;
     protected $withTrashed = true;
-
+    
     public function isBuy($request) {  
         $actions = $request->route()->getAction();
         $isBuy = $actions['isBuy'] ?? null;

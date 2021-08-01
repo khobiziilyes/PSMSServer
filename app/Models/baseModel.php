@@ -48,12 +48,16 @@ class baseModel extends Model {
             $model->created_by_id = $user->id;
             $model->updated_by_id = $user->id;
 
+            static::caseAttributes($model);
+
             if (is_null($model->store_id)) $model->store_id = $user->Store->id;
         });
         
         static::updating(function ($model) { 
             $user_id = Auth::user()->id;
             $model->updated_by_id = $user_id;
+
+            static::caseAttributes($model);
         });
 
         static::deleting(function($model) {
@@ -89,11 +93,19 @@ class baseModel extends Model {
     }
 
     public function getCreatedAtAttribute($value) {
-        return strtotime($value);
+        return $this->convertTime($value);
     }
 
     public function getUpdatedAtAttribute($value) {
-        return strtotime($value);
+        return $this->convertTime($value);
+    }
+
+    public function getDeletedAtAttribute($value) {
+        return $this->convertTime($value);
+    }
+
+    public function convertTime($value) {
+        return $value ? strtotime($value) : null;
     }
 
     public function getIsWritableAttributeInit() {
@@ -107,5 +119,10 @@ class baseModel extends Model {
 
     static function getClassName() {
         return (new \ReflectionClass(new static))->getShortName();
+    }
+
+    static function caseAttributes($model) {
+        foreach ((static::$case ?? []) as $attributeName) 
+            $model->{$attributeName} = ucwords($model->{$attributeName});
     }
 }

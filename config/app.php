@@ -5,7 +5,7 @@ $BASIC_PERMISSIONS = collect([]);
 foreach (['Customer', 'Vendor', 'Accessory', 'Phone', 'Item', 'Buy', 'Sell'] as $model)
     foreach (['Read', 'Write', 'Update'] as $method) $BASIC_PERMISSIONS->push('can' . $method . $model);
 
-$BASIC_PERMISSIONS = $BASIC_PERMISSIONS->concat(['canSwitchStore', 'canUpdateDefaultPrice', 'canUpdatePermissions']);
+$BASIC_PERMISSIONS = $BASIC_PERMISSIONS->concat(['canSwitchStore', 'canUpdateCurrentQuantity', 'canUpdateDefaultPrice', 'canUpdatePermissions']);
 $ULTRA_PERMISSIONS = $BASIC_PERMISSIONS->concat(['addToPublic']);
 
 return [

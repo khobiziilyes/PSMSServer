@@ -7,8 +7,13 @@ class partTest extends featureBase {
     use Traits;
 
     public function testAcces() {
-        $response = $this->postJson('/api/relations/accessory/1', [
-            'secondary_ids' => [1, 2]
+        $response = $this->postJson('/api/vendors', [
+            'name' => 'ilyes khobizi',
+            'phone1' => '0544113366',
+            'phone2' => '',
+            'address' => '',
+            'fax' => '',
+            'notes' => ''
         ]);
 
         $this->Log('idk', $response->json());

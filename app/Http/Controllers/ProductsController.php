@@ -12,7 +12,6 @@ use App\Http\Controllers\baseController;
 
 use App\Models\Phone;
 use App\Models\Accessory;
-use App\Models\ProductRelation;
 
 class ProductsController extends baseController {
     use ControllersTraits\storeModel;
@@ -20,7 +19,6 @@ class ProductsController extends baseController {
     use ControllersTraits\destroyModel;
 
     protected $beforeDestroy = 'items';
-    protected $whiteListOrderBy = ['name', 'brand'];
     static $isPublicProperty = true;
 
     public function _allowedFilters($more = []) {
