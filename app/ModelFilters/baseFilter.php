@@ -43,10 +43,12 @@ class baseFilter extends ModelFilter {
     }
 
     public function createdBy($id) {
+        if ($id == '-1') return $this->doesntHave('created_by_obj');
         return $this->where('created_by_id', $id);
     }
 
     public function updatedBy($id) {
+        if ($id == '-1') return $this->doesntHave('updated_by_obj');
         return $this->where('updated_by_id', $id);
     }
 }

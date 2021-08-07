@@ -32,7 +32,7 @@ class baseModel extends Model {
                 $builder->where($storeIdColumn, $Store->id);
             } else {
                 $builder->whereHas('Store', function ($query) use ($Store) {
-                    $query->where('group_id', $Store->Group->id);
+                    $query->whereIn('group_id', [$Store->Group->id, 0]);
                 });
             }
 
@@ -72,6 +72,12 @@ class baseModel extends Model {
         return $this->belongsTo(Store::class);
     }
     
+    public function creatorUpdator($field) {
+        return $this->hasOne(\App\Models\User::class, 'id', $field)
+            ->withTrashed()
+            ->withDefault(['id' => -1, 'name' => 'DELETED']);
+    }
+
     public function created_by_obj() {
         return $this->creatorUpdator('created_by_id');
     }
@@ -80,16 +86,12 @@ class baseModel extends Model {
         return $this->creatorUpdator('updated_by_id');
     }
 
-    public function creatorUpdator($field) {
-        return $this->hasOne(\App\Models\User::class, 'id', $field)->withTrashed()->withDefault(['id' => -1, 'name' => 'DELETED']);
-    }
-
     public function getCreatedByAttribute () {
-        return $this->created_by_obj->name . ' #' . $this->created_by_id;
+        return $this->created_by_obj->name . ' #' . $this->created_by_obj->id;
     }
 
     public function getUpdatedByAttribute () {
-        return $this->updated_by_obj->name . ' #' . $this->updated_by_id;
+        return $this->updated_by_obj->name . ' #' . $this->updated_by_obj->id;
     }
 
     public function getCreatedAtAttribute($value) {

@@ -35,7 +35,7 @@ class ItemsController extends baseController {
             'notes' => 'present|notes'
         ];
 
-        if (is_null($resource_id)){
+        if (is_null($resource_id)) {
             $rules['delta'] = [
                 'required',
                 'integer',
@@ -53,10 +53,13 @@ class ItemsController extends baseController {
     public function update(Request $request, Item $item) {
         $this->authorizeAction('Update');
         
-        if ($request->input('defaultPrice') !== $item->defaultPrice) Bouncer::authorize('canUpdateDefaultPrice');
-        if ($request->input('currentQuantity') !== $item->currentQuantity) Bouncer::authorize('canUpdateCurrentQuantity');
+        $valArr = $this->getValidationRules($item->id);
+        $validatedData = Validator::make($request->input(), $valArr)->validate();
+    
+        if ($validatedData['defaultPrice'] !== $item->defaultPrice) Bouncer::authorize('canUpdateDefaultPrice');
+        if ($validatedData['currentQuantity'] !== $item->currentQuantity) Bouncer::authorize('canUpdateCurrentQuantity');
 
-        return $this->storeOrUpdate($request->input(), $item->id);
+        return $this->storeOrUpdate($validatedData, $item->id);
     }
 
     public function storeItemable($type, $Itemable) {
@@ -72,9 +75,7 @@ class ItemsController extends baseController {
         $theInstance = $Itemable->Items()->create($validatedData);
         $theInstance->save();
         
-        $totalRows = Item::count();
-        
-        return $this->instanceResponse($request, $theInstance);
+        return $theInstance;
     }
 
     function formatOutput($collection, $request) {

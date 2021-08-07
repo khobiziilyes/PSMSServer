@@ -4,6 +4,14 @@
 		"selected_items":
 		[
 			[
+				"the",
+				"theInstance"
+			],
+			[
+				"Tras",
+				"TransactionsController"
+			],
+			[
 				"curre",
 				"currentQuantity"
 			],
@@ -114,10 +122,6 @@
 			[
 				"getS",
 				"getStop\tconst"
-			],
-			[
-				"the",
-				"thePromise\tproperty"
 			],
 			[
 				"resps",
@@ -510,29 +514,16 @@
 			[
 				"val",
 				"validationSchema"
-			],
-			[
-				"is",
-				"isBuy"
 			]
 		]
 	},
 	"buffers":
 	[
 		{
-			"contents": "totalProfitPrice\naverageBuyPricePerItem\naverageSellPricePerItem\naverageProfitPricePerItem\naverageTotalProfitPrice\ncurrentQuantityBuyWorth\ncurrentQuantitySellWorth\nexpectedCurrentQuantityProfitPrice\nexpectedTotalProfitPrice\nrequiredMinimumPrice\ntotalBuyCost\ntotalSellCost\ntotalBuys\ntotalSells",
-			"settings":
-			{
-				"buffer_size": 291,
-				"line_ending": "Unix",
-				"name": "totalProfitPrice"
-			}
-		},
-		{
 			"file": "routes/api.php",
 			"settings":
 			{
-				"buffer_size": 3960,
+				"buffer_size": 4036,
 				"encoding": "UTF-8",
 				"line_ending": "Unix"
 			}
@@ -630,23 +621,40 @@
 		"/home/th3m1n1c0d34/Documents/Projects/PSMS/Server/app",
 		"/home/th3m1n1c0d34/Documents/Projects/PSMS/Server/app/Http",
 		"/home/th3m1n1c0d34/Documents/Projects/PSMS/Server/app/Http/Controllers",
+		"/home/th3m1n1c0d34/Documents/Projects/PSMS/Server/app/Http/Controllers/ControllersTraits",
+		"/home/th3m1n1c0d34/Documents/Projects/PSMS/Server/app/ModelFilters",
 		"/home/th3m1n1c0d34/Documents/Projects/PSMS/Server/app/Models",
-		"/home/th3m1n1c0d34/Documents/Projects/PSMS/Server/routes"
+		"/home/th3m1n1c0d34/Documents/Projects/PSMS/Server/app/Scopes",
+		"/home/th3m1n1c0d34/Documents/Projects/PSMS/Server/public",
+		"/home/th3m1n1c0d34/Documents/Projects/PSMS/Server/routes",
+		"/home/th3m1n1c0d34/Documents/Projects/PSMS/Server/tests",
+		"/home/th3m1n1c0d34/Documents/Projects/PSMS/Server/tests/Feature"
 	],
 	"file_history":
 	[
+		"/home/th3m1n1c0d34/Documents/Projects/PSMS/Server/app/ModelFilters/baseFilter.php",
+		"/home/th3m1n1c0d34/Documents/Projects/PSMS/Server/app/Models/baseModel.php",
+		"/home/th3m1n1c0d34/Documents/Projects/PSMS/Server/app/Http/Controllers/ControllersTraits/storeOrUpdateModel.php",
+		"/home/th3m1n1c0d34/Documents/Projects/PSMS/Server/app/Http/Controllers/TransactionsController.php",
+		"/home/th3m1n1c0d34/Documents/Projects/PSMS/Server/app/Http/Controllers/ItemsController.php",
+		"/home/th3m1n1c0d34/Documents/Projects/PSMS/Server/app/Http/Controllers/Controller.php",
+		"/home/th3m1n1c0d34/Documents/Projects/PSMS/Server/public/index.php",
+		"/home/th3m1n1c0d34/Documents/Projects/PSMS/Server/Calcs.txt",
+		"/home/th3m1n1c0d34/Documents/Projects/PSMS/Server/routes/api.php",
+		"/home/th3m1n1c0d34/Documents/Projects/PSMS/Server/CALCS.txt",
+		"/home/th3m1n1c0d34/Documents/Projects/PSMS/Server/tests/Feature/partTest.php",
+		"/home/th3m1n1c0d34/Documents/Projects/PSMS/Server/app/Http/Controllers/UsersController.php",
+		"/home/th3m1n1c0d34/Documents/Projects/PSMS/Server/app/Scopes/GroupScope.php",
+		"/home/th3m1n1c0d34/Documents/Projects/PSMS/Server/app/Models/Group.php",
+		"/home/th3m1n1c0d34/Documents/Projects/PSMS/Server/app/Models/User.php",
 		"/home/th3m1n1c0d34/Documents/Projects/PSMS/Server/app/Http/Controllers/baseController.php",
 		"/home/th3m1n1c0d34/Documents/Projects/PSMS/Server/app/Models/Product.php",
 		"/home/th3m1n1c0d34/Documents/Projects/PSMS/Server/app/Models/Transaction.php",
 		"/home/th3m1n1c0d34/Documents/Projects/PSMS/Server/app/Http/Controllers/ProductsController.php",
-		"/home/th3m1n1c0d34/Documents/Projects/PSMS/Server/app/Http/Controllers/TransactionsController.php",
-		"/home/th3m1n1c0d34/Documents/Projects/PSMS/Server/routes/api.php",
 		"/home/th3m1n1c0d34/Documents/Projects/PSMS/Server/config/app.php",
 		"/home/th3m1n1c0d34/Documents/Projects/PSMS/Server/bootstrap/app.php",
-		"/home/th3m1n1c0d34/Documents/Projects/PSMS/Server/app/Http/Controllers/ItemsController.php",
 		"/home/th3m1n1c0d34/Documents/Projects/PSMS/DBSchema.txt",
 		"/home/th3m1n1c0d34/Product.php",
-		"/home/th3m1n1c0d34/Documents/Projects/PSMS/Server/CALCS.txt",
 		"/home/th3m1n1c0d34/Documents/PSMS-OLD/others/ohno.txt",
 		"/home/th3m1n1c0d34/Documents/PSMS-OLD/others/new   1.txt",
 		"/home/th3m1n1c0d34/Documents/PSMS-OLD/others/new 1.txt",
@@ -655,14 +663,10 @@
 		"/home/th3m1n1c0d34/Documents/PSMS-OLD/OPS.txt",
 		"/home/th3m1n1c0d34/Documents/PSMS-OLD/TODO.txt",
 		"/home/th3m1n1c0d34/Documents/PSMS-OLD/OPTIONS.txt",
-		"/home/th3m1n1c0d34/Documents/Projects/PSMS/Server/tests/Feature/partTest.php",
-		"/home/th3m1n1c0d34/Documents/Projects/PSMS/Server/app/Models/baseModel.php",
 		"/home/th3m1n1c0d34/Documents/Projects/PSMS/Server/app/Models/Person.php",
 		"/home/th3m1n1c0d34/Documents/Projects/PSMS/Server/app/Models/Item.php",
-		"/home/th3m1n1c0d34/Documents/Projects/PSMS/Server/app/Http/Controllers/Controller.php",
 		"/home/th3m1n1c0d34/Documents/Projects/PSMS/Server/app/Models/ItemTraits.php",
 		"/home/th3m1n1c0d34/Documents/Projects/PSMS/Server/tests/Feature/Traits.php",
-		"/home/th3m1n1c0d34/Documents/Projects/PSMS/Server/app/ModelFilters/baseFilter.php",
 		"/home/th3m1n1c0d34/Documents/Projects/PSMS/Server/app/Http/Controllers/PhonesController.php",
 		"/home/th3m1n1c0d34/Documents/Projects/PSMS/Server/app/Models/Cart.php",
 		"/home/th3m1n1c0d34/Documents/Projects/PSMS/Server/Server.sublime-project",
@@ -755,14 +759,7 @@
 		"/home/th3m1n1c0d34/Documents/PSMS/Client/src/Pages/App/index.js",
 		"/home/th3m1n1c0d34/Documents/PSMS/Client/src/Pages/Transactions/Create/index.js",
 		"/home/th3m1n1c0d34/Documents/PSMS/Client/src/Pages/Transactions/Show.js",
-		"/home/th3m1n1c0d34/Documents/PSMS/Client/src/Pages/Transactions/Create/ItemsPanel.js",
-		"/home/th3m1n1c0d34/Documents/PSMS/Client/src/Pages/Routes.js",
-		"/home/th3m1n1c0d34/Documents/PSMS/Client/src/Pages/Items/Accessory/List.js",
-		"/home/th3m1n1c0d34/Documents/PSMS/Client/src/Consts.js",
-		"/home/th3m1n1c0d34/Documents/PSMS/Client/src/Components/MuiTable/Consts.js",
-		"/home/th3m1n1c0d34/Documents/PSMS/Client/src/Pages/Person/List.js",
-		"/home/th3m1n1c0d34/Documents/PSMS/Client/src/Pages/Person/Create.js",
-		"/home/th3m1n1c0d34/Documents/Projects/MG/index.html"
+		"/home/th3m1n1c0d34/Documents/PSMS/Client/src/Pages/Transactions/Create/ItemsPanel.js"
 	],
 	"find":
 	{
@@ -778,9 +775,17 @@
 	},
 	"find_state":
 	{
-		"case_sensitive": false,
+		"case_sensitive": true,
 		"find_history":
 		[
+			"totalRows",
+			"instanceResponse",
+			"totalRows",
+			"TransactionsController",
+			"DELETED",
+			"group_id",
+			"User::",
+			"GroupScope",
 			"whitelist",
 			"theClass",
 			"whiteListOrderBy",
@@ -809,128 +814,24 @@
 	"groups":
 	[
 		{
-			"selected": 1,
+			"selected": 0,
 			"sheets":
 			[
 				{
 					"buffer": 0,
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 291,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								291,
-								291
-							]
-						],
-						"settings":
-						{
-							"auto_name": "totalProfitPrice",
-							"bracket_highlighter.busy": false,
-							"bracket_highlighter.locations":
-							{
-								"close":
-								{
-								},
-								"icon":
-								{
-								},
-								"open":
-								{
-								},
-								"unmatched":
-								{
-								}
-							},
-							"bracket_highlighter.regions":
-							[
-								"bh_double_quote",
-								"bh_double_quote_center",
-								"bh_double_quote_open",
-								"bh_double_quote_close",
-								"bh_double_quote_content",
-								"bh_tag",
-								"bh_tag_center",
-								"bh_tag_open",
-								"bh_tag_close",
-								"bh_tag_content",
-								"bh_c_define",
-								"bh_c_define_center",
-								"bh_c_define_open",
-								"bh_c_define_close",
-								"bh_c_define_content",
-								"bh_angle",
-								"bh_angle_center",
-								"bh_angle_open",
-								"bh_angle_close",
-								"bh_angle_content",
-								"bh_default",
-								"bh_default_center",
-								"bh_default_open",
-								"bh_default_close",
-								"bh_default_content",
-								"bh_square",
-								"bh_square_center",
-								"bh_square_open",
-								"bh_square_close",
-								"bh_square_content",
-								"bh_regex",
-								"bh_regex_center",
-								"bh_regex_open",
-								"bh_regex_close",
-								"bh_regex_content",
-								"bh_curly",
-								"bh_curly_center",
-								"bh_curly_open",
-								"bh_curly_close",
-								"bh_curly_content",
-								"bh_round",
-								"bh_round_center",
-								"bh_round_open",
-								"bh_round_close",
-								"bh_round_content",
-								"bh_single_quote",
-								"bh_single_quote_center",
-								"bh_single_quote_open",
-								"bh_single_quote_close",
-								"bh_single_quote_content",
-								"bh_unmatched",
-								"bh_unmatched_center",
-								"bh_unmatched_open",
-								"bh_unmatched_close",
-								"bh_unmatched_content"
-							],
-							"syntax": "Packages/Text/Plain text.tmLanguage",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 1,
-					"type": "text"
-				},
-				{
-					"buffer": 1,
 					"file": "routes/api.php",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 3960,
+						"buffer_size": 4036,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								962,
-								962
+								21,
+								21
 							]
 						],
 						"settings":
@@ -953,61 +854,61 @@
 							},
 							"bracket_highlighter.regions":
 							[
-								"bh_double_quote",
-								"bh_double_quote_center",
-								"bh_double_quote_open",
-								"bh_double_quote_close",
-								"bh_double_quote_content",
-								"bh_tag",
-								"bh_tag_center",
-								"bh_tag_open",
-								"bh_tag_close",
-								"bh_tag_content",
-								"bh_c_define",
-								"bh_c_define_center",
-								"bh_c_define_open",
-								"bh_c_define_close",
-								"bh_c_define_content",
-								"bh_angle",
-								"bh_angle_center",
-								"bh_angle_open",
-								"bh_angle_close",
-								"bh_angle_content",
 								"bh_default",
 								"bh_default_center",
 								"bh_default_open",
 								"bh_default_close",
 								"bh_default_content",
-								"bh_square",
-								"bh_square_center",
-								"bh_square_open",
-								"bh_square_close",
-								"bh_square_content",
 								"bh_regex",
 								"bh_regex_center",
 								"bh_regex_open",
 								"bh_regex_close",
 								"bh_regex_content",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_double_quote_content",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_square_content",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_angle_content",
 								"bh_curly",
 								"bh_curly_center",
 								"bh_curly_open",
 								"bh_curly_close",
 								"bh_curly_content",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_unmatched_content",
+								"bh_c_define",
+								"bh_c_define_center",
+								"bh_c_define_open",
+								"bh_c_define_close",
+								"bh_c_define_content",
 								"bh_round",
 								"bh_round_center",
 								"bh_round_open",
 								"bh_round_close",
 								"bh_round_content",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_tag_content",
 								"bh_single_quote",
 								"bh_single_quote_center",
 								"bh_single_quote_open",
 								"bh_single_quote_close",
-								"bh_single_quote_content",
-								"bh_unmatched",
-								"bh_unmatched_center",
-								"bh_unmatched_open",
-								"bh_unmatched_close",
-								"bh_unmatched_content"
+								"bh_single_quote_content"
 							],
 							"syntax": "Packages/PHP/PHP.sublime-syntax",
 							"tab_size": 4,
@@ -1072,8 +973,68 @@
 		"selected_items":
 		[
 			[
+				"base",
+				"app/Models/baseModel.php"
+			],
+			[
+				"contr",
+				"app/Http/Controllers/Controller.php"
+			],
+			[
 				"api",
 				"routes/api.php"
+			],
+			[
+				"inde",
+				"public/index.php"
+			],
+			[
+				"calcs",
+				"Calcs.txt"
+			],
+			[
+				"tran",
+				"app/Http/Controllers/TransactionsController.php"
+			],
+			[
+				"transac",
+				"app/Http/Controllers/TransactionsController.php"
+			],
+			[
+				"part",
+				"tests/Feature/partTest.php"
+			],
+			[
+				"user",
+				"app/Http/Controllers/UsersController.php"
+			],
+			[
+				"basem",
+				"app/Models/baseModel.php"
+			],
+			[
+				"grou",
+				"app/Scopes/GroupScope.php"
+			],
+			[
+				"gro",
+				"app/Scopes/GroupScope.php"
+			],
+			[
+				"us",
+				"app/Models/User.php"
+			],
+			[
+				"users",
+				"app/Http/Controllers/UsersController.php"
+			],
+			[
+				"API",
+				"routes/api.php"
+			],
+			[
+				"itemsC",
+				"app/Http/Controllers/ItemsController.php"
 			],
 			[
 				"basecontr",
@@ -1134,18 +1095,6 @@
 			[
 				"item",
 				"app/Models/Item.php"
-			],
-			[
-				"tran",
-				"app/Models/Transaction.php"
-			],
-			[
-				"base",
-				"app/Models/baseModel.php"
-			],
-			[
-				"basem",
-				"app/Models/baseModel.php"
 			],
 			[
 				"",
@@ -1270,10 +1219,6 @@
 			[
 				"usage",
 				"usage.js"
-			],
-			[
-				"inde",
-				"index.js"
 			],
 			[
 				"ran",
@@ -1538,50 +1483,6 @@
 			[
 				"speed",
 				"src/Components/SpeedDial.js"
-			],
-			[
-				"fomri",
-				"src/Components/FormikDialog/index.js"
-			],
-			[
-				"transa",
-				"src/Pages/Transactions/Create/Actions.js"
-			],
-			[
-				"appbar",
-				"src/Components/AppBar/index.js"
-			],
-			[
-				"consts",
-				"src/Consts.js"
-			],
-			[
-				"column",
-				"src/Components/MuiTable/Columns.js"
-			],
-			[
-				"access",
-				"src/Pages/Items/Accessory/Create.js"
-			],
-			[
-				"tex",
-				"src/Components/Inputs/Text.js"
-			],
-			[
-				"colu",
-				"src/Components/MuiTable/Columns.js"
-			],
-			[
-				"conf",
-				"config.php"
-			],
-			[
-				"confi",
-				"config.php"
-			],
-			[
-				"conv",
-				"Conv.php"
 			]
 		],
 		"width": 0.0

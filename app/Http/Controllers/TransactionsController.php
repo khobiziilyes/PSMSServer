@@ -109,7 +109,7 @@ class TransactionsController extends baseController {
             }
         });
 
-        return $this->instanceResponse($request, $theInstance);
+        return $theInstance;
     }
 
     public function destroy($id) {
@@ -119,8 +119,6 @@ class TransactionsController extends baseController {
         $this->authorizeAction('Update', $isBuy ? 'Buy' : 'Sell');
         
         DB::transaction(function () use($Transaction, $isBuy) {
-            
-
             $Transaction->Carts->each(function($Cart) use ($isBuy) {
                 $Item = $Cart->Item;
                 $itemCalcsDestroyed = $Item->transactionDestroyed($Cart->Quantity, $Cart->costPerItem, $isBuy);

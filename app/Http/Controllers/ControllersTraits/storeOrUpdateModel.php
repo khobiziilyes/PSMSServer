@@ -24,9 +24,7 @@ trait storeOrUpdateModel {
         }
         
         $theInstance->save();
-        
-        $totalRows = $theClass::count();
-        
-        return $this->instanceResponse(request(), $theInstance);
+    
+        return $theInstance;
     }
 }

@@ -1,0 +1,14 @@
+totalProfitPrice
+averageBuyPricePerItem
+averageSellPricePerItem
+averageProfitPricePerItem
+averageTotalProfitPrice
+currentQuantityBuyWorth
+currentQuantitySellWorth
+expectedCurrentQuantityProfitPrice
+expectedTotalProfitPrice
+requiredMinimumPrice
+totalBuyCost
+totalSellCost
+totalBuys
+totalSells

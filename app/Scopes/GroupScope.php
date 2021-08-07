@@ -11,8 +11,8 @@ class GroupScope implements Scope {
         $user = auth()->user();
         
         if ($user) return $builder->whereHas('Store', function($query) use($user) {
-            $query->where('group_id', $user->Store->Group->id);
-        })->orWhere('id', 0);
+            $query->whereIn('group_id', [$user->Store->Group->id, 0]);
+        });
 
         return $builder;
     }

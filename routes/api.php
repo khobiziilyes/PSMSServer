@@ -37,7 +37,7 @@
     use App\Models\Phone;
     use App\Models\User;
 
-    // Illuminate\Support\Facades\Auth::loginUsingId(config('app.FAKE_LOGIN_ID'));
+    Illuminate\Support\Facades\Auth::loginUsingId(config('app.FAKE_LOGIN_ID'));
 
     Route::prefix('auth')->group(function () {
         Route::post('login', 'AuthController@login');
@@ -67,6 +67,8 @@
         
         Route::post('/buy', ['uses' => 'TransactionsController@store', 'isBuy' => true]);
         Route::post('/sell', ['uses' => 'TransactionsController@store', 'isBuy' => false]);
+
+        Route::delete('/transaction/{id}', 'TransactionsController@destroy');
 
         Route::apiResource('items', ItemsController::class)->except(['store', 'show']);
         

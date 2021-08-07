@@ -25,9 +25,9 @@ class UsersController extends Controller {
 		$user_id = $user->id;
 		$owner_id = $user->Store->Group->Owner->id;
 
-		$excepted_ids = $user_id === $owner_id ? [$owner_id] : [$user_id, $owner_id];
+		$excepted_ids = $user_id === $owner_id ? [] : [$user_id];
 
-		return User::whereNotIn('id', $excepted_ids);
+		return User::whereNotIn('id', [0, $owner_id, ...$excepted_ids]);
 	}
 
 	public function storeIdRule() {
